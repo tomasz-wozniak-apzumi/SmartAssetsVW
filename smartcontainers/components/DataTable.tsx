@@ -309,35 +309,35 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
           <table className="min-w-full text-[13px] text-gray-700">
             <thead className="sticky top-0 bg-white z-10 border-b border-gray-100">
               <tr>
-                <th className="px-4 py-3 text-left font-semibold text-gray-500">Numer kontenera</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-500">Numer bieżący</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-500">Nazwa kontenera</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Numer {getAssetGenitive(currentAsset)}</th>
+                {currentAsset !== 'Regały' && <th className="px-4 py-3 text-left font-semibold text-gray-500">Numer bieżący</th>}
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Nazwa {getAssetGenitive(currentAsset)}</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-500">Status</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-500">Typ kontenera</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-500">Wersja</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Typ {getAssetGenitive(currentAsset)}</th>
+                {currentAsset !== 'Regały' && <th className="px-4 py-3 text-left font-semibold text-gray-500">Wersja</th>}
                 <th className="px-4 py-3 text-left font-semibold text-gray-500">Kod QR</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-500">Następna weryfikacja</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-500">Właściciel</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-500">Producent</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-500">Lokalizacja</th>
+                {currentAsset !== 'Regały' && <th className="px-4 py-3 text-left font-semibold text-gray-500">Lokalizacja</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filteredCurrentNumbers.map((item) => (
                 <tr key={item.id} className={`hover:bg-blue-50/50 cursor-pointer ${selectedCurrentNumber?.id === item.id ? 'bg-blue-50' : ''}`} onClick={() => setSelectedCurrentNumber(item)}>
                   <td className="px-4 py-3 font-medium text-[#007bff]">{item.containerNumber}</td>
-                   <td className="px-4 py-3">{item.currentNumber}</td>
-                   <td className="px-4 py-3">{item.containerName}</td>
-                   <td className="px-4 py-3">
-                     <span className={`font-semibold ${item.status === 'Warunkowo dopuszczony' ? 'text-orange-500' : 'text-green-600'}`}>{item.status}</span>
-                   </td>
-                   <td className="px-4 py-3">{item.type}</td>
-                   <td className="px-4 py-3">{item.version}</td>
-                   <td className="px-4 py-3 text-gray-400 font-mono text-[10px] uppercase">{item.qrCode}</td>
-                   <td className="px-4 py-3">{item.nextVerification}</td>
-                   <td className="px-4 py-3">{item.owner}</td>
-                   <td className="px-4 py-3">{item.producer}</td>
-                   <td className="px-4 py-3">{item.location}</td>
+                  {currentAsset !== 'Regały' && <td className="px-4 py-3">{item.currentNumber}</td>}
+                  <td className="px-4 py-3">{item.containerName}</td>
+                  <td className="px-4 py-3">
+                    <span className={`font-semibold ${item.status === 'Warunkowo dopuszczony' ? 'text-orange-500' : 'text-green-600'}`}>{item.status}</span>
+                  </td>
+                  <td className="px-4 py-3">{item.type}</td>
+                  {currentAsset !== 'Regały' && <td className="px-4 py-3">{item.version}</td>}
+                  <td className="px-4 py-3 text-gray-400 font-mono text-[10px] uppercase">{item.qrCode}</td>
+                  <td className="px-4 py-3">{item.nextVerification}</td>
+                  <td className="px-4 py-3">{item.owner}</td>
+                  <td className="px-4 py-3">{item.producer}</td>
+                  {currentAsset !== 'Regały' && <td className="px-4 py-3">{item.location}</td>}
                 </tr>
               ))}
             </tbody>

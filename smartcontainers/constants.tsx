@@ -49,16 +49,16 @@ export const MOCK_CURRENT_NUMBERS: CurrentNumberData[] = [
 ];
 
 export const MOCK_LOCATIONS: LocationData[] = [
-  { id: '1', name: 'Testowa lok. A', containerCount: 0 },
-  { id: '2', name: 'Testowa LokA', containerCount: 0 },
-  { id: '3', name: 'Inna lok B', containerCount: 0 },
-  { id: '4', name: 'gestamp Działkowców - Nieodczytane', containerCount: 0 },
-  { id: '5', name: 'newCo - Nieodczytane', containerCount: 0 },
-  { id: '6', name: 'besting - Nieodczytane', containerCount: 0 },
-  { id: '7', name: 'clavey - Nieodczytane', containerCount: 0 },
-  { id: '8', name: 'kwilcz - Nieodczytane', containerCount: 0 },
-  { id: '9', name: 'vw', containerCount: 1 },
-  { id: '10', name: 'gestamp Działkowców', containerCount: 0 }
+  { id: '1', name: 'Hala Główna - Sektor A', containerCount: 45 },
+  { id: '2', name: 'Hala Główna - Sektor B', containerCount: 12 },
+  { id: '3', name: 'Magazyn Części Zamiennych', containerCount: 134 },
+  { id: '4', name: 'Gestamp Działkowców', containerCount: 56 },
+  { id: '5', name: 'Strefa Buforowa Wejściowa', containerCount: 8 },
+  { id: '6', name: 'Strefa Buforowa Wyjściowa', containerCount: 22 },
+  { id: '7', name: 'Linia Montażowa Silników', containerCount: 5 },
+  { id: '8', name: 'Plac Zewnętrzny Północ', containerCount: 110 },
+  { id: '9', name: 'VW Główny Oddział', containerCount: 78 },
+  { id: '10', name: 'Magazyn Kwarantanny', containerCount: 3 }
 ];
 
 export const MOCK_SERVICES: ServiceData[] = [
@@ -81,16 +81,16 @@ export const MOCK_CHECKLISTS: ChecklistData[] = [
 ];
 
 export const MOCK_EVENTS: EventData[] = [
-  { id: '1', name: 'Awaria' },
-  { id: '2', name: 'Uszkodzenie' },
-  { id: '3', name: 'Błąd ludzki' },
-  { id: '4', name: 'Pęknięcie części hdhd shshs dbdhd snd db' },
-  { id: '5', name: 'abc' },
-  { id: '6', name: 'Awaria type 1' },
-  { id: '7', name: 'Pomyłka' },
-  { id: '8', name: 'asd' },
-  { id: '9', name: 'New reason' },
-  { id: '10', name: 'LLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit' },
+  { id: '1', name: 'Awaria mechaniczna koła' },
+  { id: '2', name: 'Uszkodzenie poszycia bocznego' },
+  { id: '3', name: 'Błąd operatora przy załadunku' },
+  { id: '4', name: 'Zniszczenie etykiety RFID/QR' },
+  { id: '5', name: 'Pęknięcie spawu konstrukcyjnego' },
+  { id: '6', name: 'Zalanie cieczą eksploatacyjną' },
+  { id: '7', name: 'Zgubienie podczas transportu na zewnątrz' },
+  { id: '8', name: 'Odrzucenie podczas kontroli jakości' },
+  { id: '9', name: 'Korozja elementów mocujących' },
+  { id: '10', name: 'Kolizja z wózkiem widłowym HSW' },
 ];
 
 export const MENU_ITEMS: MenuItem[] = [
