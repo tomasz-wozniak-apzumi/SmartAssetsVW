@@ -5,6 +5,7 @@ import BottomNav from './components/BottomNav';
 import { ViewType, AssetType } from './types';
 import { ASSET_CONFIG } from './constants';
 import { ChevronDown, Download } from 'lucide-react';
+import CommentsOverlay from './components/CommentsOverlay';
 
 const App: React.FC = () => {
   const [currentAsset, setCurrentAsset] = useState<AssetType>('Kontenery');
@@ -21,7 +22,8 @@ const App: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden text-gray-800">
       <Sidebar currentView={currentView} onViewChange={setCurrentView} currentAsset={currentAsset} />
-      <main className="flex-1 flex flex-col min-w-0 bg-white z-10">
+      <main className="flex-1 flex flex-col min-w-0 bg-white z-10 relative">
+        <CommentsOverlay currentView={currentView} />
         <div className="bg-white border-b border-gray-100 p-4 shrink-0">
           <div className="text-[11px] text-gray-400 mb-6 font-bold tracking-wide">
             Assety / <span className="text-[#007bff]">{currentAsset}</span> / <span className="text-gray-600">{currentView}</span>
