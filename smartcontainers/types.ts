@@ -72,3 +72,5 @@ export interface MenuItem {
 }
 
 export type ViewType = 'Dane podstawowe' | 'Numery bieżące' | 'Lokalizacje' | 'Serwis' | 'Checklisty' | 'Zdarzenia';
+
+export type AssetType = 'Kontenery' | 'Trolleye' | 'Regały' | 'Wózki';

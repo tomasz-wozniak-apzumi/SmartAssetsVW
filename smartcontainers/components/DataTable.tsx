@@ -8,12 +8,14 @@ import FilterBar from './FilterBar';
 import TableSidebar from './TableSidebar';
 import CurrentNumberPreview from './CurrentNumberPreview';
 import ChecklistEditor from './ChecklistEditor';
+import { AssetType } from '../types';
 
 interface DataTableProps {
   view: ViewType;
+  currentAsset: AssetType;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ view }) => {
+const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [selectedContainer, setSelectedContainer] = useState<ContainerData | null>(null);
@@ -153,10 +155,10 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
     };
 
     return (
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2 text-gray-800">
            {iconMap[view]}
-           <h1 className="text-lg font-bold">{view}</h1>
+           <h1 className="text-lg font-bold">{currentAsset} — {view}</h1>
         </div>
         {commonActions(view)}
       </div>

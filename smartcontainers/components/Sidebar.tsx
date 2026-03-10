@@ -1,14 +1,17 @@
 import React from 'react';
-import { MENU_ITEMS } from '../constants';
+import { MENU_ITEMS, ASSET_CONFIG } from '../constants';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { ViewType } from '../types';
+import { ViewType, AssetType } from '../types';
 
 interface SidebarProps {
   currentView: ViewType;
+  currentAsset: AssetType;
   onViewChange: (view: ViewType) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
+const Sidebar: React.FC<SidebarProps> = ({ currentView, currentAsset, onViewChange }) => {
+  const isAssetyView = ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'].includes(currentView);
+
   return (
     <aside className="w-64 bg-[#f8f9fa] border-r border-gray-200 flex flex-col h-screen overflow-y-auto shrink-0">
       {/* Logo */}
@@ -52,11 +55,18 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
 
       {/* Menu Items */}
       <nav className="flex-1">
-        {MENU_ITEMS.map((item, idx) => (
+        {MENU_ITEMS.map((item, idx) => {
+          const isActive = item.title === 'Assety' ? isAssetyView : item.active;
+          return (
           <div key={idx}>
             <div 
+              onClick={() => {
+                if (item.title === 'Assety' && !isAssetyView) {
+                  onViewChange(ASSET_CONFIG[currentAsset].defaultModule);
+                }
+              }}
               className={`flex items-center px-4 py-2 cursor-pointer transition-colors group ${
-                item.active ? 'bg-[#007bff] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'
+                isActive ? 'bg-[#007bff] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
               <span className="mr-3">{item.icon}</span>
@@ -88,7 +98,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
               </div>
             )}
           </div>
-        ))}
+        )})}
       </nav>
 
       {/* Footer / Flags */}

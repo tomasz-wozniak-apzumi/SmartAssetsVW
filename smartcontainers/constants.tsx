@@ -11,7 +11,14 @@ import {
   ShieldCheck, 
   Award
 } from 'lucide-react';
-import { ContainerData, CurrentNumberData, LocationData, ServiceData, ChecklistData, EventData, MenuItem } from './types';
+import { ContainerData, CurrentNumberData, LocationData, ServiceData, ChecklistData, EventData, MenuItem, AssetType, ViewType } from './types';
+
+export const ASSET_CONFIG: Record<AssetType, { defaultModule: ViewType, modules: ViewType[] }> = {
+  'Kontenery': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
+  'Trolleye': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
+  'Regały': { defaultModule: 'Numery bieżące', modules: ['Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
+  'Wózki': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
+};
 
 export const MOCK_CONTAINERS: ContainerData[] = [
   { id: '1', number: '482', name: '58210', verificationPeriod: 180, project: 'Precision Parts A', type: 'AUTOMATIC', orderNumber: 'ORD-99122', prototypes: 2, currentNumbers: 150, total: 152 },
@@ -84,18 +91,10 @@ export const MENU_ITEMS: MenuItem[] = [
   { title: 'Trening', icon: <GraduationCap size={18} /> },
   { title: 'Serwis', icon: <Settings size={18} /> },
   { 
-    title: 'Kontenery', 
+    title: 'Assety', 
     icon: <Package size={18} />, 
     active: true, 
-    expanded: true,
-    subItems: [
-      'Dane podstawowe',
-      'Numery bieżące',
-      'Lokalizacje',
-      'Serwis',
-      'Checklisty',
-      'Zdarzenia'
-    ]
+    expanded: false
   },
   { title: 'Użytkownicy', icon: <Users size={18} /> },
   { title: 'Role', icon: <ShieldCheck size={18} /> },
