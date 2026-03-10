@@ -14,9 +14,26 @@ export function useComments(currentView: string) {
   const [comments, setComments] = useState<CommentData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Funkcja pomocnicza aby dodać timeout do każdego fetcha
+  const fetchWithTimeout = async (url: string, options: RequestInit = {}) => {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), 2000); // 2 sekundowy timeout
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal
+      });
+      clearTimeout(id);
+      return response;
+    } catch (error) {
+      clearTimeout(id);
+      throw error; // Rzuca dalej do zewnetrznego catcha
+    }
+  };
+
   const fetchComments = useCallback(async () => {
     try {
-      const res = await fetch('/api/comments');
+      const res = await fetchWithTimeout('/api/comments');
       if (!res.ok) throw new Error('API failed, falling back to local');
       const data = await res.json();
       setComments(data);
@@ -45,7 +62,7 @@ export function useComments(currentView: string) {
     };
 
     try {
-      const res = await fetch('/api/comments', {
+      const res = await fetchWithTimeout('/api/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(commentData),
@@ -68,7 +85,7 @@ export function useComments(currentView: string) {
 
   const deleteComment = async (id: string) => {
     try {
-      const res = await fetch(`/api/comments?id=${id}`, { method: 'DELETE' });
+      const res = await fetchWithTimeout(`/api/comments?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         setComments(prev => prev.filter(c => c.id !== id));
       } else {
