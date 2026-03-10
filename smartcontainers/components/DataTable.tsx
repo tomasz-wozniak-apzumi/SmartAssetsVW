@@ -74,16 +74,19 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
 
   const hasActiveFilters = Object.values(filters).some(v => v !== '') || searchTerm !== '';
 
+  const assetContainers = useMemo(() => MOCK_CONTAINERS.filter(item => item.assetType === currentAsset), [currentAsset]);
+  const assetCurrentNumbers = useMemo(() => MOCK_CURRENT_NUMBERS.filter(item => item.assetType === currentAsset), [currentAsset]);
+
   const filteredContainers = useMemo(() => {
-    return MOCK_CONTAINERS.filter(item => {
+    return assetContainers.filter(item => {
       const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                             item.number.toLowerCase().includes(searchTerm.toLowerCase());
       return matchesSearch;
     });
-  }, [searchTerm]);
+  }, [searchTerm, assetContainers]);
 
   const filteredCurrentNumbers = useMemo(() => {
-    return MOCK_CURRENT_NUMBERS.filter(item => {
+    return assetCurrentNumbers.filter(item => {
       const matchesSearch = item.containerName.toLowerCase().includes(searchTerm.toLowerCase()) || 
                             item.containerNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             item.currentNumber.toLowerCase().includes(searchTerm.toLowerCase());
@@ -95,7 +98,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
 
       return matchesSearch && matchesNumber && matchesStatus && matchesType && matchesLocation && matchesVerification;
     });
-  }, [searchTerm, filters]);
+  }, [searchTerm, filters, assetCurrentNumbers]);
 
   const renderHeader = () => {
     if (isAddingContainer || (isAddingItem && view === 'Zdarzenia')) {
@@ -149,7 +152,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
       'Kontenery': <Package size={24} strokeWidth={1.5} />,
       'Trolleye': <LayoutGrid size={24} strokeWidth={1.5} />,
       'Regały': <Layers size={24} strokeWidth={1.5} />,
-      'Wózki': <Box size={24} strokeWidth={1.5} />,
+      'HSW': <Box size={24} strokeWidth={1.5} />,
     };
 
     return (
@@ -268,8 +271,8 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
                 <td className="px-4 py-3 text-gray-300">-</td>
               </tr>
               {[
-                { id: 'c1', name: 'test', createdAt: '29.09.2022 09:59', updatedAt: '29.09.2022 09:59', stepsCount: 1, version: 'v1 - WERSJA ROBOCZA' },
-                { id: 'c2', name: 'T1T', createdAt: '23.05.2022 14:08', updatedAt: '23.05.2022 14:08', stepsCount: 2, version: 'v7 - WERSJA ROBOCZA' }
+                { id: 'c1', name: `Procedura odbioru - ${currentAsset}`, createdAt: '29.09.2023 09:59', updatedAt: '29.09.2023 09:59', stepsCount: 5, version: 'v1.4' },
+                { id: 'c2', name: 'Codzienna inspekcja wizualna', createdAt: '23.05.2024 14:08', updatedAt: '23.05.2024 14:08', stepsCount: 8, version: 'v2.1' }
               ].map((item) => (
                 <tr key={item.id} className={`hover:bg-blue-50/50 cursor-pointer ${selectedCurrentNumber?.id === item.id ? 'bg-blue-50' : ''}`} onClick={() => setSelectedCurrentNumber(item)}>
                   <td className="px-4 py-3 flex items-center">
@@ -319,10 +322,10 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
                 onClearFilters={clearFilters} 
                 hasActiveFilters={hasActiveFilters}
                 mockData={{
-                  containerNumbers: Array.from(new Set(MOCK_CONTAINERS.map(a => a.number))),
-                  statuses: Array.from(new Set(MOCK_CURRENT_NUMBERS.map(a => a.status))),
-                  locations: Array.from(new Set(MOCK_CURRENT_NUMBERS.map(a => a.location))),
-                  verifications: Array.from(new Set(MOCK_CURRENT_NUMBERS.map(a => a.nextVerification))),
+                  containerNumbers: Array.from(new Set(assetContainers.map(a => a.number))),
+                  statuses: Array.from(new Set(assetCurrentNumbers.map(a => a.status))),
+                  locations: Array.from(new Set(assetCurrentNumbers.map(a => a.location))),
+                  verifications: Array.from(new Set(assetCurrentNumbers.map(a => a.nextVerification))),
                 }}
               />
               <div className="relative w-64 group ml-4 shrink-0 self-start">

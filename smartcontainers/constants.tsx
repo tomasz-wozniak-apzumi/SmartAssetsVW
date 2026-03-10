@@ -17,23 +17,35 @@ export const ASSET_CONFIG: Record<AssetType, { defaultModule: ViewType, modules:
   'Kontenery': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
   'Trolleye': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
   'Regały': { defaultModule: 'Numery bieżące', modules: ['Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
-  'Wózki': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
+  'HSW': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
 };
 
 export const MOCK_CONTAINERS: ContainerData[] = [
-  { id: '1', number: '482', name: '58210', verificationPeriod: 180, project: 'Precision Parts A', type: 'AUTOMATIC', orderNumber: 'ORD-99122', prototypes: 2, currentNumbers: 150, total: 152 },
-  { id: '2', number: 'T-105', name: 'Trolley Heavy', verificationPeriod: 90, project: 'Engine Block Line', type: 'MANUAL', orderNumber: 'PO-77231', prototypes: 0, currentNumbers: 85, total: 85 },
-  { id: '3', number: 'P-731', name: 'Steel Pallet S3', verificationPeriod: 365, project: 'Raw Casting S3', type: 'AUTOMATIC', orderNumber: 'ORD-1123', prototypes: 0, currentNumbers: 240, total: 240 },
-  { id: '4', number: 'S-219', name: 'Protective Suit B', verificationPeriod: 30, project: 'Chemical Hub Beta', type: 'MANUAL', orderNumber: 'TX-55091', prototypes: 1, currentNumbers: 12, total: 13 },
-  { id: '5', number: '604', name: '82743', verificationPeriod: 180, project: 'SteelForge Alpha', type: 'MANUAL', orderNumber: 'ORD-8822', prototypes: 0, currentNumbers: 110, total: 110 },
-  { id: '6', number: 'T-882', name: 'AGV-04', verificationPeriod: 120, project: 'Assembly Unit 4', type: 'AUTOMATIC', orderNumber: 'PO-44512', prototypes: 5, currentNumbers: 45, total: 50 },
+  // Kontenery
+  { id: '1', assetType: 'Kontenery', number: 'K-482', name: 'Kontener siatkowy typ A', verificationPeriod: 180, project: 'Precision Parts A', type: 'AUTOMATIC', orderNumber: 'ORD-99122', prototypes: 2, currentNumbers: 150, total: 152 },
+  { id: '2', assetType: 'Kontenery', number: 'K-105', name: 'Kontener pełny z pokrywą', verificationPeriod: 90, project: 'Engine Block Line', type: 'MANUAL', orderNumber: 'PO-77231', prototypes: 0, currentNumbers: 85, total: 85 },
+  { id: '3', assetType: 'Kontenery', number: 'K-731', name: 'Pojemnik KLT 600x400', verificationPeriod: 365, project: 'Raw Casting S3', type: 'AUTOMATIC', orderNumber: 'ORD-1123', prototypes: 0, currentNumbers: 240, total: 240 },
+  // Trolleye
+  { id: '4', assetType: 'Trolleye', number: 'TR-219', name: 'Trolley transportowy lekki', verificationPeriod: 30, project: 'Assembly Line 1', type: 'MANUAL', orderNumber: 'TX-55091', prototypes: 1, currentNumbers: 12, total: 13 },
+  { id: '5', assetType: 'Trolleye', number: 'TR-604', name: 'Trolley ciężki platformowy', verificationPeriod: 180, project: 'SteelForge Alpha', type: 'MANUAL', orderNumber: 'ORD-8822', prototypes: 0, currentNumbers: 110, total: 110 },
+  // HSW
+  { id: '6', assetType: 'HSW', number: 'HSW-882', name: 'Wózek widłowy czołowy', verificationPeriod: 120, project: 'Magazyn Główny', type: 'AUTOMATIC', orderNumber: 'PO-44512', prototypes: 0, currentNumbers: 45, total: 45 },
+  { id: '7', assetType: 'HSW', number: 'HSW-102', name: 'Paleciak z wagą', verificationPeriod: 365, project: 'Logistyka', type: 'MANUAL', orderNumber: 'PO-12344', prototypes: 0, currentNumbers: 20, total: 20 },
 ];
 
 export const MOCK_CURRENT_NUMBERS: CurrentNumberData[] = [
-  { id: '1', containerNumber: '31', currentNumber: '195', containerName: '514489', status: 'Warunkowo dopuszczony', type: 'Manualny', version: '1', qrCode: '514489_1096', nextVerification: '18.02.2026', owner: 'Dybiźbański', producer: 'VW-AO', location: 'Clavey' },
-  { id: '2', containerNumber: 'W-01', currentNumber: '1', containerName: 'Wózek widłowy', status: 'W użyciu', type: 'Manualny', version: '1013', qrCode: 'jjj', nextVerification: '27.08.2025', owner: 'VW', producer: 'Producent Stal-bud', location: 'Gestamp Działkowców' },
-  { id: '3', containerNumber: 'S-10', currentNumber: '197', containerName: 'Skafander Ochronny', status: 'Prototyp', type: 'Automatyczny', version: '0', qrCode: '514490_40', nextVerification: '13.01.2022', owner: 'VW', producer: '', location: 'Gestamp Działkowców' },
-  { id: '4', containerNumber: 'P-99', currentNumber: '1991', containerName: 'EuroPaleta Spec', status: 'Zablokowany', type: 'Automatyczny', version: '0', qrCode: '514488_1004', nextVerification: '23.01.2025', owner: 'VW', producer: '', location: 'Gestamp Działkowców' },
+  // Kontenery
+  { id: '1', assetType: 'Kontenery', containerNumber: 'K-482', currentNumber: '195', containerName: 'Kontener siatkowy typ A', status: 'Warunkowo dopuszczony', type: 'Manualny', version: '1', qrCode: 'K482_1096', nextVerification: '18.02.2026', owner: 'Logistyka Wewnętrzna', producer: 'VW-AO', location: 'Clavey' },
+  { id: '2', assetType: 'Kontenery', containerNumber: 'K-105', currentNumber: '001', containerName: 'Kontener pełny z pokrywą', status: 'W użyciu', type: 'Manualny', version: '1013', qrCode: 'K105_001', nextVerification: '27.08.2025', owner: 'VW', producer: 'Stal-bud', location: 'Gestamp Działkowców' },
+  // Trolleye
+  { id: '3', assetType: 'Trolleye', containerNumber: 'TR-219', currentNumber: '197', containerName: 'Trolley transportowy lekki', status: 'Prototyp', type: 'Automatyczny', version: '0', qrCode: 'TR219_40', nextVerification: '13.01.2025', owner: 'Inżynieria', producer: 'Troll-Pol', location: 'Gestamp Działkowców' },
+  { id: '4', assetType: 'Trolleye', containerNumber: 'TR-604', currentNumber: '1991', containerName: 'Trolley ciężki platformowy', status: 'Zablokowany', type: 'Automatyczny', version: '0', qrCode: 'TR604_1004', nextVerification: '23.01.2025', owner: 'Utrzymanie Ruchu', producer: 'Troll-Pol', location: 'Gestamp Działkowców' },
+  // Regały 
+  { id: '5', assetType: 'Regały', containerNumber: 'REG-12', currentNumber: '001', containerName: 'Regał wysokiego składowania', status: 'W użyciu', type: 'Manualny', version: '1', qrCode: 'REG12_01', nextVerification: '10.12.2024', owner: 'Logistyka', producer: 'Regal-System', location: 'Magazyn A' },
+  { id: '6', assetType: 'Regały', containerNumber: 'REG-14', currentNumber: '002', containerName: 'Regał paletowy rzędowy', status: 'W użyciu', type: 'Automatyczny', version: '2', qrCode: 'REG14_02', nextVerification: '15.11.2025', owner: 'Logistyka', producer: 'Regal-System', location: 'Magazyn B' },
+  // HSW
+  { id: '7', assetType: 'HSW', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Wózek widłowy czołowy', status: 'W użyciu', type: 'Automatyczny', version: '1.2', qrCode: 'HSW882_23', nextVerification: '05.05.2025', owner: 'Utrzymanie Ruchu', producer: 'Toyota', location: 'Hala 3' },
+  { id: '8', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Paleciak z wagą', status: 'Uszkodzony', type: 'Manualny', version: '1.0', qrCode: 'HSW102_04', nextVerification: '01.09.2024', owner: 'Magazyn Wewnętrzny', producer: 'Mag-Tech', location: 'Strefa buforowa' },
 ];
 
 export const MOCK_LOCATIONS: LocationData[] = [

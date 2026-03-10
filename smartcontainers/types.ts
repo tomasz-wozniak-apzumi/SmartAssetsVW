@@ -2,6 +2,7 @@ import React from 'react';
 
 export interface ContainerData {
   id: string;
+  assetType: AssetType;
   number: string;
   name: string;
   verificationPeriod: number;
@@ -15,10 +16,11 @@ export interface ContainerData {
 
 export interface CurrentNumberData {
   id: string;
+  assetType: AssetType;
   containerNumber: string;
   currentNumber: string;
   containerName: string;
-  status: 'Warunkowo dopuszczony' | 'Prototyp' | 'Zablokowany' | 'W użyciu';
+  status: 'Warunkowo dopuszczony' | 'Prototyp' | 'Zablokowany' | 'W użyciu' | 'Uszkodzony';
   type: 'Manualny' | 'Automatyczny';
   version: string;
   qrCode: string;
@@ -73,4 +75,4 @@ export interface MenuItem {
 
 export type ViewType = 'Dane podstawowe' | 'Numery bieżące' | 'Lokalizacje' | 'Serwis' | 'Checklisty' | 'Zdarzenia';
 
-export type AssetType = 'Kontenery' | 'Trolleye' | 'Regały' | 'Wózki';
+export type AssetType = 'Kontenery' | 'Trolleye' | 'Regały' | 'HSW';
