@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Plus, Box, ClipboardCheck, LayoutGrid, ChevronDown, Settings, CheckSquare, History, X, Save, Folder, Upload } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Plus, Box, ClipboardCheck, LayoutGrid, ChevronDown, Settings, CheckSquare, History, X, Save, Folder, Upload, Package, Layers } from 'lucide-react';
 import { MOCK_CONTAINERS, MOCK_CURRENT_NUMBERS, MOCK_LOCATIONS, MOCK_SERVICES, MOCK_CHECKLISTS, MOCK_EVENTS } from '../constants';
 import { ViewType, ContainerData } from '../types';
 
@@ -145,22 +145,27 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
       }
     };
 
-    const iconMap: Record<string, React.ReactNode> = {
-      'Dane podstawowe': <Box size={24} strokeWidth={1.5} />,
-      'Numery bieżące': <ClipboardCheck size={24} strokeWidth={1.5} />,
-      'Lokalizacje': <LayoutGrid size={24} strokeWidth={1.5} />,
-      'Serwis': <Settings size={24} strokeWidth={1.5} />,
-      'Checklisty': <CheckSquare size={24} strokeWidth={1.5} />,
-      'Zdarzenia': <History size={24} strokeWidth={1.5} />
+    const assetIconMap: Record<AssetType, React.ReactNode> = {
+      'Kontenery': <Package size={24} strokeWidth={1.5} />,
+      'Trolleye': <LayoutGrid size={24} strokeWidth={1.5} />,
+      'Regały': <Layers size={24} strokeWidth={1.5} />,
+      'Wózki': <Box size={24} strokeWidth={1.5} />,
     };
 
     return (
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2 text-gray-800">
-           {iconMap[view]}
-           <h1 className="text-lg font-bold">{currentAsset} — {view}</h1>
+      <div className="flex items-end justify-between mb-6">
+        <div className="flex items-center space-x-4">
+           <div className="w-12 h-12 rounded-lg bg-blue-50 text-[#007bff] flex items-center justify-center">
+             {assetIconMap[currentAsset] || <Package size={24} strokeWidth={1.5} />}
+           </div>
+           <div className="flex flex-col">
+              <h1 className="text-2xl font-bold text-gray-800 leading-tight mb-1">{currentAsset}</h1>
+              <span className="text-[13px] font-semibold text-gray-500">{view}</span>
+           </div>
         </div>
-        {commonActions(view)}
+        <div className="pb-1">
+           {commonActions(view)}
+        </div>
       </div>
     );
   };
