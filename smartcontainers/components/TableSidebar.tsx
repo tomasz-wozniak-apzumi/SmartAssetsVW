@@ -156,6 +156,75 @@ const TableSidebar: React.FC<TableSidebarProps> = ({
     );
   }
 
+  // Sidebar for Checklisty
+  if (selectedCurrentNumber && view === 'Checklisty') {
+    return (
+      <div className="w-72 border-l border-gray-200 bg-[#f8f9fa] flex flex-col fixed right-0 top-0 bottom-0 z-20 shadow-xl transition-all">
+        <div className="p-4 border-b border-gray-200 bg-white flex items-center justify-between">
+          <h2 className="font-bold text-gray-800">Szczegóły</h2>
+          <button onClick={onCloseCurrentNumber} className="text-gray-400 hover:text-gray-600 transition-colors">
+            <X size={18} />
+          </button>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto p-4 space-y-6">
+          <div className="space-y-4">
+            <div className="text-center bg-white p-6 rounded border border-gray-100 shadow-sm flex flex-col items-center">
+               <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-lg flex items-center justify-center mb-4">
+                  <span className="text-4xl">☑</span>
+               </div>
+               <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">{selectedCurrentNumber.name}</p>
+            </div>
+
+            <div className="space-y-4 pt-4 border-t border-gray-100">
+              {[
+                { label: 'Nazwa', value: selectedCurrentNumber.name },
+                { label: 'Data utworzenia', value: selectedCurrentNumber.createdAt },
+                { label: 'Ostatnia edycja', value: selectedCurrentNumber.updatedAt || selectedCurrentNumber.createdAt },
+                { label: 'Liczba kroków', value: selectedCurrentNumber.stepsCount },
+                { label: 'Wersja', value: selectedCurrentNumber.version, status: true },
+                { label: 'Opis', value: '-' }
+              ].map((item, idx) => (
+                <div key={idx} className="border-b border-gray-100 pb-2">
+                  <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{item.label}</p>
+                  <p className={`text-sm font-medium ${item.status ? 'text-orange-500' : 'text-gray-700'}`}>{item.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2 mt-auto pb-4 pt-10">
+            <button 
+              onClick={onPreviewCurrentNumber} // using this as 'onEdit' trigger for Checklisty
+              className="w-full flex items-center justify-center px-4 py-2.5 bg-[#007bff] text-white rounded text-[11px] font-bold shadow-sm hover:bg-blue-600 transition-colors uppercase tracking-tight"
+            >
+              <Edit2 size={16} className="mr-3" />
+              EDYTUJ
+            </button>
+            <button className="w-full flex items-center justify-center px-4 py-2.5 bg-red-600 text-white rounded text-[11px] font-bold shadow-sm hover:bg-red-700 transition-colors uppercase tracking-tight">
+              <Trash2 size={16} className="mr-3" />
+              USUŃ
+            </button>
+            
+            <div className="flex items-center justify-between text-[10px] text-gray-400 font-bold uppercase mt-12 py-4 border-t border-gray-100">
+               <span>Piotr Nowak</span>
+               <span className="text-[#007bff] underline">Rola Admina</span>
+            </div>
+             <div className="flex items-center space-x-2 text-[10px] text-gray-400">
+               <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                  PN
+               </span>
+               <div className="flex flex-col">
+                  <span>02.11.2023, 11:23</span>
+                  <span className="text-[#007bff] underline">Logi serwera</span>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return null;
 };
 

@@ -7,6 +7,7 @@ import { ViewType, ContainerData } from '../types';
 import FilterBar from './FilterBar';
 import TableSidebar from './TableSidebar';
 import CurrentNumberPreview from './CurrentNumberPreview';
+import ChecklistEditor from './ChecklistEditor';
 
 interface DataTableProps {
   view: ViewType;
@@ -18,6 +19,7 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
   const [selectedContainer, setSelectedContainer] = useState<ContainerData | null>(null);
   const [selectedCurrentNumber, setSelectedCurrentNumber] = useState<any | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
+  const [isEditingChecklist, setIsEditingChecklist] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [isAddingContainer, setIsAddingContainer] = useState(false);
@@ -42,6 +44,7 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
     setSelectedContainer(null);
     setSelectedCurrentNumber(null);
     setIsPreviewing(false);
+    setIsEditingChecklist(false);
   }, [view]);
 
   const handleFilterChange = (key: string, value: string) => {
@@ -126,6 +129,13 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
                <button className={btnStyle}><Download size={14} className="mr-2" />KONTROLE - EKSPORT</button>
                <button className={btnStyle}><Download size={14} className="mr-2" />EKSPORTUJ DO CSV</button>
                <button className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />WCZYTAJ NUMER BIEŻĄCY</button>
+            </div>
+          );
+        case 'Checklisty':
+          return (
+            <div className="flex items-center space-x-2">
+               <button className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />DODAJ KATALOG</button>
+               <button className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />DODAJ LISTĘ KONTROLNĄ</button>
             </div>
           );
         // ... rest of cases for simplicity
@@ -227,6 +237,49 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
             </tbody>
           </table>
         );
+      case 'Checklisty':
+        return (
+          <table className="min-w-full text-[13px] text-gray-700">
+            <thead className="sticky top-0 bg-white z-10 border-b border-gray-100">
+              <tr className="bg-white">
+                <th className="px-4 py-3 text-left font-semibold text-gray-500 w-1/3">Nazwa</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Data utworzenia</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Data edycji</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Liczba kroków</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Wersja</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              <tr className="hover:bg-gray-50 cursor-pointer">
+                <td className="px-4 py-3 flex items-center text-gray-400">
+                  <span className="mr-2 rotate-90">↱</span>
+                  Katalog nadrzędny (Główny)
+                </td>
+                <td className="px-4 py-3 text-gray-300">-</td>
+                <td className="px-4 py-3 text-gray-300">-</td>
+                <td className="px-4 py-3 text-gray-300">-</td>
+                <td className="px-4 py-3 text-gray-300">-</td>
+              </tr>
+              {[
+                { id: 'c1', name: 'test', createdAt: '29.09.2022 09:59', updatedAt: '29.09.2022 09:59', stepsCount: 1, version: 'v1 - WERSJA ROBOCZA' },
+                { id: 'c2', name: 'T1T', createdAt: '23.05.2022 14:08', updatedAt: '23.05.2022 14:08', stepsCount: 2, version: 'v7 - WERSJA ROBOCZA' }
+              ].map((item) => (
+                <tr key={item.id} className={`hover:bg-blue-50/50 cursor-pointer ${selectedCurrentNumber?.id === item.id ? 'bg-blue-50' : ''}`} onClick={() => setSelectedCurrentNumber(item)}>
+                  <td className="px-4 py-3 flex items-center">
+                    <span className="mr-3 text-emerald-500">☑</span>
+                    {item.name}
+                  </td>
+                  <td className="px-4 py-3 text-gray-500">{item.createdAt}</td>
+                  <td className="px-4 py-3 text-gray-500">{item.updatedAt}</td>
+                  <td className="px-4 py-3 text-gray-500">{item.stepsCount}</td>
+                  <td className="px-4 py-3">
+                    <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-0.5 rounded font-bold">{item.version}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        );
       default: return null;
     }
   };
@@ -240,6 +293,10 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
     <div className="flex flex-1 overflow-hidden relative bg-white">
       {isPreviewing && selectedCurrentNumber && (
         <CurrentNumberPreview data={selectedCurrentNumber} onClose={() => setIsPreviewing(false)} />
+      )}
+
+      {isEditingChecklist && (
+        <ChecklistEditor onClose={() => setIsEditingChecklist(false)} onSave={() => setIsEditingChecklist(false)} />
       )}
 
       <div className={`flex flex-col flex-1 p-4 md:p-6 space-y-4 overflow-hidden bg-white transition-all duration-300 ${(selectedContainer || selectedCurrentNumber) ? 'mr-72' : ''}`}>
@@ -307,7 +364,13 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
         selectedCurrentNumber={selectedCurrentNumber}
         onCloseContainer={() => setSelectedContainer(null)}
         onCloseCurrentNumber={() => setSelectedCurrentNumber(null)}
-        onPreviewCurrentNumber={() => setIsPreviewing(true)}
+        onPreviewCurrentNumber={() => {
+          if (view === 'Checklisty') {
+            setIsEditingChecklist(true);
+          } else {
+            setIsPreviewing(true);
+          }
+        }}
         onOpenModal={() => setIsModalOpen(true)}
       />
     </div>

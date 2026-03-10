@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ClipboardCheck, Edit2, Trash2, Eye, Upload, Download } from 'lucide-react';
+import { ClipboardCheck, Edit2, Trash2, Eye, Upload, Download, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import AddDocumentModal from './AddDocumentModal';
 
 interface CurrentNumberPreviewProps {
@@ -224,6 +224,55 @@ const CurrentNumberPreview: React.FC<CurrentNumberPreviewProps> = ({ data, onClo
                 ))}
               </tbody>
             </table>
+          </div>
+        </section>
+
+        <hr className="border-gray-100" />
+
+        {/* History Section */}
+        <section className="pb-8">
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">HISTORIA</h2>
+          <div className="border border-gray-100 rounded">
+            <table className="w-full text-[11px] text-left">
+              <thead className="bg-[#f8f9fa] border-b border-gray-100">
+                <tr>
+                  <th className="px-4 py-2 font-semibold text-gray-500">Autor</th>
+                  <th className="px-4 py-2 font-semibold text-gray-500">Rodzaj</th>
+                  <th className="px-4 py-2 font-semibold text-gray-500">Opis</th>
+                  <th className="px-4 py-2 font-semibold text-gray-500">Data dodania</th>
+                  <th className="px-4 py-2"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {[
+                  { autor: 'Jan Kowalski', rodzaj: 'Zmiana statusu', opis: 'W użyciu → Zablokowany', data: '29.03.2023, 10:23' },
+                  { autor: 'Michał Malinowski', rodzaj: 'Zmiana statusu', opis: 'Nowy → W użyciu', data: '29.03.2023, 10:15' },
+                  { autor: 'Piotr Nowak', rodzaj: 'Zmiana kodu QR', opis: '514488_1292 → 514489_109266', data: '02.06.2022, 14:04' },
+                  { autor: 'Adam Adamski', rodzaj: 'Zmiana statusu', opis: 'W użyciu → Nowy', data: '29.03.2021, 11:13' },
+                  { autor: 'Krzysztof Woźniak', rodzaj: 'Lista kontrolna wykonana', opis: 'Tak', data: '29.03.2021, 11:12' }
+                ].map((entry, idx) => (
+                  <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 text-gray-700 font-medium">{entry.autor}</td>
+                    <td className="px-4 py-3 text-gray-600">{entry.rodzaj}</td>
+                    <td className="px-4 py-3 text-gray-600">{entry.opis}</td>
+                    <td className="px-4 py-3 text-gray-500">{entry.data}</td>
+                    <td className="px-4 py-3 text-right">
+                      <Eye size={16} className="text-[#007bff] cursor-pointer inline" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex items-center justify-between text-[10px] text-gray-400 mt-2">
+            <span>Pokazywane 1 do 5 z 7 elementów (2 strony).</span>
+            <div className="flex items-center bg-[#f0f2f5] rounded overflow-hidden">
+                <button className="p-1 px-2 hover:bg-gray-200 text-gray-400"><ChevronsLeft size={12} /></button>
+                <button className="p-1 px-2 hover:bg-gray-200 text-gray-400"><ChevronLeft size={12} /></button>
+                <button className="px-3 py-1 bg-white text-[#007bff] font-bold border-x border-gray-100">1</button>
+                <button className="p-1 px-2 hover:bg-gray-200 text-gray-400"><ChevronRight size={12} /></button>
+                <button className="p-1 px-2 hover:bg-gray-200 text-gray-400"><ChevronsRight size={12} /></button>
+            </div>
           </div>
         </section>
       </div>
