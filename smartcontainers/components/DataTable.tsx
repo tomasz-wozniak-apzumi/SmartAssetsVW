@@ -178,6 +178,9 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
             <div className="flex items-center space-x-2">
                <button className={btnStyle}><Download size={14} className="mr-2" />KONTROLE - EKSPORT</button>
                <button className={btnStyle}><Download size={14} className="mr-2" />EKSPORTUJ DO CSV</button>
+               {currentAsset === 'Regały' && (
+                 <button onClick={() => setIsAddingContainer(true)} className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />NOWY NUMER REGAŁU</button>
+               )}
                <button className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />WCZYTAJ NUMER BIEŻĄCY</button>
             </div>
           );
