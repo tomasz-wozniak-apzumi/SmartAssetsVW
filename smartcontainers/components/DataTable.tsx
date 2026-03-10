@@ -18,6 +18,7 @@ interface DataTableProps {
 const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<Record<string, string>>({});
+  const [localContainers, setLocalContainers] = useState<ContainerData[]>(MOCK_CONTAINERS);
   const [selectedContainer, setSelectedContainer] = useState<ContainerData | null>(null);
   const [selectedCurrentNumber, setSelectedCurrentNumber] = useState<any | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
@@ -37,6 +38,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
     type: 'MANUAL',
     emails: ''
   });
+  const [numberError, setNumberError] = useState('');
 
   // Reset states when view changes
   useEffect(() => {
@@ -63,8 +65,38 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
 
   const handleSave = () => {
     if (isAddingContainer) {
-      console.log('Saving container:', newContainerData);
+      if (!newContainerData.number.trim()) return;
+
+      if (currentAsset === 'Regały') {
+        // Validation: R_Z1[_Z2...]_H44_1
+        const rackRegex = /^R(_[A-Za-z0-9]+)+_[A-Za-z0-9]+_[A-Za-z0-9]+$/;
+        if (!rackRegex.test(newContainerData.number)) {
+          setNumberError('Błędny format. Wymagany: R_Z1_H44_1 (R_Zakład_Hala_Numer, + opcjonalne zakłady)');
+          return;
+        }
+      }
+      setNumberError('');
+      
+      const newContainer: ContainerData = {
+        id: Math.random().toString(36).substr(2, 9),
+        assetType: currentAsset,
+        number: newContainerData.number,
+        name: newContainerData.name,
+        verificationPeriod: parseInt(newContainerData.verificationPeriod) || 0,
+        project: newContainerData.project,
+        type: newContainerData.type as 'MANUAL' | 'AUTOMATIC',
+        orderNumber: newContainerData.orderNumber,
+        prototypes: 0,
+        currentNumbers: 0,
+        total: 0
+      };
+
+      setLocalContainers(prev => [newContainer, ...prev]);
       setIsAddingContainer(false);
+      setNewContainerData({
+        number: '', name: '', orderNumber: '', project: '', verificationPeriod: '', type: 'MANUAL', emails: ''
+      });
+      setNumberError('');
     } else if (isAddingItem) {
       if (!newItemName.trim()) return;
       setIsAddingItem(false);
@@ -74,7 +106,17 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
 
   const hasActiveFilters = Object.values(filters).some(v => v !== '') || searchTerm !== '';
 
-  const assetContainers = useMemo(() => MOCK_CONTAINERS.filter(item => item.assetType === currentAsset), [currentAsset]);
+  const getAssetGenitive = (asset: AssetType) => {
+    switch(asset) {
+      case 'Kontenery': return 'kontenera';
+      case 'Trolleye': return 'trolleya';
+      case 'Regały': return 'regału';
+      case 'HSW': return 'HSW';
+      default: return 'elementu';
+    }
+  };
+
+  const assetContainers = useMemo(() => localContainers.filter(item => item.assetType === currentAsset), [currentAsset, localContainers]);
   const assetCurrentNumbers = useMemo(() => MOCK_CURRENT_NUMBERS.filter(item => item.assetType === currentAsset), [currentAsset]);
 
   const filteredContainers = useMemo(() => {
@@ -102,12 +144,15 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
 
   const renderHeader = () => {
     if (isAddingContainer || (isAddingItem && view === 'Zdarzenia')) {
-      const title = isAddingContainer ? 'Nowy numer kontenera' : 'Dodawanie zdarzenia';
+      const genitive = getAssetGenitive(currentAsset);
+      const title = isAddingContainer ? `Nowy numer ${genitive}` : 'Dodawanie zdarzenia';
       const Icon = isAddingContainer ? Box : History;
       return (
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-gray-800">
-             <Icon size={24} strokeWidth={1.5} />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-3 text-gray-800">
+             <div className="p-2 bg-gray-100 rounded text-gray-500">
+               <Package size={20} strokeWidth={1.5} />
+             </div>
              <h1 className="text-lg font-bold">{title}</h1>
           </div>
           <div className="flex items-center space-x-3">
@@ -125,7 +170,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
           return (
             <div className="flex items-center space-x-2">
                <button className={btnStyle}><Download size={14} className="mr-2" />EKSPORTUJ DO CSV</button>
-               <button onClick={() => setIsAddingContainer(true)} className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />NOWY NUMER KONTENERA</button>
+               <button onClick={() => setIsAddingContainer(true)} className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />NOWY NUMER {getAssetGenitive(currentAsset).toUpperCase()}</button>
             </div>
           );
         case 'Numery bieżące':
@@ -176,15 +221,16 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
   const renderTable = () => {
     switch (view) {
       case 'Dane podstawowe':
+        const gen = getAssetGenitive(currentAsset);
         return (
           <table className="min-w-full text-[13px] text-gray-700">
             <thead className="sticky top-0 bg-white z-10 border-b border-gray-100">
               <tr>
-                <th className="px-4 py-3 text-left font-semibold text-gray-500">Numer kontenera</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-500">Nazwa kontenera</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Numer {gen}</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Nazwa {gen}</th>
                 <th className="px-4 py-3 text-center font-semibold text-gray-500">Okres weryfikacji</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-500">Projekt</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-500">Typ kontenera</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Typ {gen}</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-500">Numer zamówienia</th>
                 <th className="px-4 py-3 text-center font-semibold text-gray-500">Prototypy</th>
                 <th className="px-4 py-3 text-center font-semibold text-gray-500">Numery bieżące</th>
@@ -361,9 +407,49 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
         )}
 
         {isAddingContainer && (
-           <div className="flex-1 py-4">
-             <h2 className="text-sm font-bold mb-4">Formularz dodawania (uproszczony w tym widoku)</h2>
-             <button onClick={() => setIsAddingContainer(false)} className="px-4 py-2 border border-gray-300 rounded">Powrót</button>
+           <div className="flex-1 py-4 bg-white overflow-y-auto w-full">
+             <div className="max-w-[1200px] w-full grid grid-cols-2 gap-x-12 gap-y-6">
+                <div className="space-y-6">
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Numer {getAssetGenitive(currentAsset)}</label>
+                     <input type="text" value={newContainerData.number} onChange={e => { setNewContainerData({...newContainerData, number: e.target.value}); setNumberError(''); }} className={`w-full px-3 py-2 border ${numberError ? 'border-red-500' : 'border-gray-200'} rounded text-sm focus:border-blue-500 focus:outline-none`} placeholder={`Numer ${getAssetGenitive(currentAsset)}`} />
+                     {numberError && <p className="text-[10px] text-red-500 mt-1">{numberError}</p>}
+                     {currentAsset === 'Regały' && !numberError && <p className="text-[10px] text-gray-400 mt-1">Format: R_Zakład1[_Zakład2...]_Hala_Numer (np. R_Z1_H44_1)</p>}
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Nazwa {getAssetGenitive(currentAsset)}</label>
+                     <input type="text" value={newContainerData.name} onChange={e => setNewContainerData({...newContainerData, name: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" placeholder={`Nazwa ${getAssetGenitive(currentAsset)}`} />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Numer zamówienia</label>
+                     <input type="text" value={newContainerData.orderNumber} onChange={e => setNewContainerData({...newContainerData, orderNumber: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" placeholder="Numer zamówienia" />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Projekt</label>
+                     <input type="text" value={newContainerData.project} onChange={e => setNewContainerData({...newContainerData, project: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" placeholder="Projekt" />
+                   </div>
+                </div>
+                <div className="space-y-6">
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Okres weryfikacji (dni)</label>
+                     <input type="number" value={newContainerData.verificationPeriod} onChange={e => setNewContainerData({...newContainerData, verificationPeriod: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" placeholder="Okres weryfikacji (dni)" />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Typ {getAssetGenitive(currentAsset)}</label>
+                     <div className="relative">
+                       <select value={newContainerData.type} onChange={e => setNewContainerData({...newContainerData, type: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none">
+                         <option value="MANUAL">Manualny</option>
+                         <option value="AUTOMATIC">Automatyczny</option>
+                       </select>
+                       <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
+                     </div>
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Wysyłaj mail o zmianie statusu do wskazanych adresów</label>
+                     <textarea value={newContainerData.emails} onChange={e => setNewContainerData({...newContainerData, emails: e.target.value})} rows={3} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" placeholder="Maile oddziel przecinkiem. Przykładowo: jacek@gmail.com, tomek@gmail.com"></textarea>
+                   </div>
+                </div>
+             </div>
            </div>
         )}
       </div>
