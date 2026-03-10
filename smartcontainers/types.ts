@@ -32,12 +32,14 @@ export interface CurrentNumberData {
 
 export interface LocationData {
   id: string;
+  assetType: AssetType;
   name: string;
   containerCount: number;
 }
 
 export interface ServiceData {
   id: string;
+  assetType: AssetType;
   containerNumber: string;
   currentNumber: string;
   containerName: string;
@@ -53,6 +55,7 @@ export interface ServiceData {
 
 export interface ChecklistData {
   id: string;
+  assetType: AssetType;
   name: string;
   createdDate: string;
   editDate: string;
@@ -62,6 +65,7 @@ export interface ChecklistData {
 
 export interface EventData {
   id: string;
+  assetType: AssetType;
   name: string;
 }
 

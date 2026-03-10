@@ -49,48 +49,48 @@ export const MOCK_CURRENT_NUMBERS: CurrentNumberData[] = [
 ];
 
 export const MOCK_LOCATIONS: LocationData[] = [
-  { id: '1', name: 'Hala Główna - Sektor A', containerCount: 45 },
-  { id: '2', name: 'Hala Główna - Sektor B', containerCount: 12 },
-  { id: '3', name: 'Magazyn Części Zamiennych', containerCount: 134 },
-  { id: '4', name: 'Gestamp Działkowców', containerCount: 56 },
-  { id: '5', name: 'Strefa Buforowa Wejściowa', containerCount: 8 },
-  { id: '6', name: 'Strefa Buforowa Wyjściowa', containerCount: 22 },
-  { id: '7', name: 'Linia Montażowa Silników', containerCount: 5 },
-  { id: '8', name: 'Plac Zewnętrzny Północ', containerCount: 110 },
-  { id: '9', name: 'VW Główny Oddział', containerCount: 78 },
-  { id: '10', name: 'Magazyn Kwarantanny', containerCount: 3 }
+  { id: '1', assetType: 'Kontenery', name: 'Hala Główna - Sektor A', containerCount: 45 },
+  { id: '2', assetType: 'Trolleye', name: 'Hala Główna - Sektor B', containerCount: 12 },
+  { id: '3', assetType: 'Regały', name: 'Magazyn Części Zamiennych', containerCount: 134 },
+  { id: '4', assetType: 'HSW', name: 'Gestamp Działkowców', containerCount: 56 },
+  { id: '5', assetType: 'Kontenery', name: 'Strefa Buforowa Wejściowa', containerCount: 8 },
+  { id: '6', assetType: 'Trolleye', name: 'Strefa Buforowa Wyjściowa', containerCount: 22 },
+  { id: '7', assetType: 'Regały', name: 'Linia Montażowa Silników', containerCount: 5 },
+  { id: '8', assetType: 'HSW', name: 'Plac Zewnętrzny Północ', containerCount: 110 },
+  { id: '9', assetType: 'Kontenery', name: 'VW Główny Oddział', containerCount: 78 },
+  { id: '10', assetType: 'Regały', name: 'Magazyn Kwarantanny', containerCount: 3 }
 ];
 
 export const MOCK_SERVICES: ServiceData[] = [
-  { id: '102', containerNumber: 'K-482', currentNumber: '195', containerName: 'Kontener siatkowy', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 17:48', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
-  { id: '103', containerNumber: 'K-105', currentNumber: '001', containerName: 'Kontener pełny z pokrywą', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 17:48', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
-  { id: '108', containerNumber: 'TR-219', currentNumber: '197', containerName: 'Trolley transportowy', status: 'Uszkodzony', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 23:36', reportedBy: 'Adam Nowak', executionDate: '-', owner: 'Logistyka', executor: '-', location: 'Magazyn A' },
-  { id: '109', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Wózek widłowy czołowy', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 23:36', reportedBy: 'Kamil Kowalski', executionDate: '-', owner: 'Utrzymanie Ruchu', executor: '-', location: 'Hala 3' },
-  { id: '118', containerNumber: 'REG-12', currentNumber: '001', containerName: 'Regał wysokiego składowania', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '25.09.2024, 09:33', reportedBy: 'Michał Wiśniewski', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
-  { id: '120', containerNumber: 'K-731', currentNumber: '240', containerName: 'Pojemnik KLT', status: 'Naprawiony', ticketStatus: 'Zamknięty', reportedDate: '25.09.2024, 09:35', reportedBy: 'Janusz Testowy', executionDate: '26.09.2024, 13:18', owner: 'VW', executor: 'Serwis Zewnętrzny', location: 'Clavey' },
-  { id: '121', containerNumber: 'TR-604', currentNumber: '1991', containerName: 'Trolley ciężki', status: 'Zablokowany', ticketStatus: 'Otwarty', reportedDate: '26.09.2024, 13:50', reportedBy: 'Kamil Kamil D...', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
-  { id: '126', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Paleciak z wagą', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '27.09.2024, 08:55', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Strefa buforowa' },
+  { id: '102', assetType: 'Kontenery', containerNumber: 'K-482', currentNumber: '195', containerName: 'Kontener siatkowy', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 17:48', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
+  { id: '103', assetType: 'Kontenery', containerNumber: 'K-105', currentNumber: '001', containerName: 'Kontener pełny z pokrywą', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 17:48', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
+  { id: '108', assetType: 'Trolleye', containerNumber: 'TR-219', currentNumber: '197', containerName: 'Trolley transportowy', status: 'Uszkodzony', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 23:36', reportedBy: 'Adam Nowak', executionDate: '-', owner: 'Logistyka', executor: '-', location: 'Magazyn A' },
+  { id: '109', assetType: 'HSW', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Wózek widłowy czołowy', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 23:36', reportedBy: 'Kamil Kowalski', executionDate: '-', owner: 'Utrzymanie Ruchu', executor: '-', location: 'Hala 3' },
+  { id: '118', assetType: 'Regały', containerNumber: 'REG-12', currentNumber: '001', containerName: 'Regał wysokiego składowania', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '25.09.2024, 09:33', reportedBy: 'Michał Wiśniewski', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
+  { id: '120', assetType: 'Kontenery', containerNumber: 'K-731', currentNumber: '240', containerName: 'Pojemnik KLT', status: 'Naprawiony', ticketStatus: 'Zamknięty', reportedDate: '25.09.2024, 09:35', reportedBy: 'Janusz Testowy', executionDate: '26.09.2024, 13:18', owner: 'VW', executor: 'Serwis Zewnętrzny', location: 'Clavey' },
+  { id: '121', assetType: 'Trolleye', containerNumber: 'TR-604', currentNumber: '1991', containerName: 'Trolley ciężki', status: 'Zablokowany', ticketStatus: 'Otwarty', reportedDate: '26.09.2024, 13:50', reportedBy: 'Kamil Kamil D...', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
+  { id: '126', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Paleciak z wagą', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '27.09.2024, 08:55', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Strefa buforowa' },
 ];
 
 export const MOCK_CHECKLISTS: ChecklistData[] = [
-  { id: '1', name: 'Hubert', createdDate: '25.02.2022 11:09', editDate: '04.03.2022 10:21', stepCount: 0, version: '-' },
-  { id: '2', name: 'Dawid - Testasd', createdDate: '25.02.2022 09:46', editDate: '28.02.2022 17:13', stepCount: 0, version: '-' },
-  { id: '3', name: 'Test', createdDate: '06.05.2022 15:11', editDate: '06.05.2022 15:11', stepCount: 0, version: '-' },
-  { id: '4', name: 'Piotr_test', createdDate: '17.05.2022 13:53', editDate: '17.05.2022 13:53', stepCount: 0, version: '-' },
-  { id: '5', name: 'Testowy', createdDate: '28.02.2022 11:41', editDate: '28.02.2022 11:41', stepCount: 0, version: '-' },
+  { id: '1', assetType: 'Kontenery', name: 'Hubert', createdDate: '25.02.2022 11:09', editDate: '04.03.2022 10:21', stepCount: 0, version: '-' },
+  { id: '2', assetType: 'Regały', name: 'Dawid - Testasd', createdDate: '25.02.2022 09:46', editDate: '28.02.2022 17:13', stepCount: 0, version: '-' },
+  { id: '3', assetType: 'Trolleye', name: 'Test', createdDate: '06.05.2022 15:11', editDate: '06.05.2022 15:11', stepCount: 0, version: '-' },
+  { id: '4', assetType: 'HSW', name: 'Piotr_test', createdDate: '17.05.2022 13:53', editDate: '17.05.2022 13:53', stepCount: 0, version: '-' },
+  { id: '5', assetType: 'Kontenery', name: 'Testowy', createdDate: '28.02.2022 11:41', editDate: '28.02.2022 11:41', stepCount: 0, version: '-' },
 ];
 
 export const MOCK_EVENTS: EventData[] = [
-  { id: '1', name: 'Awaria mechaniczna koła' },
-  { id: '2', name: 'Uszkodzenie poszycia bocznego' },
-  { id: '3', name: 'Błąd operatora przy załadunku' },
-  { id: '4', name: 'Zniszczenie etykiety RFID/QR' },
-  { id: '5', name: 'Pęknięcie spawu konstrukcyjnego' },
-  { id: '6', name: 'Zalanie cieczą eksploatacyjną' },
-  { id: '7', name: 'Zgubienie podczas transportu na zewnątrz' },
-  { id: '8', name: 'Odrzucenie podczas kontroli jakości' },
-  { id: '9', name: 'Korozja elementów mocujących' },
-  { id: '10', name: 'Kolizja z wózkiem widłowym HSW' },
+  { id: '1', assetType: 'Kontenery', name: 'Awaria mechaniczna koła' },
+  { id: '2', assetType: 'Trolleye', name: 'Uszkodzenie poszycia bocznego' },
+  { id: '3', assetType: 'Regały', name: 'Błąd operatora przy załadunku' },
+  { id: '4', assetType: 'HSW', name: 'Zniszczenie etykiety RFID/QR' },
+  { id: '5', assetType: 'Kontenery', name: 'Pęknięcie spawu konstrukcyjnego' },
+  { id: '6', assetType: 'Trolleye', name: 'Zalanie cieczą eksploatacyjną' },
+  { id: '7', assetType: 'Regały', name: 'Zgubienie podczas transportu na zewnątrz' },
+  { id: '8', assetType: 'HSW', name: 'Odrzucenie podczas kontroli jakości' },
+  { id: '9', assetType: 'Kontenery', name: 'Korozja elementów mocujących' },
+  { id: '10', assetType: 'HSW', name: 'Kolizja z wózkiem widłowym HSW' },
 ];
 
 export const MENU_ITEMS: MenuItem[] = [

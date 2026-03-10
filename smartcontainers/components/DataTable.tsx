@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Plus, Box, ClipboardCheck, LayoutGrid, ChevronDown, Settings, CheckSquare, History, X, Save, Folder, Upload, Package, Layers } from 'lucide-react';
 import { MOCK_CONTAINERS, MOCK_CURRENT_NUMBERS, MOCK_LOCATIONS, MOCK_SERVICES, MOCK_CHECKLISTS, MOCK_EVENTS } from '../constants';
-import { ViewType, ContainerData, LocationData, EventData } from '../types';
+import { ViewType, ContainerData, LocationData, EventData, CurrentNumberData, ServiceData, ChecklistData } from '../types';
 
 // New Components
 import FilterBar from './FilterBar';
@@ -19,8 +19,11 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [localContainers, setLocalContainers] = useState<ContainerData[]>(MOCK_CONTAINERS);
+  const [localCurrentNumbers, setLocalCurrentNumbers] = useState<CurrentNumberData[]>(MOCK_CURRENT_NUMBERS);
   const [localLocations, setLocalLocations] = useState<LocationData[]>(MOCK_LOCATIONS);
   const [localEvents, setLocalEvents] = useState<EventData[]>(MOCK_EVENTS);
+  const [localServices, setLocalServices] = useState<ServiceData[]>(MOCK_SERVICES);
+  const [localChecklists, setLocalChecklists] = useState<ChecklistData[]>(MOCK_CHECKLISTS);
   const [selectedContainer, setSelectedContainer] = useState<ContainerData | null>(null);
   const [selectedCurrentNumber, setSelectedCurrentNumber] = useState<any | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
@@ -72,15 +75,6 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
   const handleSave = () => {
     if (isAddingContainer) {
       if (!newContainerData.number.trim()) return;
-
-      if (currentAsset === 'Regały') {
-        // Validation: R_Z1[_Z2...]_H44_1
-        const rackRegex = /^R(_[A-Za-z0-9]+)+_[A-Za-z0-9]+_[A-Za-z0-9]+$/;
-        if (!rackRegex.test(newContainerData.number)) {
-          setNumberError('Błędny format. Wymagany: R_Z1_H44_1 (R_Zakład_Hala_Numer, + opcjonalne zakłady)');
-          return;
-        }
-      }
       setNumberError('');
       
       const newContainer: ContainerData = {
@@ -98,6 +92,24 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
       };
 
       setLocalContainers(prev => [newContainer, ...prev]);
+
+      const newCurrentNum: CurrentNumberData = {
+        id: Math.random().toString(36).substr(2, 9),
+        assetType: currentAsset,
+        containerNumber: newContainerData.number,
+        currentNumber: '001',
+        containerName: newContainerData.name,
+        status: 'W użyciu',
+        type: newContainerData.type === 'MANUAL' ? 'Manualny' : 'Automatyczny',
+        version: '1.0',
+        qrCode: `${newContainerData.number}_001`,
+        nextVerification: '-',
+        owner: 'Brak',
+        producer: 'Brak',
+        location: 'Brak'
+      };
+      setLocalCurrentNumbers(prev => [newCurrentNum, ...prev]);
+
       setIsAddingContainer(false);
       setNewContainerData({
         number: '', name: '', orderNumber: '', project: '', verificationPeriod: '', type: 'MANUAL', emails: ''
@@ -108,6 +120,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
       
       const newLoc: LocationData = {
         id: Math.random().toString(36).substr(2, 9),
+        assetType: currentAsset,
         name: newItemName,
         containerCount: 0
       };
@@ -119,6 +132,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
        
        const newEv: EventData = {
          id: Math.random().toString(36).substr(2, 9),
+         assetType: currentAsset,
          name: newItemName,
        };
        setLocalEvents(prev => [newEv, ...prev]);
@@ -144,7 +158,11 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
   };
 
   const assetContainers = useMemo(() => localContainers.filter(item => item.assetType === currentAsset), [currentAsset, localContainers]);
-  const assetCurrentNumbers = useMemo(() => MOCK_CURRENT_NUMBERS.filter(item => item.assetType === currentAsset), [currentAsset]);
+  const assetCurrentNumbers = useMemo(() => localCurrentNumbers.filter(item => item.assetType === currentAsset), [currentAsset, localCurrentNumbers]);
+  const assetLocations = useMemo(() => localLocations.filter(item => item.assetType === currentAsset), [currentAsset, localLocations]);
+  const assetEvents = useMemo(() => localEvents.filter(item => item.assetType === currentAsset), [currentAsset, localEvents]);
+  const assetServices = useMemo(() => localServices.filter(item => item.assetType === currentAsset), [currentAsset, localServices]);
+  const assetChecklists = useMemo(() => localChecklists.filter(item => item.assetType === currentAsset), [currentAsset, localChecklists]);
 
   const filteredContainers = useMemo(() => {
     return assetContainers.filter(item => {
@@ -366,18 +384,15 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
                 <td className="px-4 py-3 text-gray-300">-</td>
                 <td className="px-4 py-3 text-gray-300">-</td>
               </tr>
-              {[
-                { id: 'c1', name: `Procedura odbioru - ${currentAsset}`, createdAt: '29.09.2023 09:59', updatedAt: '29.09.2023 09:59', stepsCount: 5, version: 'v1.4' },
-                { id: 'c2', name: 'Codzienna inspekcja wizualna', createdAt: '23.05.2024 14:08', updatedAt: '23.05.2024 14:08', stepsCount: 8, version: 'v2.1' }
-              ].map((item) => (
+              {assetChecklists.map((item) => (
                 <tr key={item.id} className={`hover:bg-blue-50/50 cursor-pointer ${selectedCurrentNumber?.id === item.id ? 'bg-blue-50' : ''}`} onClick={() => setSelectedCurrentNumber(item)}>
                   <td className="px-4 py-3 flex items-center">
                     <span className="mr-3 text-emerald-500">☑</span>
                     {item.name}
                   </td>
-                  <td className="px-4 py-3 text-gray-500">{item.createdAt}</td>
-                  <td className="px-4 py-3 text-gray-500">{item.updatedAt}</td>
-                  <td className="px-4 py-3 text-gray-500">{item.stepsCount}</td>
+                  <td className="px-4 py-3 text-gray-500">{item.createdDate}</td>
+                  <td className="px-4 py-3 text-gray-500">{item.editDate}</td>
+                  <td className="px-4 py-3 text-gray-500">{item.stepCount}</td>
                   <td className="px-4 py-3">
                     <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-0.5 rounded font-bold">{item.version}</span>
                   </td>
@@ -396,7 +411,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {localLocations.map((item) => (
+              {assetLocations.map((item) => (
                 <tr key={item.id} className="hover:bg-blue-50/50 cursor-pointer">
                   <td className="px-4 py-3 font-medium text-gray-800">{item.name}</td>
                   <td className="px-4 py-3">{item.containerCount}</td>
@@ -414,7 +429,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {localEvents.map((item) => (
+              {assetEvents.map((item) => (
                 <tr key={item.id} className="hover:bg-blue-50/50 cursor-pointer">
                   <td className="px-4 py-3 font-medium text-gray-800">{item.name}</td>
                 </tr>
@@ -442,7 +457,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {MOCK_SERVICES.map((item) => (
+              {assetServices.map((item) => (
                 <tr key={item.id} className="hover:bg-blue-50/50 cursor-pointer">
                   <td className="px-4 py-3 text-gray-500">{item.id}</td>
                   <td className="px-4 py-3 font-medium text-[#007bff]">{item.containerNumber}</td>
