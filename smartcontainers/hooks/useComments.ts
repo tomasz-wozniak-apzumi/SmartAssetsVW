@@ -16,14 +16,16 @@ export function useComments(currentView: string) {
 
   const fetchComments = useCallback(async () => {
     try {
-      // In development environments without Vercel CLI, we might need a full URL if not using proxy
-      // Assuming we either use Vercel CLI or standard proxy in Vite
       const res = await fetch('/api/comments');
-      if (!res.ok) throw new Error('Failed to fetch comments');
+      if (!res.ok) throw new Error('API failed, falling back to local');
       const data = await res.json();
       setComments(data);
     } catch (err) {
-      console.error(err);
+      // Fallback lokalny
+      const localData = localStorage.getItem('mockComments');
+      if (localData) {
+        setComments(JSON.parse(localData));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -36,6 +38,12 @@ export function useComments(currentView: string) {
   }, [fetchComments]);
 
   const addComment = async (commentData: Omit<CommentData, 'id' | 'createdAt'>) => {
+    const newComment: CommentData = {
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      ...commentData
+    };
+
     try {
       const res = await fetch('/api/comments', {
         method: 'POST',
@@ -43,12 +51,18 @@ export function useComments(currentView: string) {
         body: JSON.stringify(commentData),
       });
       if (res.ok) {
-        const newComment = await res.json();
-        setComments(prev => [...prev, newComment]);
-        return newComment;
+        const savedComment = await res.json();
+        setComments(prev => [...prev, savedComment]);
+        return savedComment;
+      } else {
+        throw new Error('Fallback to local handling');
       }
     } catch (err) {
-      console.error('Failed to add comment', err);
+      // Fallback lokalny
+      const currentComments = [...comments, newComment];
+      localStorage.setItem('mockComments', JSON.stringify(currentComments));
+      setComments(currentComments);
+      return newComment;
     }
   };
 
@@ -57,9 +71,14 @@ export function useComments(currentView: string) {
       const res = await fetch(`/api/comments?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         setComments(prev => prev.filter(c => c.id !== id));
+      } else {
+         throw new Error('Fallback');
       }
     } catch (err) {
-      console.error('Failed to delete comment', err);
+      // Fallback lokalny
+      const newComments = comments.filter(c => c.id !== id);
+      localStorage.setItem('mockComments', JSON.stringify(newComments));
+      setComments(newComments);
     }
   };
 
