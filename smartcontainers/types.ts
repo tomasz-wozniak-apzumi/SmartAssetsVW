@@ -12,6 +12,7 @@ export interface ContainerData {
   prototypes: number;
   currentNumbers: number;
   total: number;
+  zaklad: ZakladType;
 }
 
 export interface CurrentNumberData {
@@ -28,6 +29,7 @@ export interface CurrentNumberData {
   owner: string;
   producer: string;
   location: string;
+  zaklad: ZakladType;
 }
 
 export interface LocationData {
@@ -35,6 +37,7 @@ export interface LocationData {
   assetType: AssetType;
   name: string;
   containerCount: number;
+  zaklad: ZakladType;
 }
 
 export interface ServiceData {
@@ -51,6 +54,7 @@ export interface ServiceData {
   owner: string;
   executor: string;
   location: string;
+  zaklad: ZakladType;
 }
 
 export interface ChecklistData {
@@ -61,12 +65,14 @@ export interface ChecklistData {
   editDate: string;
   stepCount: number;
   version: string;
+  zaklad: ZakladType;
 }
 
 export interface EventData {
   id: string;
   assetType: AssetType;
   name: string;
+  zaklad: ZakladType;
 }
 
 export interface MenuItem {
@@ -80,3 +86,5 @@ export interface MenuItem {
 export type ViewType = 'Dane podstawowe' | 'Numery bieżące' | 'Lokalizacje' | 'Serwis' | 'Checklisty' | 'Zdarzenia';
 
 export type AssetType = 'Kontenery' | 'Trolleye' | 'Regały' | 'HSW';
+
+export type ZakladType = 'Zakład Września' | 'Zakład Poznań';

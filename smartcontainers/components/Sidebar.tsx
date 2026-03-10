@@ -1,15 +1,17 @@
 import React from 'react';
 import { MENU_ITEMS, ASSET_CONFIG } from '../constants';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { ViewType, AssetType } from '../types';
+import { ViewType, AssetType, ZakladType } from '../types';
 
 interface SidebarProps {
   currentView: ViewType;
   currentAsset: AssetType;
+  currentZaklad: ZakladType;
   onViewChange: (view: ViewType) => void;
+  onZakladChange: (zaklad: ZakladType) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ currentView, currentAsset, onViewChange }) => {
+const Sidebar: React.FC<SidebarProps> = ({ currentView, currentAsset, currentZaklad, onViewChange, onZakladChange }) => {
   const isAssetyView = ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'].includes(currentView);
 
   return (
@@ -46,10 +48,17 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, currentAsset, onViewChan
       </div>
 
       {/* Project Selector */}
-      <div className="px-4 mb-4">
-        <div className="flex items-center justify-between p-2 border border-gray-200 rounded bg-white text-xs text-gray-700">
-           <span>NGK demo</span>
-           <ChevronDown size={12} />
+      <div className="px-4 mb-4 relative z-20">
+        <select 
+          value={currentZaklad}
+          onChange={(e) => onZakladChange(e.target.value as ZakladType)}
+          className="w-full flex items-center justify-between p-2 pl-3 pr-8 border border-gray-200 rounded bg-white text-xs font-semibold text-[#007bff] focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer appearance-none outline-none shadow-sm transition-colors hover:bg-gray-50 drop-shadow-sm"
+        >
+           <option value="Zakład Września">Zakład Września</option>
+           <option value="Zakład Poznań">Zakład Poznań</option>
+        </select>
+        <div className="pointer-events-none absolute inset-y-0 right-6 flex items-center px-1 text-gray-400">
+           <ChevronDown size={14} className="text-[#007bff]"/>
         </div>
       </div>
 

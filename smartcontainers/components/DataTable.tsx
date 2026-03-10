@@ -1,21 +1,20 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Plus, Box, ClipboardCheck, LayoutGrid, ChevronDown, Settings, CheckSquare, History, X, Save, Folder, Upload, Package, Layers } from 'lucide-react';
 import { MOCK_CONTAINERS, MOCK_CURRENT_NUMBERS, MOCK_LOCATIONS, MOCK_SERVICES, MOCK_CHECKLISTS, MOCK_EVENTS } from '../constants';
-import { ViewType, ContainerData, LocationData, EventData, CurrentNumberData, ServiceData, ChecklistData } from '../types';
+import { ViewType, ContainerData, LocationData, EventData, CurrentNumberData, ServiceData, ChecklistData, AssetType, ZakladType } from '../types';
 
-// New Components
 import FilterBar from './FilterBar';
 import TableSidebar from './TableSidebar';
 import CurrentNumberPreview from './CurrentNumberPreview';
 import ChecklistEditor from './ChecklistEditor';
-import { AssetType } from '../types';
 
 interface DataTableProps {
   view: ViewType;
   currentAsset: AssetType;
+  currentZaklad: ZakladType;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
+const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [localContainers, setLocalContainers] = useState<ContainerData[]>(MOCK_CONTAINERS);
@@ -88,7 +87,8 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
         orderNumber: newContainerData.orderNumber,
         prototypes: 0,
         currentNumbers: 0,
-        total: 0
+        total: 0,
+        zaklad: currentZaklad
       };
 
       setLocalContainers(prev => [newContainer, ...prev]);
@@ -106,7 +106,8 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
         nextVerification: '-',
         owner: 'Brak',
         producer: 'Brak',
-        location: 'Brak'
+        location: 'Brak',
+        zaklad: currentZaklad
       };
       setLocalCurrentNumbers(prev => [newCurrentNum, ...prev]);
 
@@ -122,7 +123,8 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
         id: Math.random().toString(36).substr(2, 9),
         assetType: currentAsset,
         name: newItemName,
-        containerCount: 0
+        containerCount: 0,
+        zaklad: currentZaklad
       };
       setLocalLocations(prev => [newLoc, ...prev]);
       setIsAddingLocation(false);
@@ -134,6 +136,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
          id: Math.random().toString(36).substr(2, 9),
          assetType: currentAsset,
          name: newItemName,
+         zaklad: currentZaklad
        };
        setLocalEvents(prev => [newEv, ...prev]);
        setIsAddingEvent(false);
@@ -157,12 +160,12 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
     }
   };
 
-  const assetContainers = useMemo(() => localContainers.filter(item => item.assetType === currentAsset), [currentAsset, localContainers]);
-  const assetCurrentNumbers = useMemo(() => localCurrentNumbers.filter(item => item.assetType === currentAsset), [currentAsset, localCurrentNumbers]);
-  const assetLocations = useMemo(() => localLocations.filter(item => item.assetType === currentAsset), [currentAsset, localLocations]);
-  const assetEvents = useMemo(() => localEvents.filter(item => item.assetType === currentAsset), [currentAsset, localEvents]);
-  const assetServices = useMemo(() => localServices.filter(item => item.assetType === currentAsset), [currentAsset, localServices]);
-  const assetChecklists = useMemo(() => localChecklists.filter(item => item.assetType === currentAsset), [currentAsset, localChecklists]);
+  const assetContainers = useMemo(() => localContainers.filter(item => item.assetType === currentAsset && item.zaklad === currentZaklad), [currentAsset, currentZaklad, localContainers]);
+  const assetCurrentNumbers = useMemo(() => localCurrentNumbers.filter(item => item.assetType === currentAsset && item.zaklad === currentZaklad), [currentAsset, currentZaklad, localCurrentNumbers]);
+  const assetLocations = useMemo(() => localLocations.filter(item => item.assetType === currentAsset && item.zaklad === currentZaklad), [currentAsset, currentZaklad, localLocations]);
+  const assetEvents = useMemo(() => localEvents.filter(item => item.assetType === currentAsset && item.zaklad === currentZaklad), [currentAsset, currentZaklad, localEvents]);
+  const assetServices = useMemo(() => localServices.filter(item => item.assetType === currentAsset && item.zaklad === currentZaklad), [currentAsset, currentZaklad, localServices]);
+  const assetChecklists = useMemo(() => localChecklists.filter(item => item.assetType === currentAsset && item.zaklad === currentZaklad), [currentAsset, currentZaklad, localChecklists]);
 
   const filteredContainers = useMemo(() => {
     return assetContainers.filter(item => {
@@ -275,7 +278,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
              {assetIconMap[currentAsset] || <Package size={24} strokeWidth={1.5} />}
            </div>
            <div className="flex flex-col">
-              <h1 className="text-2xl font-bold text-gray-800 leading-tight mb-1">{currentAsset}</h1>
+              <h1 className="text-2xl font-bold text-gray-800 leading-tight mb-1">{currentZaklad} / {currentAsset}</h1>
               <span className="text-[13px] font-semibold text-gray-500">{view}</span>
            </div>
         </div>

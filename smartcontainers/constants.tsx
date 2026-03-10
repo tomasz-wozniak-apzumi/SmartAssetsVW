@@ -22,75 +22,75 @@ export const ASSET_CONFIG: Record<AssetType, { defaultModule: ViewType, modules:
 
 export const MOCK_CONTAINERS: ContainerData[] = [
   // Kontenery
-  { id: '1', assetType: 'Kontenery', number: 'K-482', name: 'Kontener siatkowy typ A', verificationPeriod: 180, project: 'Precision Parts A', type: 'AUTOMATIC', orderNumber: 'ORD-99122', prototypes: 2, currentNumbers: 150, total: 152 },
-  { id: '2', assetType: 'Kontenery', number: 'K-105', name: 'Kontener pełny z pokrywą', verificationPeriod: 90, project: 'Engine Block Line', type: 'MANUAL', orderNumber: 'PO-77231', prototypes: 0, currentNumbers: 85, total: 85 },
-  { id: '3', assetType: 'Kontenery', number: 'K-731', name: 'Pojemnik KLT 600x400', verificationPeriod: 365, project: 'Raw Casting S3', type: 'AUTOMATIC', orderNumber: 'ORD-1123', prototypes: 0, currentNumbers: 240, total: 240 },
+  { id: '1', assetType: 'Kontenery', number: 'K-482', name: 'Kontener siatkowy typ A', verificationPeriod: 180, project: 'Precision Parts A', type: 'AUTOMATIC', orderNumber: 'ORD-99122', prototypes: 2, currentNumbers: 150, total: 152, zaklad: 'Zakład Września' },
+  { id: '2', assetType: 'Kontenery', number: 'K-105', name: 'Kontener pełny z pokrywą', verificationPeriod: 90, project: 'Engine Block Line', type: 'MANUAL', orderNumber: 'PO-77231', prototypes: 0, currentNumbers: 85, total: 85, zaklad: 'Zakład Poznań' },
+  { id: '3', assetType: 'Kontenery', number: 'K-731', name: 'Pojemnik KLT 600x400', verificationPeriod: 365, project: 'Raw Casting S3', type: 'AUTOMATIC', orderNumber: 'ORD-1123', prototypes: 0, currentNumbers: 240, total: 240, zaklad: 'Zakład Września' },
   // Trolleye
-  { id: '4', assetType: 'Trolleye', number: 'TR-219', name: 'Trolley transportowy lekki', verificationPeriod: 30, project: 'Assembly Line 1', type: 'MANUAL', orderNumber: 'TX-55091', prototypes: 1, currentNumbers: 12, total: 13 },
-  { id: '5', assetType: 'Trolleye', number: 'TR-604', name: 'Trolley ciężki platformowy', verificationPeriod: 180, project: 'SteelForge Alpha', type: 'MANUAL', orderNumber: 'ORD-8822', prototypes: 0, currentNumbers: 110, total: 110 },
+  { id: '4', assetType: 'Trolleye', number: 'TR-219', name: 'Trolley transportowy lekki', verificationPeriod: 30, project: 'Assembly Line 1', type: 'MANUAL', orderNumber: 'TX-55091', prototypes: 1, currentNumbers: 12, total: 13, zaklad: 'Zakład Poznań' },
+  { id: '5', assetType: 'Trolleye', number: 'TR-604', name: 'Trolley ciężki platformowy', verificationPeriod: 180, project: 'SteelForge Alpha', type: 'MANUAL', orderNumber: 'ORD-8822', prototypes: 0, currentNumbers: 110, total: 110, zaklad: 'Zakład Września' },
   // HSW
-  { id: '6', assetType: 'HSW', number: 'HSW-882', name: 'Wózek widłowy czołowy', verificationPeriod: 120, project: 'Magazyn Główny', type: 'AUTOMATIC', orderNumber: 'PO-44512', prototypes: 0, currentNumbers: 45, total: 45 },
-  { id: '7', assetType: 'HSW', number: 'HSW-102', name: 'Paleciak z wagą', verificationPeriod: 365, project: 'Logistyka', type: 'MANUAL', orderNumber: 'PO-12344', prototypes: 0, currentNumbers: 20, total: 20 },
+  { id: '6', assetType: 'HSW', number: 'HSW-882', name: 'Wózek widłowy czołowy', verificationPeriod: 120, project: 'Magazyn Główny', type: 'AUTOMATIC', orderNumber: 'PO-44512', prototypes: 0, currentNumbers: 45, total: 45, zaklad: 'Zakład Września' },
+  { id: '7', assetType: 'HSW', number: 'HSW-102', name: 'Paleciak z wagą', verificationPeriod: 365, project: 'Logistyka', type: 'MANUAL', orderNumber: 'PO-12344', prototypes: 0, currentNumbers: 20, total: 20, zaklad: 'Zakład Poznań' },
 ];
 
 export const MOCK_CURRENT_NUMBERS: CurrentNumberData[] = [
   // Kontenery
-  { id: '1', assetType: 'Kontenery', containerNumber: 'K-482', currentNumber: '195', containerName: 'Kontener siatkowy typ A', status: 'Warunkowo dopuszczony', type: 'Manualny', version: '1', qrCode: 'K482_1096', nextVerification: '18.02.2026', owner: 'Logistyka Wewnętrzna', producer: 'VW-AO', location: 'Clavey' },
-  { id: '2', assetType: 'Kontenery', containerNumber: 'K-105', currentNumber: '001', containerName: 'Kontener pełny z pokrywą', status: 'W użyciu', type: 'Manualny', version: '1013', qrCode: 'K105_001', nextVerification: '27.08.2025', owner: 'VW', producer: 'Stal-bud', location: 'Gestamp Działkowców' },
+  { id: '1', assetType: 'Kontenery', containerNumber: 'K-482', currentNumber: '195', containerName: 'Kontener siatkowy typ A', status: 'Warunkowo dopuszczony', type: 'Manualny', version: '1', qrCode: 'K482_1096', nextVerification: '18.02.2026', owner: 'Logistyka Wewnętrzna', producer: 'VW-AO', location: 'Clavey', zaklad: 'Zakład Września' },
+  { id: '2', assetType: 'Kontenery', containerNumber: 'K-105', currentNumber: '001', containerName: 'Kontener pełny z pokrywą', status: 'W użyciu', type: 'Manualny', version: '1013', qrCode: 'K105_001', nextVerification: '27.08.2025', owner: 'VW', producer: 'Stal-bud', location: 'Gestamp Działkowców', zaklad: 'Zakład Poznań' },
   // Trolleye
-  { id: '3', assetType: 'Trolleye', containerNumber: 'TR-219', currentNumber: '197', containerName: 'Trolley transportowy lekki', status: 'Prototyp', type: 'Automatyczny', version: '0', qrCode: 'TR219_40', nextVerification: '13.01.2025', owner: 'Inżynieria', producer: 'Troll-Pol', location: 'Gestamp Działkowców' },
-  { id: '4', assetType: 'Trolleye', containerNumber: 'TR-604', currentNumber: '1991', containerName: 'Trolley ciężki platformowy', status: 'Zablokowany', type: 'Automatyczny', version: '0', qrCode: 'TR604_1004', nextVerification: '23.01.2025', owner: 'Utrzymanie Ruchu', producer: 'Troll-Pol', location: 'Gestamp Działkowców' },
+  { id: '3', assetType: 'Trolleye', containerNumber: 'TR-219', currentNumber: '197', containerName: 'Trolley transportowy lekki', status: 'Prototyp', type: 'Automatyczny', version: '0', qrCode: 'TR219_40', nextVerification: '13.01.2025', owner: 'Inżynieria', producer: 'Troll-Pol', location: 'Gestamp Działkowców', zaklad: 'Zakład Września' },
+  { id: '4', assetType: 'Trolleye', containerNumber: 'TR-604', currentNumber: '1991', containerName: 'Trolley ciężki platformowy', status: 'Zablokowany', type: 'Automatyczny', version: '0', qrCode: 'TR604_1004', nextVerification: '23.01.2025', owner: 'Utrzymanie Ruchu', producer: 'Troll-Pol', location: 'Gestamp Działkowców', zaklad: 'Zakład Poznań' },
   // Regały 
-  { id: '5', assetType: 'Regały', containerNumber: 'REG-12', currentNumber: '001', containerName: 'Regał wysokiego składowania', status: 'W użyciu', type: 'Manualny', version: '1', qrCode: 'REG12_01', nextVerification: '10.12.2024', owner: 'Logistyka', producer: 'Regal-System', location: 'Magazyn A' },
-  { id: '6', assetType: 'Regały', containerNumber: 'REG-14', currentNumber: '002', containerName: 'Regał paletowy rzędowy', status: 'W użyciu', type: 'Automatyczny', version: '2', qrCode: 'REG14_02', nextVerification: '15.11.2025', owner: 'Logistyka', producer: 'Regal-System', location: 'Magazyn B' },
+  { id: '5', assetType: 'Regały', containerNumber: 'REG-12', currentNumber: '001', containerName: 'Regał wysokiego składowania', status: 'W użyciu', type: 'Manualny', version: '1', qrCode: 'REG12_01', nextVerification: '10.12.2024', owner: 'Logistyka', producer: 'Regal-System', location: 'Magazyn A', zaklad: 'Zakład Poznań' },
+  { id: '6', assetType: 'Regały', containerNumber: 'REG-14', currentNumber: '002', containerName: 'Regał paletowy rzędowy', status: 'W użyciu', type: 'Automatyczny', version: '2', qrCode: 'REG14_02', nextVerification: '15.11.2025', owner: 'Logistyka', producer: 'Regal-System', location: 'Magazyn B', zaklad: 'Zakład Września' },
   // HSW
-  { id: '7', assetType: 'HSW', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Wózek widłowy czołowy', status: 'W użyciu', type: 'Automatyczny', version: '1.2', qrCode: 'HSW882_23', nextVerification: '05.05.2025', owner: 'Utrzymanie Ruchu', producer: 'Toyota', location: 'Hala 3' },
-  { id: '8', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Paleciak z wagą', status: 'Uszkodzony', type: 'Manualny', version: '1.0', qrCode: 'HSW102_04', nextVerification: '01.09.2024', owner: 'Magazyn Wewnętrzny', producer: 'Mag-Tech', location: 'Strefa buforowa' },
+  { id: '7', assetType: 'HSW', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Wózek widłowy czołowy', status: 'W użyciu', type: 'Automatyczny', version: '1.2', qrCode: 'HSW882_23', nextVerification: '05.05.2025', owner: 'Utrzymanie Ruchu', producer: 'Toyota', location: 'Hala 3', zaklad: 'Zakład Września' },
+  { id: '8', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Paleciak z wagą', status: 'Uszkodzony', type: 'Manualny', version: '1.0', qrCode: 'HSW102_04', nextVerification: '01.09.2024', owner: 'Magazyn Wewnętrzny', producer: 'Mag-Tech', location: 'Strefa buforowa', zaklad: 'Zakład Poznań' },
 ];
 
 export const MOCK_LOCATIONS: LocationData[] = [
-  { id: '1', assetType: 'Kontenery', name: 'Hala Główna - Sektor A', containerCount: 45 },
-  { id: '2', assetType: 'Trolleye', name: 'Hala Główna - Sektor B', containerCount: 12 },
-  { id: '3', assetType: 'Regały', name: 'Magazyn Części Zamiennych', containerCount: 134 },
-  { id: '4', assetType: 'HSW', name: 'Gestamp Działkowców', containerCount: 56 },
-  { id: '5', assetType: 'Kontenery', name: 'Strefa Buforowa Wejściowa', containerCount: 8 },
-  { id: '6', assetType: 'Trolleye', name: 'Strefa Buforowa Wyjściowa', containerCount: 22 },
-  { id: '7', assetType: 'Regały', name: 'Linia Montażowa Silników', containerCount: 5 },
-  { id: '8', assetType: 'HSW', name: 'Plac Zewnętrzny Północ', containerCount: 110 },
-  { id: '9', assetType: 'Kontenery', name: 'VW Główny Oddział', containerCount: 78 },
-  { id: '10', assetType: 'Regały', name: 'Magazyn Kwarantanny', containerCount: 3 }
+  { id: '1', assetType: 'Kontenery', name: 'Hala Główna - Sektor A', containerCount: 45, zaklad: 'Zakład Września' },
+  { id: '2', assetType: 'Trolleye', name: 'Hala Główna - Sektor B', containerCount: 12, zaklad: 'Zakład Poznań' },
+  { id: '3', assetType: 'Regały', name: 'Magazyn Części Zamiennych', containerCount: 134, zaklad: 'Zakład Września' },
+  { id: '4', assetType: 'HSW', name: 'Gestamp Działkowców', containerCount: 56, zaklad: 'Zakład Poznań' },
+  { id: '5', assetType: 'Kontenery', name: 'Strefa Buforowa Wejściowa', containerCount: 8, zaklad: 'Zakład Września' },
+  { id: '6', assetType: 'Trolleye', name: 'Strefa Buforowa Wyjściowa', containerCount: 22, zaklad: 'Zakład Poznań' },
+  { id: '7', assetType: 'Regały', name: 'Linia Montażowa Silników', containerCount: 5, zaklad: 'Zakład Poznań' },
+  { id: '8', assetType: 'HSW', name: 'Plac Zewnętrzny Północ', containerCount: 110, zaklad: 'Zakład Września' },
+  { id: '9', assetType: 'Kontenery', name: 'VW Główny Oddział', containerCount: 78, zaklad: 'Zakład Poznań' },
+  { id: '10', assetType: 'Regały', name: 'Magazyn Kwarantanny', containerCount: 3, zaklad: 'Zakład Września' }
 ];
 
 export const MOCK_SERVICES: ServiceData[] = [
-  { id: '102', assetType: 'Kontenery', containerNumber: 'K-482', currentNumber: '195', containerName: 'Kontener siatkowy', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 17:48', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
-  { id: '103', assetType: 'Kontenery', containerNumber: 'K-105', currentNumber: '001', containerName: 'Kontener pełny z pokrywą', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 17:48', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
-  { id: '108', assetType: 'Trolleye', containerNumber: 'TR-219', currentNumber: '197', containerName: 'Trolley transportowy', status: 'Uszkodzony', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 23:36', reportedBy: 'Adam Nowak', executionDate: '-', owner: 'Logistyka', executor: '-', location: 'Magazyn A' },
-  { id: '109', assetType: 'HSW', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Wózek widłowy czołowy', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 23:36', reportedBy: 'Kamil Kowalski', executionDate: '-', owner: 'Utrzymanie Ruchu', executor: '-', location: 'Hala 3' },
-  { id: '118', assetType: 'Regały', containerNumber: 'REG-12', currentNumber: '001', containerName: 'Regał wysokiego składowania', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '25.09.2024, 09:33', reportedBy: 'Michał Wiśniewski', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
-  { id: '120', assetType: 'Kontenery', containerNumber: 'K-731', currentNumber: '240', containerName: 'Pojemnik KLT', status: 'Naprawiony', ticketStatus: 'Zamknięty', reportedDate: '25.09.2024, 09:35', reportedBy: 'Janusz Testowy', executionDate: '26.09.2024, 13:18', owner: 'VW', executor: 'Serwis Zewnętrzny', location: 'Clavey' },
-  { id: '121', assetType: 'Trolleye', containerNumber: 'TR-604', currentNumber: '1991', containerName: 'Trolley ciężki', status: 'Zablokowany', ticketStatus: 'Otwarty', reportedDate: '26.09.2024, 13:50', reportedBy: 'Kamil Kamil D...', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców' },
-  { id: '126', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Paleciak z wagą', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '27.09.2024, 08:55', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Strefa buforowa' },
+  { id: '102', assetType: 'Kontenery', containerNumber: 'K-482', currentNumber: '195', containerName: 'Kontener siatkowy', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 17:48', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców', zaklad: 'Zakład Poznań' },
+  { id: '103', assetType: 'Kontenery', containerNumber: 'K-105', currentNumber: '001', containerName: 'Kontener pełny z pokrywą', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 17:48', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców', zaklad: 'Zakład Września' },
+  { id: '108', assetType: 'Trolleye', containerNumber: 'TR-219', currentNumber: '197', containerName: 'Trolley transportowy', status: 'Uszkodzony', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 23:36', reportedBy: 'Adam Nowak', executionDate: '-', owner: 'Logistyka', executor: '-', location: 'Magazyn A', zaklad: 'Zakład Września' },
+  { id: '109', assetType: 'HSW', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Wózek widłowy czołowy', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '24.09.2024, 23:36', reportedBy: 'Kamil Kowalski', executionDate: '-', owner: 'Utrzymanie Ruchu', executor: '-', location: 'Hala 3', zaklad: 'Zakład Poznań' },
+  { id: '118', assetType: 'Regały', containerNumber: 'REG-12', currentNumber: '001', containerName: 'Regał wysokiego składowania', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '25.09.2024, 09:33', reportedBy: 'Michał Wiśniewski', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców', zaklad: 'Zakład Września' },
+  { id: '120', assetType: 'Kontenery', containerNumber: 'K-731', currentNumber: '240', containerName: 'Pojemnik KLT', status: 'Naprawiony', ticketStatus: 'Zamknięty', reportedDate: '25.09.2024, 09:35', reportedBy: 'Janusz Testowy', executionDate: '26.09.2024, 13:18', owner: 'VW', executor: 'Serwis Zewnętrzny', location: 'Clavey', zaklad: 'Zakład Poznań' },
+  { id: '121', assetType: 'Trolleye', containerNumber: 'TR-604', currentNumber: '1991', containerName: 'Trolley ciężki', status: 'Zablokowany', ticketStatus: 'Otwarty', reportedDate: '26.09.2024, 13:50', reportedBy: 'Kamil Kamil D...', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców', zaklad: 'Zakład Poznań' },
+  { id: '126', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Paleciak z wagą', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '27.09.2024, 08:55', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Strefa buforowa', zaklad: 'Zakład Września' },
 ];
 
 export const MOCK_CHECKLISTS: ChecklistData[] = [
-  { id: '1', assetType: 'Kontenery', name: 'Hubert', createdDate: '25.02.2022 11:09', editDate: '04.03.2022 10:21', stepCount: 0, version: '-' },
-  { id: '2', assetType: 'Regały', name: 'Dawid - Testasd', createdDate: '25.02.2022 09:46', editDate: '28.02.2022 17:13', stepCount: 0, version: '-' },
-  { id: '3', assetType: 'Trolleye', name: 'Test', createdDate: '06.05.2022 15:11', editDate: '06.05.2022 15:11', stepCount: 0, version: '-' },
-  { id: '4', assetType: 'HSW', name: 'Piotr_test', createdDate: '17.05.2022 13:53', editDate: '17.05.2022 13:53', stepCount: 0, version: '-' },
-  { id: '5', assetType: 'Kontenery', name: 'Testowy', createdDate: '28.02.2022 11:41', editDate: '28.02.2022 11:41', stepCount: 0, version: '-' },
+  { id: '1', assetType: 'Kontenery', name: 'Hubert', createdDate: '25.02.2022 11:09', editDate: '04.03.2022 10:21', stepCount: 0, version: '-', zaklad: 'Zakład Września' },
+  { id: '2', assetType: 'Regały', name: 'Dawid - Testasd', createdDate: '25.02.2022 09:46', editDate: '28.02.2022 17:13', stepCount: 0, version: '-', zaklad: 'Zakład Poznań' },
+  { id: '3', assetType: 'Trolleye', name: 'Test', createdDate: '06.05.2022 15:11', editDate: '06.05.2022 15:11', stepCount: 0, version: '-', zaklad: 'Zakład Ojej' as any }, // Poprawione
+  { id: '4', assetType: 'HSW', name: 'Piotr_test', createdDate: '17.05.2022 13:53', editDate: '17.05.2022 13:53', stepCount: 0, version: '-', zaklad: 'Zakład Poznań' },
+  { id: '5', assetType: 'Kontenery', name: 'Testowy', createdDate: '28.02.2022 11:41', editDate: '28.02.2022 11:41', stepCount: 0, version: '-', zaklad: 'Zakład Września' },
 ];
 
 export const MOCK_EVENTS: EventData[] = [
-  { id: '1', assetType: 'Kontenery', name: 'Awaria mechaniczna koła' },
-  { id: '2', assetType: 'Trolleye', name: 'Uszkodzenie poszycia bocznego' },
-  { id: '3', assetType: 'Regały', name: 'Błąd operatora przy załadunku' },
-  { id: '4', assetType: 'HSW', name: 'Zniszczenie etykiety RFID/QR' },
-  { id: '5', assetType: 'Kontenery', name: 'Pęknięcie spawu konstrukcyjnego' },
-  { id: '6', assetType: 'Trolleye', name: 'Zalanie cieczą eksploatacyjną' },
-  { id: '7', assetType: 'Regały', name: 'Zgubienie podczas transportu na zewnątrz' },
-  { id: '8', assetType: 'HSW', name: 'Odrzucenie podczas kontroli jakości' },
-  { id: '9', assetType: 'Kontenery', name: 'Korozja elementów mocujących' },
-  { id: '10', assetType: 'HSW', name: 'Kolizja z wózkiem widłowym HSW' },
+  { id: '1', assetType: 'Kontenery', name: 'Awaria mechaniczna koła', zaklad: 'Zakład Września' },
+  { id: '2', assetType: 'Trolleye', name: 'Uszkodzenie poszycia bocznego', zaklad: 'Zakład Poznań' },
+  { id: '3', assetType: 'Regały', name: 'Błąd operatora przy załadunku', zaklad: 'Zakład Września' },
+  { id: '4', assetType: 'HSW', name: 'Zniszczenie etykiety RFID/QR', zaklad: 'Zakład Poznań' },
+  { id: '5', assetType: 'Kontenery', name: 'Pęknięcie spawu konstrukcyjnego', zaklad: 'Zakład Września' },
+  { id: '6', assetType: 'Trolleye', name: 'Zalanie cieczą eksploatacyjną', zaklad: 'Zakład Poznań' },
+  { id: '7', assetType: 'Regały', name: 'Zgubienie podczas transportu na zewnątrz', zaklad: 'Zakład Poznań' },
+  { id: '8', assetType: 'HSW', name: 'Odrzucenie podczas kontroli jakości', zaklad: 'Zakład Września' },
+  { id: '9', assetType: 'Kontenery', name: 'Korozja elementów mocujących', zaklad: 'Zakład Września' },
+  { id: '10', assetType: 'HSW', name: 'Kolizja z wózkiem widłowym HSW', zaklad: 'Zakład Poznań' },
 ];
 
 export const MENU_ITEMS: MenuItem[] = [

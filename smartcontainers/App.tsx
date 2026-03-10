@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import DataTable from './components/DataTable';
 import BottomNav from './components/BottomNav';
-import { ViewType, AssetType } from './types';
+import { ViewType, AssetType, ZakladType } from './types';
 import { ASSET_CONFIG } from './constants';
 import { ChevronDown, Download } from 'lucide-react';
 import CommentsOverlay from './components/CommentsOverlay';
@@ -10,6 +10,7 @@ import CommentsOverlay from './components/CommentsOverlay';
 const App: React.FC = () => {
   const [currentAsset, setCurrentAsset] = useState<AssetType>('Kontenery');
   const [currentView, setCurrentView] = useState<ViewType>('Dane podstawowe');
+  const [currentZaklad, setCurrentZaklad] = useState<ZakladType>('Zakład Września');
 
   const handleAssetChange = (newAsset: AssetType) => {
     setCurrentAsset(newAsset);
@@ -21,7 +22,13 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden text-gray-800">
-      <Sidebar currentView={currentView} onViewChange={setCurrentView} currentAsset={currentAsset} />
+      <Sidebar 
+        currentView={currentView} 
+        onViewChange={setCurrentView} 
+        currentAsset={currentAsset} 
+        currentZaklad={currentZaklad}
+        onZakladChange={setCurrentZaklad}
+      />
       <main className="flex-1 flex flex-col min-w-0 bg-white z-10 relative">
         <CommentsOverlay currentView={currentView} />
         <div className="bg-white border-b border-gray-100 p-4 shrink-0">
@@ -84,6 +91,7 @@ const App: React.FC = () => {
         <DataTable 
           view={currentView} 
           currentAsset={currentAsset}
+          currentZaklad={currentZaklad}
         />
         <BottomNav currentView={currentView} />
       </main>
