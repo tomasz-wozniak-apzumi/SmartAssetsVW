@@ -11,6 +11,8 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [selectedContainer, setSelectedContainer] = useState<ContainerData | null>(null);
+  const [selectedCurrentNumber, setSelectedCurrentNumber] = useState<any | null>(null);
+  const [isPreviewing, setIsPreviewing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [isAddingContainer, setIsAddingContainer] = useState(false);
@@ -33,6 +35,8 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
     setIsAddingContainer(false);
     setNewItemName('');
     setSelectedContainer(null);
+    setSelectedCurrentNumber(null);
+    setIsPreviewing(false);
   }, [view]);
 
   const handleFilterChange = (key: string, value: string) => {
@@ -352,7 +356,11 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filteredCurrentNumbers.length > 0 ? filteredCurrentNumbers.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50/50">
+                <tr 
+                  key={item.id} 
+                  className={`hover:bg-blue-50/50 cursor-pointer transition-colors ${selectedCurrentNumber?.id === item.id ? 'bg-blue-50' : ''}`}
+                  onClick={() => setSelectedCurrentNumber(item)}
+                >
                   <td className="px-4 py-3 font-medium text-[#007bff]">{item.containerNumber}</td>
                   <td className="px-4 py-3">{item.currentNumber}</td>
                   <td className="px-4 py-3">{item.containerName}</td>
@@ -510,8 +518,217 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
                             MOCK_EVENTS.length;
 
   return (
-    <div className="flex flex-1 overflow-hidden relative">
-      <div className={`flex flex-col flex-1 p-4 md:p-6 space-y-4 overflow-hidden bg-white transition-all duration-300 ${selectedContainer ? 'mr-72' : ''}`}>
+    <div className="flex flex-1 overflow-hidden relative bg-white">
+      {isPreviewing && selectedCurrentNumber ? (
+        /* Full Preview View */
+        <div className="absolute inset-0 z-50 bg-white flex flex-col overflow-y-auto">
+          <div className="flex items-center justify-between p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
+            <div className="flex items-center space-x-2">
+              <ClipboardCheck size={20} className="text-gray-600" />
+              <h1 className="text-lg font-bold text-gray-800">Podgląd numerów bieżących</h1>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button className="flex items-center px-4 py-2 border border-[#007bff] text-[#007bff] rounded text-xs font-bold hover:bg-blue-50 transition-all">
+                <Edit2 size={14} className="mr-2" /> EDYTUJ
+              </button>
+              <button className="flex items-center px-4 py-2 border border-red-500 text-red-500 rounded text-xs font-bold hover:bg-red-50 transition-all">
+                <Trash2 size={14} className="mr-2" /> USUŃ
+              </button>
+              <button 
+                onClick={() => setIsPreviewing(false)}
+                className="flex items-center px-4 py-2 bg-[#007bff] text-white rounded text-xs font-bold hover:bg-blue-600 transition-all"
+              >
+                ZAMKNIJ PODGLĄD
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6 space-y-8 max-w-7xl mx-auto w-full">
+            {/* Container Information */}
+            <section>
+              <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">DANE NUMERU KONTENERA</h2>
+              <div className="grid grid-cols-5 gap-8">
+                <div>
+                  <label className="block text-[10px] text-gray-400 font-semibold mb-1">Numer kontenera</label>
+                  <p className="text-sm font-medium">{selectedCurrentNumber.containerNumber}</p>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-gray-400 font-semibold mb-1">Nazwa kontenera</label>
+                  <p className="text-sm font-medium">{selectedCurrentNumber.containerName}</p>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-gray-400 font-semibold mb-1">Okres weryfikacji</label>
+                  <p className="text-sm font-medium">180 dni</p>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-gray-400 font-semibold mb-1">Typ kontenera</label>
+                  <p className="text-sm font-medium">{selectedCurrentNumber.type}</p>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-gray-400 font-semibold mb-1">Opis</label>
+                  <p className="text-sm font-medium">-</p>
+                </div>
+              </div>
+            </section>
+
+            <hr className="border-gray-100" />
+
+            {/* Basic Data Information */}
+            <section>
+              <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">DANE PODSTAWOWE</h2>
+              <div className="flex gap-12">
+                <div className="grid grid-cols-4 gap-x-12 gap-y-6 flex-1">
+                  <div>
+                    <label className="block text-[10px] text-gray-400 font-semibold mb-1">Numer bieżący</label>
+                    <p className="text-sm font-medium">{selectedCurrentNumber.currentNumber}</p>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-gray-400 font-semibold mb-1">Lokalizacja</label>
+                    <p className="text-sm font-medium">{selectedCurrentNumber.location}</p>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-gray-400 font-semibold mb-1">Właściciel</label>
+                    <p className="text-sm font-medium">{selectedCurrentNumber.owner}</p>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-gray-400 font-semibold mb-1">Producent</label>
+                    <p className="text-sm font-medium">{selectedCurrentNumber.producer}</p>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-gray-400 font-semibold mb-1">Status</label>
+                    <span className="text-green-600 text-sm font-bold">{selectedCurrentNumber.status}</span>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-gray-400 font-semibold mb-1">Wersja</label>
+                    <p className="text-sm font-medium">{selectedCurrentNumber.version}</p>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-gray-400 font-semibold mb-1">Data produkcji</label>
+                    <p className="text-sm font-medium">-</p>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-gray-400 font-semibold mb-1">Następna weryfikacja</label>
+                    <p className="text-sm font-medium">{selectedCurrentNumber.nextVerification}</p>
+                  </div>
+                </div>
+                <div className="w-48 text-center shrink-0">
+                  <label className="block text-[10px] text-gray-400 font-semibold mb-2 uppercase">KOD QR</label>
+                  <div className="bg-white p-2 border border-gray-100 rounded-lg inline-block shadow-sm">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=514488_38" alt="QR Code" className="w-24 h-24" />
+                  </div>
+                  <p className="text-[10px] text-gray-400 mt-1 font-mono">{selectedCurrentNumber.qrCode}</p>
+                </div>
+              </div>
+            </section>
+
+            <hr className="border-gray-100" />
+
+            {/* Checklist Section */}
+            <section>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest">LISTA KONTROLNA</h2>
+                <span className="text-xs text-red-500 font-medium">✕ Kontrola nie przeprowadzona</span>
+              </div>
+              <div className="border border-gray-100 rounded">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-[#f8f9fa] border-b border-gray-100">
+                    <tr>
+                      <th className="px-4 py-2 font-semibold text-gray-500">Data wyk.</th>
+                      <th className="px-4 py-2 font-semibold text-gray-500 underline decoration-gray-300">Nazwa</th>
+                      <th className="px-4 py-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[1,2,3,4,5,6].map(i => (
+                      <tr key={i} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-3 text-gray-600">07.11.2022, 0...</td>
+                        <td className="px-4 py-3 font-medium text-gray-800 underline decoration-blue-200">Checklista Wielobranżowa</td>
+                        <td className="px-4 py-3 text-right">
+                          <Eye size={16} className="text-[#007bff] cursor-pointer inline" />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <hr className="border-gray-100" />
+
+            {/* Service Section */}
+            <section>
+              <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">SERWIS</h2>
+              <div className="border border-gray-100 rounded">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-[#f8f9fa] border-b border-gray-100">
+                    <tr>
+                      <th className="px-4 py-2 font-semibold text-gray-500 underline decoration-gray-300">Data zgłoszenia</th>
+                      <th className="px-4 py-2 font-semibold text-gray-500">Osoba zgłaszająca</th>
+                      <th className="px-4 py-2 font-semibold text-gray-500">Opis</th>
+                      <th className="px-4 py-2 font-semibold text-gray-500">Data wykonania</th>
+                      <th className="px-4 py-2 font-semibold text-gray-500">Osoba wykonująca</th>
+                      <th className="px-4 py-2 font-semibold text-gray-500">Status zgłoszenia</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colSpan={6} className="px-4 py-8 text-center text-gray-400 italic">Brak danych</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <hr className="border-gray-100" />
+
+            {/* Documents Section */}
+            <section>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest">DOKUMENTY</h2>
+                <button className="flex items-center px-4 py-1.5 bg-[#007bff] text-white rounded text-[10px] font-bold hover:bg-blue-600 transition-all">
+                  <Upload size={12} className="mr-2" /> DODAJ DOKUMENT
+                </button>
+              </div>
+              <div className="border border-gray-100 rounded">
+                <table className="w-full text-[11px] text-left">
+                  <thead className="bg-[#f8f9fa] border-b border-gray-100">
+                    <tr>
+                      <th className="px-4 py-2 font-semibold text-gray-500 ml-10">Nazwa dokumentu</th>
+                      <th className="px-4 py-2 font-semibold text-gray-500">Typ dokumentu</th>
+                      <th className="px-4 py-2 font-semibold text-gray-500">Dodano przez</th>
+                      <th className="px-4 py-2 font-semibold text-gray-500">Data dodania</th>
+                      <th className="px-4 py-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {[
+                      { name: 'ci_360064916121000813479090181547544.jpg', type: 'OTHER', by: 'Apzumi Spatial Tes...', date: '14.01.2021, 1...' },
+                      { name: 'ci_36006388775624726204423383161474.jpg', type: 'OTHER', by: 'Apzumi Spatial Tes...', date: '14.01.2021, 1...' }
+                    ].map((doc, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-3 flex items-center space-x-3 max-w-xs">
+                          <img src={`https://picsum.photos/seed/${idx}/40/40`} className="w-8 h-8 rounded border border-gray-200 shrink-0" alt="" />
+                          <span className="truncate text-[#007bff] cursor-pointer hover:underline">{doc.name}</span>
+                        </td>
+                        <td className="px-4 py-3 text-gray-500">{doc.type}</td>
+                        <td className="px-4 py-3 text-gray-500">{doc.by}</td>
+                        <td className="px-4 py-3 text-gray-500">{doc.date}</td>
+                        <td className="px-4 py-3 text-right space-x-3">
+                          <Eye size={14} className="text-[#007bff] cursor-pointer inline" />
+                          <Download size={14} className="text-[#007bff] cursor-pointer inline" />
+                          <Trash2 size={14} className="text-red-500 cursor-pointer inline" />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </div>
+      ) : null}
+
+      <div className={`flex flex-col flex-1 p-4 md:p-6 space-y-4 overflow-hidden bg-white transition-all duration-300 ${(selectedContainer || selectedCurrentNumber) ? 'mr-72' : ''}`}>
         {renderHeader()}
 
         {isAddingContainer ? (
@@ -666,7 +883,78 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
         )}
       </div>
 
-      {/* Sidebar Details for Containers */}
+      {/* Sidebar Details for Current Numbers */}
+      {selectedCurrentNumber && view === 'Numery bieżące' && !isPreviewing && (
+        <div className="w-72 border-l border-gray-200 bg-[#f8f9fa] flex flex-col fixed right-0 top-0 bottom-0 z-20 shadow-xl transition-all">
+          <div className="p-4 border-b border-gray-200 bg-white flex items-center justify-between">
+            <h2 className="font-bold text-gray-800">Szczegóły</h2>
+            <button onClick={() => setSelectedCurrentNumber(null)} className="text-gray-400 hover:text-gray-600 transition-colors">
+              <X size={18} />
+            </button>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-4 space-y-6">
+            <div className="space-y-4">
+              {[
+                { label: 'Numer kontenera', value: selectedCurrentNumber.containerNumber },
+                { label: 'Nazwa kontenera', value: selectedCurrentNumber.containerName },
+                { label: 'Numer bieżący', value: selectedCurrentNumber.currentNumber },
+                { label: 'Kod QR', value: selectedCurrentNumber.qrCode }
+              ].map((item, idx) => (
+                <div key={idx} className="border-b border-gray-100 pb-2">
+                  <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{item.label}</p>
+                  <p className="text-sm text-gray-700 font-medium">{item.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center bg-white p-4 rounded border border-gray-100 shadow-sm">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=514488_38" alt="QR Code" className="w-32 h-32 mx-auto" />
+                <p className="text-[10px] text-gray-400 mt-2 font-mono uppercase">{selectedCurrentNumber.qrCode}</p>
+            </div>
+
+            <div className="space-y-4">
+              {[
+                { label: 'Lokalizacja', value: selectedCurrentNumber.location },
+                { label: 'Właściciel', value: selectedCurrentNumber.owner },
+                { label: 'Producent', value: selectedCurrentNumber.producer || '-' },
+                { label: 'Wersja', value: selectedCurrentNumber.version },
+                { label: 'Następna weryfikacja', value: selectedCurrentNumber.nextVerification },
+                { label: 'Data produkcji', value: '-' },
+                { label: 'Status', value: selectedCurrentNumber.status, color: true },
+                { label: 'Typ kontenera', value: selectedCurrentNumber.type }
+              ].map((item, idx) => (
+                <div key={idx} className="border-b border-gray-100 pb-2">
+                  <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{item.label}</p>
+                  <p className={`text-sm font-medium ${item.color ? 'text-green-600' : 'text-gray-700'}`}>{item.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-2 mt-auto pb-4">
+              <button 
+                onClick={() => setIsPreviewing(true)}
+                className="w-full flex items-center justify-start px-4 py-2.5 bg-[#007bff] text-white rounded text-[11px] font-bold shadow-sm hover:bg-blue-600 transition-colors uppercase tracking-tight"
+              >
+                <Eye size={16} className="mr-3" />
+                Podgląd
+              </button>
+              <div className="flex space-x-2">
+                <button className="flex-1 flex items-center justify-center px-4 py-2.5 bg-[#007bff] text-white rounded text-[11px] font-bold shadow-sm hover:bg-blue-600 transition-colors">
+                  <Edit2 size={16} className="mr-2" />
+                  EDYTUJ
+                </button>
+                <button className="flex-1 flex items-center justify-center px-4 py-2.5 bg-red-600 text-white rounded text-[11px] font-bold shadow-sm hover:bg-red-700 transition-colors">
+                  <Trash2 size={16} className="mr-2" />
+                  USUŃ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sidebar Details for Containers (Dane podstawowe) */}
       {selectedContainer && view === 'Dane podstawowe' && !isAddingItem && !isAddingContainer && (
         <div className="w-72 border-l border-gray-200 bg-[#f8f9fa] flex flex-col fixed right-0 top-0 bottom-0 z-20 shadow-xl transition-all">
           <div className="p-4 border-b border-gray-200 bg-white flex items-center justify-between">
@@ -694,7 +982,7 @@ const DataTable: React.FC<DataTableProps> = ({ view }) => {
               ))}
             </div>
 
-            <div className="space-y-2 mt-auto">
+            <div className="space-y-2 mt-auto pb-4">
               <button className="w-full flex items-center justify-start px-4 py-2.5 bg-[#004a99] text-white rounded text-[11px] font-bold shadow-sm hover:bg-[#003d80] transition-colors">
                 <Eye size={16} className="mr-3" />
                 PODGLĄD
