@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Plus, Box, ClipboardCheck, LayoutGrid, ChevronDown, Settings, CheckSquare, History, X, Save, Folder, Upload, Package, Layers } from 'lucide-react';
 import { MOCK_CONTAINERS, MOCK_CURRENT_NUMBERS, MOCK_LOCATIONS, MOCK_SERVICES, MOCK_CHECKLISTS, MOCK_EVENTS } from '../constants';
-import { ViewType, ContainerData } from '../types';
+import { ViewType, ContainerData, LocationData, EventData } from '../types';
 
 // New Components
 import FilterBar from './FilterBar';
@@ -19,12 +19,16 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [localContainers, setLocalContainers] = useState<ContainerData[]>(MOCK_CONTAINERS);
+  const [localLocations, setLocalLocations] = useState<LocationData[]>(MOCK_LOCATIONS);
+  const [localEvents, setLocalEvents] = useState<EventData[]>(MOCK_EVENTS);
   const [selectedContainer, setSelectedContainer] = useState<ContainerData | null>(null);
   const [selectedCurrentNumber, setSelectedCurrentNumber] = useState<any | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [isEditingChecklist, setIsEditingChecklist] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAddingItem, setIsAddingItem] = useState(false);
+  const [isAddingItem, setIsAddingItem] = useState(false); // Do ogólnego użycia, np. Zdarzenia
+  const [isAddingLocation, setIsAddingLocation] = useState(false);
+  const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [isAddingContainer, setIsAddingContainer] = useState(false);
   const [newItemName, setNewItemName] = useState('');
 
@@ -44,6 +48,8 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
   useEffect(() => {
     setIsAddingItem(false);
     setIsAddingContainer(false);
+    setIsAddingLocation(false);
+    setIsAddingEvent(false);
     setNewItemName('');
     setSelectedContainer(null);
     setSelectedCurrentNumber(null);
@@ -97,6 +103,27 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
         number: '', name: '', orderNumber: '', project: '', verificationPeriod: '', type: 'MANUAL', emails: ''
       });
       setNumberError('');
+    } else if (isAddingLocation) {
+      if (!newItemName.trim()) return;
+      
+      const newLoc: LocationData = {
+        id: Math.random().toString(36).substr(2, 9),
+        name: newItemName,
+        containerCount: 0
+      };
+      setLocalLocations(prev => [newLoc, ...prev]);
+      setIsAddingLocation(false);
+      setNewItemName('');
+    } else if (isAddingEvent) {
+       if (!newItemName.trim()) return;
+       
+       const newEv: EventData = {
+         id: Math.random().toString(36).substr(2, 9),
+         name: newItemName,
+       };
+       setLocalEvents(prev => [newEv, ...prev]);
+       setIsAddingEvent(false);
+       setNewItemName('');
     } else if (isAddingItem) {
       if (!newItemName.trim()) return;
       setIsAddingItem(false);
@@ -143,21 +170,21 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
   }, [searchTerm, filters, assetCurrentNumbers]);
 
   const renderHeader = () => {
-    if (isAddingContainer || (isAddingItem && view === 'Zdarzenia')) {
+    if (isAddingContainer || isAddingLocation || isAddingEvent) {
       const genitive = getAssetGenitive(currentAsset);
-      const title = isAddingContainer ? `Nowy numer ${genitive}` : 'Dodawanie zdarzenia';
-      const Icon = isAddingContainer ? Box : History;
+      const title = isAddingContainer ? `Nowy numer ${genitive}` : isAddingLocation ? 'Nowa lokalizacja' : 'Nowe zdarzenie';
+      const Icon = isAddingContainer ? Box : isAddingLocation ? Folder : History;
       return (
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3 text-gray-800">
              <div className="p-2 bg-gray-100 rounded text-gray-500">
-               <Package size={20} strokeWidth={1.5} />
+               <Icon size={20} strokeWidth={1.5} />
              </div>
              <h1 className="text-lg font-bold">{title}</h1>
           </div>
           <div className="flex items-center space-x-3">
              <button onClick={handleSave} className="flex items-center px-8 py-2 bg-[#007bff] hover:bg-blue-600 text-white rounded text-xs font-bold transition-all shadow-sm">ZAPISZ</button>
-             <button onClick={() => { setIsAddingContainer(false); setIsAddingItem(false); }} className="flex items-center px-8 py-2 border border-[#007bff] text-[#007bff] rounded text-xs font-bold hover:bg-blue-50 transition-all shadow-sm">ANULUJ</button>
+             <button onClick={() => { setIsAddingContainer(false); setIsAddingLocation(false); setIsAddingEvent(false); setIsAddingItem(false); }} className="flex items-center px-8 py-2 border border-[#007bff] text-[#007bff] rounded text-xs font-bold hover:bg-blue-50 transition-all shadow-sm">ANULUJ</button>
           </div>
         </div>
       );
@@ -189,6 +216,26 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
             <div className="flex items-center space-x-2">
                <button className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />DODAJ KATALOG</button>
                <button className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />DODAJ LISTĘ KONTROLNĄ</button>
+            </div>
+          );
+        case 'Lokalizacje':
+          return (
+            <div className="flex items-center space-x-2">
+               <button className={btnStyle}><Download size={14} className="mr-2" />EKSPORTUJ DO CSV</button>
+               <button onClick={() => setIsAddingLocation(true)} className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />NOWA LOKALIZACJA</button>
+            </div>
+          );
+        case 'Zdarzenia':
+          return (
+            <div className="flex items-center space-x-2">
+               <button onClick={() => setIsAddingEvent(true)} className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />NOWE ZDARZENIE</button>
+            </div>
+          );
+        case 'Serwis':
+          return (
+            <div className="flex items-center space-x-2">
+               <button className={btnStyle}><Download size={14} className="mr-2" />EKSPORTUJ DO XLSX</button>
+               <button className={btnStyle}><Plus size={14} className="mr-2" strokeWidth={3} />WYGENERUJ ZLECENIE ZBIORCZE</button>
             </div>
           );
         // ... rest of cases for simplicity
@@ -339,6 +386,81 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
             </tbody>
           </table>
         );
+        case 'Lokalizacje':
+        return (
+          <table className="min-w-full text-[13px] text-gray-700">
+            <thead className="sticky top-0 bg-white z-10 border-b border-gray-100">
+              <tr>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500 w-2/3">Lokalizacja</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Liczba kontenerów</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {localLocations.map((item) => (
+                <tr key={item.id} className="hover:bg-blue-50/50 cursor-pointer">
+                  <td className="px-4 py-3 font-medium text-gray-800">{item.name}</td>
+                  <td className="px-4 py-3">{item.containerCount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        );
+      case 'Zdarzenia':
+        return (
+          <table className="min-w-full text-[13px] text-gray-700">
+            <thead className="sticky top-0 bg-white z-10 border-b border-gray-100">
+              <tr>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Zdarzenie</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {localEvents.map((item) => (
+                <tr key={item.id} className="hover:bg-blue-50/50 cursor-pointer">
+                  <td className="px-4 py-3 font-medium text-gray-800">{item.name}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        );
+      case 'Serwis':
+        return (
+          <table className="min-w-full text-[13px] text-gray-700 whitespace-nowrap">
+            <thead className="sticky top-0 bg-white z-10 border-b border-gray-100">
+              <tr>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">ID</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Numer kontenera</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Numer bieżący</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Nazwa kontenera</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Status</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Status zgłoszenia</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Data zgłoszenia</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Osoba zgłaszająca</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Data wykonania</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Właściciel</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Osoba wykonująca</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-500">Lokalizacja</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {MOCK_SERVICES.map((item) => (
+                <tr key={item.id} className="hover:bg-blue-50/50 cursor-pointer">
+                  <td className="px-4 py-3 text-gray-500">{item.id}</td>
+                  <td className="px-4 py-3 font-medium text-[#007bff]">{item.containerNumber}</td>
+                  <td className="px-4 py-3">{item.currentNumber}</td>
+                  <td className="px-4 py-3">{item.containerName}</td>
+                  <td className="px-4 py-3"><span className={`font-semibold ${item.status === 'Uszkodzony' ? 'text-red-500' : 'text-green-600'}`}>{item.status}</span></td>
+                  <td className="px-4 py-3">{item.ticketStatus}</td>
+                  <td className="px-4 py-3 text-gray-500">{item.reportedDate}</td>
+                  <td className="px-4 py-3">{item.reportedBy}</td>
+                  <td className="px-4 py-3 text-gray-500">{item.executionDate}</td>
+                  <td className="px-4 py-3">{item.owner}</td>
+                  <td className="px-4 py-3">{item.executor}</td>
+                  <td className="px-4 py-3">{item.location}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        );
       default: return null;
     }
   };
@@ -361,7 +483,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
       <div className={`flex flex-col flex-1 p-4 md:p-6 space-y-4 overflow-hidden bg-white transition-all duration-300 ${(selectedContainer || selectedCurrentNumber) ? 'mr-72' : ''}`}>
         {renderHeader()}
 
-        {!isAddingContainer && !isAddingItem && (
+        {!isAddingContainer && !isAddingLocation && !isAddingEvent && !isAddingItem && (
           <div className="flex flex-col space-y-2">
             <div className="flex items-center justify-between">
               <FilterBar 
@@ -451,6 +573,26 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset }) => {
                      <label className="block text-xs font-bold text-gray-700 mb-1">Wysyłaj mail o zmianie statusu do wskazanych adresów</label>
                      <textarea value={newContainerData.emails} onChange={e => setNewContainerData({...newContainerData, emails: e.target.value})} rows={3} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" placeholder="Maile oddziel przecinkiem. Przykładowo: jacek@gmail.com, tomek@gmail.com"></textarea>
                    </div>
+                </div>
+             </div>
+           </div>
+        )}
+
+        {(isAddingLocation || isAddingEvent) && (
+           <div className="flex-1 py-4 bg-white overflow-y-auto w-full">
+             <div className="max-w-[600px] w-full space-y-6">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    {isAddingLocation ? 'Nazwa lokalizacji' : 'Nazwa zdarzenia'}
+                  </label>
+                  <input 
+                    type="text" 
+                    value={newItemName} 
+                    onChange={e => setNewItemName(e.target.value)} 
+                    className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" 
+                    placeholder={isAddingLocation ? 'Podaj nazwę lokalizacji' : 'Podaj nazwę zdarzenia'} 
+                    autoFocus 
+                  />
                 </div>
              </div>
            </div>
