@@ -5,9 +5,10 @@ import { MessageCircle, X, Send, Trash2 } from 'lucide-react';
 
 interface CommentsOverlayProps {
   currentView: string;
+  isMobile?: boolean;
 }
 
-const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView }) => {
+const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView, isMobile }) => {
   const { comments, addComment, deleteComment, isLoading } = useComments(currentView);
   const isAdmin = useAdminMode();
   const [isCommentingMode, setIsCommentingMode] = useState(false);
@@ -54,7 +55,7 @@ const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView }) => {
   return (
     <>
       {/* Floating button do włączania trybu komentarzy */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className={`${isMobile ? 'absolute bottom-24 right-4' : 'fixed bottom-6 right-6'} z-50`}>
         <button
           onClick={() => setIsCommentingMode(!isCommentingMode)}
           className={`p-4 rounded-full shadow-lg text-white transition-all ${

@@ -21,6 +21,7 @@ import {
   Pencil,
   AlertTriangle
 } from 'lucide-react';
+import CommentsOverlay from './CommentsOverlay';
 
 type MobileView = 'Menu' | 'Znajdź' | 'Numery bieżące' | 'Numery kontenerów' | 'Listy kontrolne' | 'Serwis' | 'Numer bieżący detail' | 'Numery bieżące full';
 type AssetType = 'Kontenery' | 'Regały' | 'Trolleye' | 'HSW';
@@ -692,6 +693,8 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
            <div className="w-3 h-3 border-2 border-white/50 rounded-full opacity-80 cursor-pointer" onClick={() => {}} />
            <div className="w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-white/50 border-b-8 border-b-transparent opacity-80 cursor-pointer" onClick={onClose} />
         </div>
+
+        <CommentsOverlay currentView={`Mobile-${currentView}`} isMobile />
 
         {/* Close button */}
         <button 
