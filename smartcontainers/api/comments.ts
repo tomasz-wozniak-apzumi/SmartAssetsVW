@@ -1,5 +1,9 @@
 import { kv } from '@vercel/kv';
 
+export const config = {
+  runtime: 'edge',
+};
+
 export default async function handler(request: Request) {
   // Allow CORS specifically for development if needed
   const headers = { 
