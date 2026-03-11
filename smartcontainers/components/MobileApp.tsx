@@ -538,13 +538,22 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       {renderAssetHeader()}
       <SearchInput />
       <div className="flex-1 overflow-y-auto">
-        <div className="flex justify-between items-center p-4 border-b border-gray-100 text-sm">
-           <span className="text-gray-500">1 krok</span>
-           <div className="flex items-center space-x-2">
-              <span className="text-red-600 font-bold">Niezapisane zmiany</span>
-              <ChevronRight size={16} className="text-[#1a2b4c]" />
-           </div>
-        </div>
+        {[
+          { title: 'Codzienna inspekcja', steps: 4, unsaved: true },
+          { title: 'Weryfikacja uszkodzeń', steps: 3, unsaved: false },
+          { title: 'Przegląd okresowy', steps: 6, unsaved: false },
+        ].map((item, idx) => (
+          <div key={idx} className="flex justify-between items-center p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50">
+             <div>
+               <div className="text-[#1a2b4c] text-[15px] font-medium mb-0.5">{item.title}</div>
+               <div className="text-gray-400 text-sm">{item.steps} kroków</div>
+             </div>
+             <div className="flex items-center space-x-3">
+                {item.unsaved && <span className="text-red-600 font-bold text-sm">Niezapisane zmiany</span>}
+                <ChevronRight size={18} className="text-[#1a2b4c]" />
+             </div>
+          </div>
+        ))}
       </div>
       <div className="p-4 bg-white shrink-0 border-t border-gray-100">
          <button className="w-full bg-[#2a3b6c] text-white py-3 rounded text-base font-bold tracking-wide flex justify-center items-center shadow-md">
@@ -553,6 +562,75 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       </div>
     </div>
   );
+  // ─── Serwis ───────────────────────────────────────────────────────────────
+  const renderSerwis = () => {
+    const mockSerwisData = [
+      { id: '621', numerBiezacy: '1234512345', numerKonta: '1234512345', nazwa: 'Test1234512345', status: 'Do naprawy', dataOrg: '2026-03-09' },
+      { id: '601', numerBiezacy: '2003', numerKonta: '5', nazwa: '2', status: 'Do naprawy', dataOrg: '2025-11-20' },
+      { id: '581', numerBiezacy: '...', numerKonta: '531720', nazwa: 'Nowa Wersja Instancji', status: 'Do naprawy', dataOrg: '2025-11-12' },
+    ];
+
+    return (
+      <div className="flex flex-col h-full bg-gray-50 relative">
+        <div className="flex items-center p-4 bg-white border-b border-gray-200 shrink-0 sticky top-0 z-10">
+          <button onClick={() => setCurrentView('Menu')} className="mr-4 text-[#1a2b4c]">
+            <ChevronLeft size={24} />
+          </button>
+          <h1 className="flex-1 text-center text-lg font-bold text-[#1a2b4c]">Serwis</h1>
+          <div className="flex items-center">
+            <button className="mr-2 text-[#1a2b4c]">
+              <Filter size={20} />
+            </button>
+          </div>
+        </div>
+        <SearchInput />
+        <div className="flex-1 overflow-y-auto">
+          {mockSerwisData.map((item, idx) => (
+            <div key={idx} className="bg-white mb-2 p-4 shadow-sm border-b border-gray-100">
+              <div className="flex justify-between mb-3 text-sm">
+                <div className="w-1/2 pr-2">
+                  <div className="text-gray-400 text-[11px] mb-1 leading-tight">Numer {asset.singularGenitive}</div>
+                  <div className="text-[#1a2b4c] text-base truncate">{item.numerKonta}</div>
+                </div>
+                <div className="w-1/2 pl-2">
+                  <div className="text-gray-400 text-[11px] mb-1 leading-tight">Nazwa {asset.singularGenitive}</div>
+                  <div className="text-[#1a2b4c] text-base truncate">{item.nazwa}</div>
+                </div>
+              </div>
+              <div className="flex justify-between mb-3 text-sm">
+                <div className="w-1/2 pr-2">
+                  <div className="text-gray-400 text-[11px] mb-1 leading-tight">Status</div>
+                  <div className="text-red-500 text-base">{item.status}</div>
+                </div>
+                <div className="w-1/2 pl-2">
+                  <div className="text-gray-400 text-[11px] mb-1 leading-tight">Ostatnia modyfikacja</div>
+                  <div className="text-[#1a2b4c] text-base truncate">{item.dataOrg}</div>
+                </div>
+              </div>
+              <div className="flex justify-between mb-4 text-sm">
+                <div className="w-1/2 pr-2">
+                  <div className="text-gray-400 text-[11px] mb-1 leading-tight">Numer bieżący</div>
+                  <div className="text-[#1a2b4c] text-base truncate">{item.numerBiezacy}</div>
+                </div>
+                <div className="w-1/2 pl-2">
+                  <div className="text-gray-400 text-[11px] mb-1 leading-tight">ID</div>
+                  <div className="text-[#1a2b4c] text-base truncate">{item.id}</div>
+                </div>
+              </div>
+              <div className="flex space-x-3">
+                <button className="flex-1 py-3 border border-[#1a2b4c] text-[#1a2b4c] font-bold rounded shadow-sm active:bg-gray-50 flex justify-center items-center">
+                  Podgląd
+                </button>
+                <button className="flex-1 py-3 bg-[#2a3b6c] text-white font-bold rounded shadow-sm active:bg-[#1a2b4c] flex justify-center items-center">
+                  Rozwiąż
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   // ─── Router ───────────────────────────────────────────────────────────────
   const renderCurrentView = () => {
@@ -568,13 +646,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
         </div>
       );
       case 'Listy kontrolne': return renderListyKontrolne();
-      case 'Serwis': return (
-        <div className="flex flex-col h-full">
-          {renderTopBar('Serwis', true)}
-          {renderAssetHeader()}
-          <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">Brak danych serwisowych</div>
-        </div>
-      );
+      case 'Serwis': return renderSerwis();
       default: return null;
     }
   };
