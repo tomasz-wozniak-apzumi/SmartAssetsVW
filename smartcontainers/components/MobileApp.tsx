@@ -12,6 +12,7 @@ import {
   Wrench,
   ChevronRight,
   ChevronDown,
+  X,
   Filter,
   Package,
   Layers,
@@ -100,12 +101,15 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
         <div className="w-6 mr-4" />
       )}
       <h1 className="flex-1 text-center text-lg font-bold text-[#1a2b4c]">{title}</h1>
-      {title === 'Numery bieżące' && (
+      {title === 'Numery bieżące' ? (
         <button className="ml-4 text-[#1a2b4c]">
           <Filter size={20} />
         </button>
+      ) : (
+        <button onClick={onClose} className="ml-4 text-gray-400 p-1 hover:bg-gray-100 rounded-full" title="Zamknij">
+          <X size={20} />
+        </button>
       )}
-      {title !== 'Numery bieżące' && <div className="w-6 ml-4" />}
     </div>
   );
 
