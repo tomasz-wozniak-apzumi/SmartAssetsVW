@@ -1,9 +1,5 @@
 import Redis from 'ioredis';
 
-export const config = {
-  runtime: 'edge',
-};
-
 // Inicjacja klienta na zewnątrz, aby używał puli połączeń na serwerach Vercel
 const redisUrl = process.env.redisvw_REDIS_URL || '';
 const redis = redisUrl ? new Redis(redisUrl) : null;
