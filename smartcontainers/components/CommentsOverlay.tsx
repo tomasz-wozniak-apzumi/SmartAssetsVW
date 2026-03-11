@@ -13,6 +13,7 @@ const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView, isMobile
   const isAdmin = useAdminMode();
   const [isCommentingMode, setIsCommentingMode] = useState(false);
   const [activeCommentId, setActiveCommentId] = useState<string | null>(null);
+  const [collapsedAdminComments, setCollapsedAdminComments] = useState<Set<string>>(new Set());
   
   // Stan dla nowo tworzonego komentarza
   const [newPin, setNewPin] = useState<{ x: number, y: number } | null>(null);
@@ -82,7 +83,16 @@ const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView, isMobile
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setActiveCommentId(activeCommentId === comment.id ? null : comment.id);
+                if (comment.isAdminComment) {
+                  setCollapsedAdminComments(prev => {
+                    const next = new Set(prev);
+                    if (next.has(comment.id)) next.delete(comment.id);
+                    else next.add(comment.id);
+                    return next;
+                  });
+                } else {
+                  setActiveCommentId(activeCommentId === comment.id ? null : comment.id);
+                }
               }}
               className={`w-8 h-8 rounded-full border-2 border-white shadow-md flex items-center justify-center font-bold text-xs hover:scale-110 transition-transform ${
                 comment.isAdminComment
@@ -93,8 +103,8 @@ const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView, isMobile
               {comment.isAdminComment ? '!' : comment.author.charAt(0).toUpperCase()}
             </button>
 
-            {/* Chmurka z treścią (zawsze widoczna w przypadku admina) */}
-            {(activeCommentId === comment.id || comment.isAdminComment) && (
+            {/* Chmurka z treścią */}
+            {(comment.isAdminComment ? !collapsedAdminComments.has(comment.id) : activeCommentId === comment.id) && (
               <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 rounded-lg shadow-xl border p-3 text-sm flex flex-col gap-2 ${
                 comment.isAdminComment 
                   ? 'bg-red-50 border-red-200' 
