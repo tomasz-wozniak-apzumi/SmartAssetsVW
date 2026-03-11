@@ -9,6 +9,8 @@ interface TableSidebarProps {
   onCloseContainer: () => void;
   onCloseCurrentNumber: () => void;
   onPreviewCurrentNumber: () => void;
+  onEditContainer?: () => void;
+  onEditCurrentNumber?: () => void;
   onOpenModal: () => void;
 }
 
@@ -19,6 +21,8 @@ const TableSidebar: React.FC<TableSidebarProps> = ({
   onCloseContainer, 
   onCloseCurrentNumber,
   onPreviewCurrentNumber,
+  onEditContainer,
+  onEditCurrentNumber,
   onOpenModal
 }) => {
   
@@ -80,7 +84,7 @@ const TableSidebar: React.FC<TableSidebarProps> = ({
               Podgląd
             </button>
             <div className="flex space-x-2">
-              <button className="flex-1 flex items-center justify-center px-4 py-2.5 bg-[#007bff] text-white rounded text-[11px] font-bold shadow-sm hover:bg-blue-600 transition-colors">
+              <button onClick={onEditCurrentNumber} className="flex-1 flex items-center justify-center px-4 py-2.5 bg-[#007bff] text-white rounded text-[11px] font-bold shadow-sm hover:bg-blue-600 transition-colors">
                 <Edit2 size={16} className="mr-2" />
                 EDYTUJ
               </button>
@@ -141,7 +145,7 @@ const TableSidebar: React.FC<TableSidebarProps> = ({
               UTWÓRZ NUMERY BIEŻĄCE
             </button>
             <div className="flex space-x-2 pt-2">
-              <button className="flex-1 flex items-center justify-center px-4 py-2.5 bg-[#004a99] text-white rounded text-[11px] font-bold shadow-sm hover:bg-[#003d80] transition-colors">
+              <button onClick={onEditContainer} className="flex-1 flex items-center justify-center px-4 py-2.5 bg-[#004a99] text-white rounded text-[11px] font-bold shadow-sm hover:bg-[#003d80] transition-colors">
                 <Edit2 size={16} className="mr-2" />
                 EDYTUJ
               </button>

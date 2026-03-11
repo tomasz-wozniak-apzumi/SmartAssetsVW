@@ -32,6 +32,8 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
   const [isAddingLocation, setIsAddingLocation] = useState(false);
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [isAddingContainer, setIsAddingContainer] = useState(false);
+  const [isEditingContainer, setIsEditingContainer] = useState<ContainerData | null>(null);
+  const [isEditingCurrentNumber, setIsEditingCurrentNumber] = useState<CurrentNumberData | null>(null);
   const [newItemName, setNewItemName] = useState('');
 
   // Form states for new container
@@ -57,6 +59,8 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
     setSelectedCurrentNumber(null);
     setIsPreviewing(false);
     setIsEditingChecklist(false);
+    setIsEditingContainer(null);
+    setIsEditingCurrentNumber(null);
   }, [view]);
 
   const handleFilterChange = (key: string, value: string) => {
@@ -141,6 +145,12 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
        setLocalEvents(prev => [newEv, ...prev]);
        setIsAddingEvent(false);
        setNewItemName('');
+    } else if (isEditingContainer) {
+      setLocalContainers(prev => prev.map(c => c.id === isEditingContainer.id ? isEditingContainer : c));
+      setIsEditingContainer(null);
+    } else if (isEditingCurrentNumber) {
+      setLocalCurrentNumbers(prev => prev.map(c => c.id === isEditingCurrentNumber.id ? isEditingCurrentNumber : c));
+      setIsEditingCurrentNumber(null);
     } else if (isAddingItem) {
       if (!newItemName.trim()) return;
       setIsAddingItem(false);
@@ -191,10 +201,20 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
   }, [searchTerm, filters, assetCurrentNumbers]);
 
   const renderHeader = () => {
-    if (isAddingContainer || isAddingLocation || isAddingEvent) {
+    if (isAddingContainer || isAddingLocation || isAddingEvent || isEditingContainer || isEditingCurrentNumber) {
       const genitive = getAssetGenitive(currentAsset);
-      const title = isAddingContainer ? `Nowy numer ${genitive}` : isAddingLocation ? 'Nowa lokalizacja' : 'Nowe zdarzenie';
-      const Icon = isAddingContainer ? Box : isAddingLocation ? Folder : History;
+      
+      let title = '';
+      let Icon = Box;
+      if (isAddingContainer) title = `Nowy numer ${genitive}`;
+      else if (isAddingLocation) title = 'Nowa lokalizacja';
+      else if (isAddingEvent) title = 'Nowe zdarzenie';
+      else if (isEditingContainer) title = `Edytuj numer ${genitive}`;
+      else if (isEditingCurrentNumber) { title = 'Edytuj numer bieżący'; Icon = LayoutGrid; }
+      
+      if (isAddingLocation) Icon = Folder;
+      if (isAddingEvent) Icon = History;
+      
       return (
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3 text-gray-800">
@@ -205,7 +225,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
           </div>
           <div className="flex items-center space-x-3">
              <button onClick={handleSave} className="flex items-center px-8 py-2 bg-[#007bff] hover:bg-blue-600 text-white rounded text-xs font-bold transition-all shadow-sm">ZAPISZ</button>
-             <button onClick={() => { setIsAddingContainer(false); setIsAddingLocation(false); setIsAddingEvent(false); setIsAddingItem(false); }} className="flex items-center px-8 py-2 border border-[#007bff] text-[#007bff] rounded text-xs font-bold hover:bg-blue-50 transition-all shadow-sm">ANULUJ</button>
+             <button onClick={() => { setIsAddingContainer(false); setIsAddingLocation(false); setIsAddingEvent(false); setIsAddingItem(false); setIsEditingContainer(null); setIsEditingCurrentNumber(null); }} className="flex items-center px-8 py-2 border border-[#007bff] text-[#007bff] rounded text-xs font-bold hover:bg-blue-50 transition-all shadow-sm">ANULUJ</button>
           </div>
         </div>
       );
@@ -501,7 +521,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
       <div className={`flex flex-col flex-1 p-4 md:p-6 space-y-4 overflow-hidden bg-white transition-all duration-300 ${(selectedContainer || selectedCurrentNumber) ? 'mr-72' : ''}`}>
         {renderHeader()}
 
-        {!isAddingContainer && !isAddingLocation && !isAddingEvent && !isAddingItem && (
+        {!isAddingContainer && !isAddingLocation && !isAddingEvent && !isAddingItem && !isEditingContainer && !isEditingCurrentNumber && (
           <div className="flex flex-col space-y-2">
             <div className="flex items-center justify-between">
               <FilterBar 
@@ -596,6 +616,114 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
            </div>
         )}
 
+        {isEditingContainer && (
+           <div className="flex-1 py-4 bg-white overflow-y-auto w-full">
+             <div className="max-w-[1200px] w-full grid grid-cols-2 gap-x-12 gap-y-6">
+                <div className="space-y-6">
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Numer {getAssetGenitive(currentAsset)}</label>
+                     <input type="text" value={isEditingContainer.number} onChange={e => setIsEditingContainer({...isEditingContainer, number: e.target.value})} className={`w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none`} />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Nazwa {getAssetGenitive(currentAsset)}</label>
+                     <input type="text" value={isEditingContainer.name} onChange={e => setIsEditingContainer({...isEditingContainer, name: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Numer zamówienia</label>
+                     <input type="text" value={isEditingContainer.orderNumber || ''} onChange={e => setIsEditingContainer({...isEditingContainer, orderNumber: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Projekt</label>
+                     <input type="text" value={isEditingContainer.project || ''} onChange={e => setIsEditingContainer({...isEditingContainer, project: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                   </div>
+                </div>
+                <div className="space-y-6">
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Okres weryfikacji (dni)</label>
+                     <input type="number" value={isEditingContainer.verificationPeriod} onChange={e => setIsEditingContainer({...isEditingContainer, verificationPeriod: parseInt(e.target.value) || 0})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Typ {getAssetGenitive(currentAsset)}</label>
+                     <div className="relative">
+                       <select value={isEditingContainer.type} onChange={e => setIsEditingContainer({...isEditingContainer, type: e.target.value as any})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none">
+                         <option value="MANUAL">Manualny</option>
+                         <option value="AUTOMATIC">Automatyczny</option>
+                       </select>
+                       <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
+                     </div>
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Wysyłaj mail o zmianie statusu do wskazanych adresów</label>
+                     <textarea rows={3} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" placeholder="Maile oddziel przecinkiem. Przykładowo: jacek@gmail.com, tomek@gmail.com"></textarea>
+                   </div>
+                </div>
+             </div>
+           </div>
+        )}
+
+        {isEditingCurrentNumber && (
+           <div className="flex-1 py-4 bg-white overflow-y-auto w-full">
+             <div className="max-w-[1200px] w-full grid grid-cols-2 gap-x-12 gap-y-6">
+                <div className="space-y-6">
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Numer bieżący</label>
+                     <input type="text" value={isEditingCurrentNumber.currentNumber} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, currentNumber: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Wersja</label>
+                     <input type="text" value={isEditingCurrentNumber.version || ''} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, version: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Właściciel</label>
+                     <input type="text" value={isEditingCurrentNumber.owner || ''} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, owner: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Status</label>
+                     <div className="relative">
+                       <select value={isEditingCurrentNumber.status} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, status: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none font-semibold text-orange-500">
+                         <option value="Warunkowo dopuszczony">Warunkowo dopuszczony</option>
+                         <option value="W użyciu">W użyciu</option>
+                         <option value="Zablokowany">Zablokowany</option>
+                         <option value="W naprawie">W naprawie</option>
+                       </select>
+                       <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
+                     </div>
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Kod QR</label>
+                     <div className="flex items-center space-x-4">
+                       <img src={`https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${isEditingCurrentNumber.qrCode}`} alt="QR Code" className="w-12 h-12" />
+                       <span className="font-mono text-sm text-gray-600 uppercase">{isEditingCurrentNumber.qrCode}</span>
+                     </div>
+                   </div>
+                </div>
+                <div className="space-y-6">
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Lokalizacja</label>
+                     <div className="relative">
+                       <select value={isEditingCurrentNumber.location} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, location: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none">
+                         <option value="Clavey">Clavey</option>
+                         <option value="Brak">Brak</option>
+                         <option value="Magazyn główny">Magazyn główny</option>
+                       </select>
+                       <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
+                     </div>
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Producent</label>
+                     <input type="text" value={isEditingCurrentNumber.producer || ''} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, producer: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-bold text-gray-700 mb-1">Data produkcji</label>
+                     <div className="relative">
+                       <input type="text" value="22.05.2021" readOnly className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-500" />
+                     </div>
+                   </div>
+                </div>
+             </div>
+           </div>
+        )}
+
         {(isAddingLocation || isAddingEvent) && (
            <div className="flex-1 py-4 bg-white overflow-y-auto w-full">
              <div className="max-w-[600px] w-full space-y-6">
@@ -629,6 +757,12 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
           } else {
             setIsPreviewing(true);
           }
+        }}
+        onEditContainer={() => {
+          setIsEditingContainer(selectedContainer);
+        }}
+        onEditCurrentNumber={() => {
+          setIsEditingCurrentNumber(selectedCurrentNumber);
         }}
         onOpenModal={() => setIsModalOpen(true)}
       />
