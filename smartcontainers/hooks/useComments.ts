@@ -14,19 +14,12 @@ export function useComments(currentView: string) {
   const [comments, setComments] = useState<CommentData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Funkcja pomocnicza aby dodać timeout do każdego fetcha
+  // Funkcja pomocnicza aby dodać fetch do zapytań
   const fetchWithTimeout = async (url: string, options: RequestInit = {}) => {
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), 5000); // 5 sekundowy timeout dla zimnych startów Vercel
     try {
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal
-      });
-      clearTimeout(id);
+      const response = await fetch(url, options);
       return response;
     } catch (error) {
-      clearTimeout(id);
       throw error; // Rzuca dalej do zewnetrznego catcha
     }
   };
