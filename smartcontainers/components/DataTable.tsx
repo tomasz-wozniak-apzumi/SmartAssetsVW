@@ -740,7 +740,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
                        </div>
                        <div>
                          <label className="block text-xs font-bold text-gray-700 mb-1">Data produkcji</label>
-                         <input type="text" value="22.05.2021" readOnly className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-500 cursor-not-allowed" />
+                         <input type="text" value={isEditingCurrentNumber.productionDate || '22.05.2021'} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, productionDate: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
                        </div>
                        <div>
                          <label className="block text-xs font-bold text-gray-700 mb-1">Okres weryfikacji (dni)</label>
@@ -770,7 +770,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
                        </div>
                        <div>
                          <label className="block text-xs font-bold text-gray-700 mb-1">Data produkcji</label>
-                         <input type="text" value="22.05.2021" readOnly className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-500 cursor-not-allowed" />
+                         <input type="text" value={isEditingCurrentNumber.productionDate || '22.05.2021'} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, productionDate: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
                        </div>
                      </>
                    )}

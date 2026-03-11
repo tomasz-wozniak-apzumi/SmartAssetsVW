@@ -30,6 +30,7 @@ export interface CurrentNumberData {
   producer: string;
   location: string;
   zaklad: ZakladType;
+  productionDate?: string;
 }
 
 export interface LocationData {
