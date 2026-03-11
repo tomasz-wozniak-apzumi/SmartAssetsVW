@@ -76,7 +76,7 @@ const ChecklistEditor: React.FC<ChecklistEditorProps> = ({ onClose, onSave }) =>
               <label className="block text-xs font-bold text-gray-700">Ścieżka</label>
               <div className="relative">
                 <select className="w-full px-3 py-2 border border-gray-200 rounded text-sm bg-white appearance-none focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all">
-                  <option>Listy kontrolne / Adamowe / Hubert</option>
+                  <option>Listy kontrolne / Główne procedury / Kontenery</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                   <span className="text-xs">▼</span>

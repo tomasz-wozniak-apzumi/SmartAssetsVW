@@ -73,11 +73,26 @@ export const MOCK_SERVICES: ServiceData[] = [
 ];
 
 export const MOCK_CHECKLISTS: ChecklistData[] = [
-  { id: '1', assetType: 'Kontenery', name: 'Hubert', createdDate: '25.02.2022 11:09', editDate: '04.03.2022 10:21', stepCount: 0, version: '-', zaklad: 'Zakład Września' },
-  { id: '2', assetType: 'Regały', name: 'Dawid - Testasd', createdDate: '25.02.2022 09:46', editDate: '28.02.2022 17:13', stepCount: 0, version: '-', zaklad: 'Zakład Poznań' },
-  { id: '3', assetType: 'Trolleye', name: 'Test', createdDate: '06.05.2022 15:11', editDate: '06.05.2022 15:11', stepCount: 0, version: '-', zaklad: 'Zakład Ojej' as any }, // Poprawione
-  { id: '4', assetType: 'HSW', name: 'Piotr_test', createdDate: '17.05.2022 13:53', editDate: '17.05.2022 13:53', stepCount: 0, version: '-', zaklad: 'Zakład Poznań' },
-  { id: '5', assetType: 'Kontenery', name: 'Testowy', createdDate: '28.02.2022 11:41', editDate: '28.02.2022 11:41', stepCount: 0, version: '-', zaklad: 'Zakład Września' },
+  // Kontenery
+  { id: 'c1', assetType: 'Kontenery', name: 'Inspekcja wizualna kontenera', createdDate: '25.02.2022 11:09', editDate: '04.03.2022 10:21', stepCount: 5, version: '1.2', zaklad: 'Zakład Września' },
+  { id: 'c2', assetType: 'Kontenery', name: 'Sprawdzenie wagi pojemnika', createdDate: '28.02.2022 11:41', editDate: '28.02.2022 11:41', stepCount: 3, version: '1.0', zaklad: 'Zakład Poznań' },
+  { id: 'c3', assetType: 'Kontenery', name: 'Kontrola spójności spawów', createdDate: '10.03.2022 09:15', editDate: '12.03.2022 14:30', stepCount: 8, version: '2.0', zaklad: 'Zakład Września' },
+  { id: 'c4', assetType: 'Kontenery', name: 'Zezłomowanie i recykling', createdDate: '15.04.2022 08:00', editDate: '15.04.2022 08:20', stepCount: 4, version: '1.1', zaklad: 'Zakład Poznań' },
+
+  // Trolleye
+  { id: 't1', assetType: 'Trolleye', name: 'Kontrola układu jezdnego', createdDate: '06.05.2022 15:11', editDate: '06.05.2022 15:11', stepCount: 6, version: '1.0', zaklad: 'Zakład Poznań' },
+  { id: 't2', assetType: 'Trolleye', name: 'Sprawdzenie dyszla pociągowego', createdDate: '12.06.2022 07:30', editDate: '13.06.2022 09:20', stepCount: 3, version: '1.1', zaklad: 'Zakład Września' },
+  { id: 't3', assetType: 'Trolleye', name: 'Ocena stanu powłoki lakierniczej', createdDate: '20.07.2022 10:00', editDate: '20.07.2022 10:55', stepCount: 2, version: '1.0', zaklad: 'Zakład Września' },
+
+  // Regały
+  { id: 'r1', assetType: 'Regały', name: 'Przegląd nośności i stabilności regału', createdDate: '25.02.2022 09:46', editDate: '28.02.2022 17:13', stepCount: 12, version: '3.1', zaklad: 'Zakład Poznań' },
+  { id: 'r2', assetType: 'Regały', name: 'Inspekcja uszkodzeń słupów nośnych', createdDate: '05.08.2022 11:20', editDate: '06.08.2022 12:40', stepCount: 7, version: '1.3', zaklad: 'Zakład Września' },
+  { id: 'r3', assetType: 'Regały', name: 'Kontrola mocowań do posadzki i stężeń', createdDate: '11.09.2022 08:15', editDate: '11.09.2022 09:10', stepCount: 5, version: '1.0', zaklad: 'Zakład Poznań' },
+
+  // HSW
+  { id: 'h1', assetType: 'HSW', name: 'UDT: Codzienna kontrola pracownicza', createdDate: '17.05.2022 13:53', editDate: '17.05.2022 13:53', stepCount: 15, version: '2.5', zaklad: 'Zakład Poznań' },
+  { id: 'h2', assetType: 'HSW', name: 'Przegląd układu hydraulicznego i wideł', createdDate: '22.10.2022 07:00', editDate: '22.10.2022 08:30', stepCount: 10, version: '1.4', zaklad: 'Zakład Września' },
+  { id: 'h3', assetType: 'HSW', name: 'Weryfikacja hamulców i kierowania', createdDate: '30.11.2022 14:20', editDate: '01.12.2022 10:15', stepCount: 8, version: '1.1', zaklad: 'Zakład Poznań' },
 ];
 
 export const MOCK_EVENTS: EventData[] = [
