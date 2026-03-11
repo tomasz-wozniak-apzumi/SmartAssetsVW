@@ -11,10 +11,55 @@ import {
   ListTodo, 
   Wrench,
   ChevronRight,
-  Filter
+  ChevronDown,
+  Filter,
+  Package,
+  Layers,
+  ShoppingCart,
+  Truck
 } from 'lucide-react';
 
 type MobileView = 'Menu' | 'Znajdź' | 'Numery bieżące' | 'Numery kontenerów' | 'Listy kontrolne' | 'Serwis';
+type AssetType = 'Kontenery' | 'Regały' | 'Trolleye' | 'HSW';
+
+interface AssetConfig {
+  label: string;
+  singularGenitive: string; // "kontenera" / "regału" etc.
+  pluralGenitive: string;   // "kontenerów" / "regałów" etc.
+  icon: React.ReactNode;
+  color: string;
+}
+
+const ASSET_CONFIG: Record<AssetType, AssetConfig> = {
+  Kontenery: {
+    label: 'Kontenery',
+    singularGenitive: 'kontenera',
+    pluralGenitive: 'kontenerów',
+    icon: <Package size={20} />,
+    color: '#2a3b6c',
+  },
+  Regały: {
+    label: 'Regały',
+    singularGenitive: 'regału',
+    pluralGenitive: 'regałów',
+    icon: <Layers size={20} />,
+    color: '#1a6c3b',
+  },
+  Trolleye: {
+    label: 'Trolleye',
+    singularGenitive: 'trolleya',
+    pluralGenitive: 'trolleyów',
+    icon: <ShoppingCart size={20} />,
+    color: '#6c2a2a',
+  },
+  HSW: {
+    label: 'HSW',
+    singularGenitive: 'HSW',
+    pluralGenitive: 'HSW',
+    icon: <Truck size={20} />,
+    color: '#5c3a6c',
+  },
+};
 
 interface MobileAppProps {
   onClose: () => void;
@@ -23,15 +68,33 @@ interface MobileAppProps {
 const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   const [currentView, setCurrentView] = useState<MobileView>('Menu');
   const [activeTab, setActiveTab] = useState<'TWORZENIE' | 'EDYCJA'>('TWORZENIE');
+  const [selectedAsset, setSelectedAsset] = useState<AssetType>('Kontenery');
+  const [assetyExpanded, setAssetyExpanded] = useState(false);
 
+  const asset = ASSET_CONFIG[selectedAsset];
+
+  // ─── Asset Header Banner (shown in non-menu views) ────────────────────────
+  const renderAssetHeader = () => (
+    <div 
+      className="flex items-center px-4 py-2 shrink-0"
+      style={{ backgroundColor: asset.color + '15', borderBottom: `2px solid ${asset.color}30` }}
+    >
+      <span style={{ color: asset.color }} className="mr-2">{asset.icon}</span>
+      <span className="text-xs font-bold tracking-wide uppercase" style={{ color: asset.color }}>
+        {asset.label}
+      </span>
+    </div>
+  );
+
+  // ─── Top Bar ──────────────────────────────────────────────────────────────
   const renderTopBar = (title: string, showBack: boolean = false) => (
     <div className="flex items-center p-4 bg-white border-b border-gray-200 shrink-0 sticky top-0 z-10">
       {showBack ? (
-        <button onClick={() => setCurrentView('Menu')} className="mr-4 text-[#1a2b4c]">
+        <button onClick={() => setCurrentView('Znajdź')} className="mr-4 text-[#1a2b4c]">
           <ChevronLeft size={24} />
         </button>
       ) : (
-        <div className="w-6 mr-4" /> // spacer
+        <div className="w-6 mr-4" />
       )}
       <h1 className="flex-1 text-center text-lg font-bold text-[#1a2b4c]">{title}</h1>
       {title === 'Numery bieżące' && (
@@ -39,46 +102,40 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
           <Filter size={20} />
         </button>
       )}
-      {title !== 'Numery bieżące' && <div className="w-6 ml-4" />} {/* spacer */}
+      {title !== 'Numery bieżące' && <div className="w-6 ml-4" />}
     </div>
   );
 
+  // ─── Bottom Nav ───────────────────────────────────────────────────────────
   const renderBottomNav = () => {
-    // Menu view bottom nav
     if (currentView === 'Menu') {
       return (
         <div className="flex bg-white border-t border-gray-200 mt-auto shrink-0 pb-2 pt-2 px-2 justify-between">
           <button className="flex flex-col items-center flex-1 text-gray-400">
-            <PhoneCall size={24} className="mb-1" />
-            <span className="text-[10px]">Spatial Call</span>
+            <PhoneCall size={24} className="mb-1" /><span className="text-[10px]">Spatial Call</span>
           </button>
           <button className="flex flex-col items-center flex-1 text-gray-400">
-            <BookOpen size={24} className="mb-1" />
-            <span className="text-[10px]">Procedury</span>
+            <BookOpen size={24} className="mb-1" /><span className="text-[10px]">Procedury</span>
           </button>
           <button className="flex flex-col items-center flex-1 text-gray-400">
-            <QrCode size={24} className="mb-1" />
-            <span className="text-[10px]">QR</span>
+            <QrCode size={24} className="mb-1" /><span className="text-[10px]">QR</span>
           </button>
           <button className="flex flex-col items-center flex-1 text-gray-400">
-            <Settings size={24} className="mb-1" />
-            <span className="text-[10px]">Serwis</span>
+            <Settings size={24} className="mb-1" /><span className="text-[10px]">Serwis</span>
           </button>
           <button className="flex flex-col items-center flex-1 text-[#1a2b4c]">
-            <Menu size={24} className="mb-1" />
-            <span className="text-[10px] font-bold">Menu</span>
+            <Menu size={24} className="mb-1" /><span className="text-[10px] font-bold">Menu</span>
           </button>
         </div>
       );
     }
 
-    // Other views bottom nav
     return (
       <div className="flex bg-white border-t border-gray-200 mt-auto shrink-0 pb-2 pt-2 px-1 justify-between">
         {[
           { id: 'Znajdź', icon: <Search size={22} />, label: 'Znajdź' },
           { id: 'Numery bieżące', icon: <FileText size={22} />, label: 'Numery\nbieżące' },
-          { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: 'Numery\nkontenerów' },
+          { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: `Numery\n${asset.pluralGenitive}` },
           { id: 'Listy kontrolne', icon: <BookOpen size={22} />, label: 'Listy\nkontrolne' },
           { id: 'Serwis', icon: <Wrench size={22} />, label: 'Serwis' }
         ].map(item => (
@@ -87,9 +144,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
             onClick={() => setCurrentView(item.id as MobileView)}
             className={`flex flex-col items-center flex-1 whitespace-pre-line text-center ${currentView === item.id ? 'text-[#1a2b4c]' : 'text-gray-400'}`}
           >
-            <div className={`mb-1 ${currentView === item.id ? 'font-bold' : ''}`}>
-               {item.icon}
-            </div>
+            <div className={`mb-1 ${currentView === item.id ? 'font-bold' : ''}`}>{item.icon}</div>
             <span className={`text-[10px] leading-tight ${currentView === item.id ? 'font-bold' : ''}`}>{item.label}</span>
             {currentView === item.id && <div className="w-10 h-0.5 bg-[#1a2b4c] mt-1 rounded-t" />}
           </button>
@@ -98,6 +153,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     );
   };
 
+  // ─── Menu View ────────────────────────────────────────────────────────────
   const renderMenu = () => (
     <div className="flex flex-col h-full bg-white text-gray-800">
       {renderTopBar('Menu')}
@@ -112,21 +168,54 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
         </div>
       </div>
       
-      <div className="flex flex-col flex-1">
-        {[
-          { label: 'Przestrzeń: Adamowe' },
-          { label: 'Assety', onClick: () => setCurrentView('Znajdź') }, // Changed from Kontenery to Assety per request
-          { label: 'Czyszczenie linii' },
-          { label: 'Wizualizacje' },
-          { label: 'Zmień rozdzielczość wideo' },
-          { label: 'Wyloguj' },
-        ].map((item, idx) => (
+      <div className="flex flex-col flex-1 overflow-y-auto">
+        {/* Przestrzeń */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-100 cursor-default opacity-50">
+          <span className="text-[#1a2b4c] font-medium text-[15px]">Przestrzeń: Adamowe</span>
+          <ChevronRight size={18} className="text-gray-400" />
+        </div>
+
+        {/* Assety — expandable */}
+        <div>
           <div 
-            key={idx} 
             className="flex items-center justify-between p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 active:bg-gray-100"
-            onClick={item.onClick}
+            onClick={() => setAssetyExpanded(prev => !prev)}
           >
-            <span className="text-[#1a2b4c] font-medium text-[15px]">{item.label}</span>
+            <span className="text-[#1a2b4c] font-medium text-[15px]">Assety</span>
+            <ChevronDown size={18} className={`text-gray-400 transition-transform ${assetyExpanded ? 'rotate-180' : ''}`} />
+          </div>
+
+          {assetyExpanded && (
+            <div className="bg-gray-50 border-b border-gray-100">
+              {(Object.keys(ASSET_CONFIG) as AssetType[]).map(type => (
+                <div
+                  key={type}
+                  className={`flex items-center px-6 py-3 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors ${selectedAsset === type ? 'bg-blue-50' : 'hover:bg-gray-100'}`}
+                  onClick={() => {
+                    setSelectedAsset(type);
+                    setAssetyExpanded(false);
+                    setCurrentView('Znajdź');
+                  }}
+                >
+                  <span className="mr-3" style={{ color: ASSET_CONFIG[type].color }}>
+                    {ASSET_CONFIG[type].icon}
+                  </span>
+                  <span className={`text-sm flex-1 ${selectedAsset === type ? 'font-bold text-[#1a2b4c]' : 'text-gray-700'}`}>
+                    {ASSET_CONFIG[type].label}
+                  </span>
+                  {selectedAsset === type && (
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: ASSET_CONFIG[type].color }} />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Other non-clickable menu items */}
+        {['Czyszczenie linii', 'Wizualizacje', 'Zmień rozdzielczość wideo', 'Wyloguj'].map((label, idx) => (
+          <div key={idx} className="flex items-center justify-between p-4 border-b border-gray-100 cursor-default opacity-50">
+            <span className="text-[#1a2b4c] font-medium text-[15px]">{label}</span>
             <ChevronRight size={18} className="text-gray-400" />
           </div>
         ))}
@@ -134,24 +223,27 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     </div>
   );
 
+  // ─── Znajdź View ──────────────────────────────────────────────────────────
   const renderZnajdz = () => (
     <div className="flex flex-col h-full bg-white relative">
-      {renderTopBar('Znajdź', true)}
+      {renderTopBar('Znajdź', false)}
+      {renderAssetHeader()}
       <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-4">
         <button className="w-full bg-[#2a3b6c] text-white py-4 px-4 rounded shadow flex items-center justify-center text-lg font-bold tracking-wide">
           <QrCode className="mr-3" size={24} />
           ZNAJDŹ WEDŁUG QR
         </button>
         <button className="w-full bg-[#2a3b6c] text-white py-4 px-4 rounded shadow flex items-center justify-center text-lg font-bold tracking-wide">
-           <QrCode className="mr-3" size={24} /> {/* Assuming similar icon visually or maybe list type */}
-           ZNAJDŹ WEDŁUG TYPU
+          <ListTodo className="mr-3" size={24} />
+          ZNAJDŹ WEDŁUG TYPU
         </button>
       </div>
     </div>
   );
 
+  // ─── Search Input ────────────────────────────────────────────────────────
   const SearchInput = () => (
-    <div className="p-3 bg-white sticky top-[60px] z-10 border-b border-gray-100">
+    <div className="p-3 bg-white shrink-0 border-b border-gray-100">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
         <input 
@@ -163,21 +255,23 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     </div>
   );
 
+  // ─── Numery Bieżące ───────────────────────────────────────────────────────
   const renderNumeryBiezace = () => (
     <div className="flex flex-col h-full bg-white relative">
       {renderTopBar('Numery bieżące', true)}
+      {renderAssetHeader()}
       <SearchInput />
       <div className="flex-1 overflow-y-auto">
         {[963, 964, 965].map(id => (
           <div key={id} className="p-4 border-b border-gray-200 text-sm">
             <div className="flex justify-between mb-2">
               <div className="w-1/2">
-                <div className="text-gray-500 text-xs mb-1">Numer kontenera</div>
+                <div className="text-gray-500 text-xs mb-1">Numer {asset.singularGenitive}</div>
                 <div className="text-[#1a2b4c] font-medium text-lg">40</div>
               </div>
               <div className="w-1/2">
-                <div className="text-gray-500 text-xs mb-1">Nazwa kontenera</div>
-                 <div className="text-[#1a2b4c] font-medium text-lg">3</div>
+                <div className="text-gray-500 text-xs mb-1">Nazwa {asset.singularGenitive}</div>
+                <div className="text-[#1a2b4c] font-medium text-lg">3</div>
               </div>
             </div>
             <div className="flex justify-between mb-4">
@@ -200,9 +294,11 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     </div>
   );
 
+  // ─── Numery Kontenerów ────────────────────────────────────────────────────
   const renderNumeryKontenerow = () => (
     <div className="flex flex-col h-full bg-white relative">
-      {renderTopBar('Numery kontenerów', true)}
+      {renderTopBar(`Numery ${asset.pluralGenitive}`, true)}
+      {renderAssetHeader()}
       <SearchInput />
       <div className="flex-1 overflow-y-auto">
        {[
@@ -214,11 +310,11 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
           <div key={id} className="p-4 border-b border-gray-200 text-sm">
             <div className="flex justify-between mb-3">
               <div className="w-1/3">
-                <div className="text-gray-500 text-[11px] mb-1 leading-tight">Numer kontenera</div>
+                <div className="text-gray-500 text-[11px] mb-1 leading-tight">Numer {asset.singularGenitive}</div>
                 <div className="text-[#1a2b4c] font-medium text-lg">{item.kNumer}</div>
               </div>
               <div className="w-1/3">
-                <div className="text-gray-500 text-[11px] mb-1 leading-tight">Nazwa kontenera</div>
+                <div className="text-gray-500 text-[11px] mb-1 leading-tight">Nazwa {asset.singularGenitive}</div>
                 <div className="text-[#1a2b4c] font-medium text-lg">{item.nazwa}</div>
               </div>
               <div className="w-1/3">
@@ -246,9 +342,10 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     </div>
   );
 
+  // ─── Listy Kontrolne ──────────────────────────────────────────────────────
   const renderListyKontrolne = () => (
     <div className="flex flex-col h-full bg-white relative">
-      <div className="flex pt-4 bg-white border-b-2 border-gray-100 text-sm font-bold shadow-sm z-10 sticky top-0">
+      <div className="flex pt-4 bg-white border-b-2 border-gray-100 text-sm font-bold shadow-sm z-10 shrink-0">
         <div 
           onClick={() => setActiveTab('TWORZENIE')}
           className={`flex-1 text-center pb-3 cursor-pointer ${activeTab === 'TWORZENIE' ? 'border-b-2 border-[#1a2b4c] text-[#1a2b4c]' : 'text-gray-500'}`}
@@ -262,9 +359,8 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
           EDYCJA
         </div>
       </div>
-      
+      {renderAssetHeader()}
       <SearchInput />
-
       <div className="flex-1 overflow-y-auto">
         <div className="flex justify-between items-center p-4 border-b border-gray-100 text-sm">
            <span className="text-gray-500">1 krok</span>
@@ -274,8 +370,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
            </div>
         </div>
       </div>
-
-      <div className="p-4 bg-white sticky bottom-0 border-t border-gray-100">
+      <div className="p-4 bg-white shrink-0 border-t border-gray-100">
          <button className="w-full bg-[#2a3b6c] text-white py-3 rounded text-base font-bold tracking-wide flex justify-center items-center shadow-md">
             + DODAJ LISTĘ KONTROLNĄ
          </button>
@@ -283,6 +378,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     </div>
   );
 
+  // ─── Router ───────────────────────────────────────────────────────────────
   const renderCurrentView = () => {
     switch (currentView) {
       case 'Menu': return renderMenu();
@@ -290,7 +386,13 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       case 'Numery bieżące': return renderNumeryBiezace();
       case 'Numery kontenerów': return renderNumeryKontenerow();
       case 'Listy kontrolne': return renderListyKontrolne();
-      case 'Serwis': return <div className="flex-1 flex items-center justify-center text-gray-500">Serwis (Mock)</div>;
+      case 'Serwis': return (
+        <div className="flex flex-col h-full">
+          {renderTopBar('Serwis', true)}
+          {renderAssetHeader()}
+          <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">Brak danych serwisowych</div>
+        </div>
+      );
       default: return null;
     }
   };
@@ -338,7 +440,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
            <div className="w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-white/50 border-b-8 border-b-transparent opacity-80 cursor-pointer" onClick={onClose} />
         </div>
 
-        {/* Close hint (outside device) */}
+        {/* Close button */}
         <button 
           onClick={onClose}
           className="absolute -right-12 -top-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white backdrop-blur transition-all shadow-lg border border-white/20 z-50"
