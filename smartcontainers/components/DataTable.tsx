@@ -663,16 +663,32 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
 
         {isEditingCurrentNumber && (
            <div className="flex-1 py-4 bg-white overflow-y-auto w-full">
-             <div className="max-w-[1200px] w-full grid grid-cols-2 gap-x-12 gap-y-6">
+             <div className="max-w-[1200px] w-full grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                 <div className="space-y-6">
-                   <div>
-                     <label className="block text-xs font-bold text-gray-700 mb-1">Numer bieżący</label>
-                     <input type="text" value={isEditingCurrentNumber.currentNumber} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, currentNumber: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
-                   </div>
-                   <div>
-                     <label className="block text-xs font-bold text-gray-700 mb-1">Wersja</label>
-                     <input type="text" value={isEditingCurrentNumber.version || ''} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, version: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
-                   </div>
+                   {currentAsset === 'Regały' ? (
+                     <>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Numer {getAssetGenitive(currentAsset)}</label>
+                         <input type="text" value={isEditingCurrentNumber.containerNumber} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, containerNumber: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                       </div>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Nazwa {getAssetGenitive(currentAsset)}</label>
+                         <input type="text" value={isEditingCurrentNumber.containerName} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, containerName: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                       </div>
+                     </>
+                   ) : (
+                     <>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Numer bieżący</label>
+                         <input type="text" value={isEditingCurrentNumber.currentNumber} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, currentNumber: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                       </div>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Wersja</label>
+                         <input type="text" value={isEditingCurrentNumber.version || ''} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, version: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                       </div>
+                     </>
+                   )}
+
                    <div>
                      <label className="block text-xs font-bold text-gray-700 mb-1">Właściciel</label>
                      <input type="text" value={isEditingCurrentNumber.owner || ''} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, owner: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
@@ -680,45 +696,82 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
                    <div>
                      <label className="block text-xs font-bold text-gray-700 mb-1">Status</label>
                      <div className="relative">
-                       <select value={isEditingCurrentNumber.status} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, status: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none font-semibold text-orange-500">
+                       <select value={isEditingCurrentNumber.status} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, status: e.target.value})} className={`w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none font-semibold ${isEditingCurrentNumber.status === 'W użyciu' ? 'text-green-600' : 'text-orange-500'}`}>
                          <option value="Warunkowo dopuszczony">Warunkowo dopuszczony</option>
                          <option value="W użyciu">W użyciu</option>
                          <option value="Zablokowany">Zablokowany</option>
                          <option value="W naprawie">W naprawie</option>
+                         <option value="Nowy">Nowy</option>
                        </select>
                        <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
                      </div>
                    </div>
-                   <div>
-                     <label className="block text-xs font-bold text-gray-700 mb-1">Kod QR</label>
-                     <div className="flex items-center space-x-4">
-                       <img src={`https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${isEditingCurrentNumber.qrCode}`} alt="QR Code" className="w-12 h-12" />
-                       <span className="font-mono text-sm text-gray-600 uppercase">{isEditingCurrentNumber.qrCode}</span>
+                   
+                   {currentAsset !== 'Regały' && (
+                     <div>
+                       <label className="block text-xs font-bold text-gray-700 mb-1">Kod QR</label>
+                       <div className="flex items-center space-x-4">
+                         <img src={`https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${isEditingCurrentNumber.qrCode}`} alt="QR Code" className="w-12 h-12" />
+                         <span className="font-mono text-sm text-gray-600 uppercase bg-gray-50 px-2 py-1 rounded border border-gray-100">{isEditingCurrentNumber.qrCode}</span>
+                       </div>
                      </div>
-                   </div>
+                   )}
                 </div>
                 <div className="space-y-6">
-                   <div>
-                     <label className="block text-xs font-bold text-gray-700 mb-1">Lokalizacja</label>
-                     <div className="relative">
-                       <select value={isEditingCurrentNumber.location} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, location: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none">
-                         <option value="Clavey">Clavey</option>
-                         <option value="Brak">Brak</option>
-                         <option value="Magazyn główny">Magazyn główny</option>
-                       </select>
-                       <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
+                   {currentAsset === 'Regały' ? (
+                     <>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Typ {getAssetGenitive(currentAsset)}</label>
+                         <div className="relative">
+                           <select value={isEditingCurrentNumber.type} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, type: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none">
+                             <option value="Manualny">Manualny</option>
+                             <option value="Automatyczny">Automatyczny</option>
+                           </select>
+                           <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
+                         </div>
+                       </div>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Producent</label>
+                         <input type="text" value={isEditingCurrentNumber.producer || ''} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, producer: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                       </div>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Następna weryfikacja</label>
+                         <input type="text" value={isEditingCurrentNumber.nextVerification || '-'} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, nextVerification: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                       </div>
+                     </>
+                   ) : (
+                     <>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Lokalizacja</label>
+                         <div className="relative">
+                           <select value={isEditingCurrentNumber.location} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, location: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none">
+                             <option value="Clavey">Clavey</option>
+                             <option value="Brak">Brak</option>
+                             <option value="Magazyn główny">Magazyn główny</option>
+                           </select>
+                           <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
+                         </div>
+                       </div>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Producent</label>
+                         <input type="text" value={isEditingCurrentNumber.producer || ''} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, producer: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
+                       </div>
+                       <div>
+                         <label className="block text-xs font-bold text-gray-700 mb-1">Data produkcji</label>
+                         <input type="text" value="22.05.2021" readOnly className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-500 cursor-not-allowed" />
+                       </div>
+                     </>
+                   )}
+
+                   {currentAsset === 'Regały' && (
+                     <div>
+                       <label className="block text-xs font-bold text-gray-700 mb-1">Kod QR</label>
+                       <div className="flex items-center space-x-4">
+                         <img src={`https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${isEditingCurrentNumber.qrCode}`} alt="QR Code" className="w-12 h-12" />
+                         <span className="font-mono text-sm text-gray-600 uppercase bg-gray-50 px-2 py-1 rounded border border-gray-100">{isEditingCurrentNumber.qrCode}</span>
+                       </div>
                      </div>
-                   </div>
-                   <div>
-                     <label className="block text-xs font-bold text-gray-700 mb-1">Producent</label>
-                     <input type="text" value={isEditingCurrentNumber.producer || ''} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, producer: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none" />
-                   </div>
-                   <div>
-                     <label className="block text-xs font-bold text-gray-700 mb-1">Data produkcji</label>
-                     <div className="relative">
-                       <input type="text" value="22.05.2021" readOnly className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-500" />
-                     </div>
-                   </div>
+                   )}
                 </div>
              </div>
            </div>
