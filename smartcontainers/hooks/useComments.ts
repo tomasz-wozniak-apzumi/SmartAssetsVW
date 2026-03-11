@@ -8,6 +8,7 @@ export interface CommentData {
   text: string;
   author: string;
   createdAt: string;
+  isAdminComment?: boolean;
 }
 
 export function useComments(currentView: string) {

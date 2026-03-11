@@ -1,5 +1,6 @@
 import React, { useState, MouseEvent } from 'react';
 import { useComments } from '../hooks/useComments';
+import { useAdminMode } from '../hooks/useAdminMode';
 import { MessageCircle, X, Send, Trash2 } from 'lucide-react';
 
 interface CommentsOverlayProps {
@@ -8,6 +9,7 @@ interface CommentsOverlayProps {
 
 const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView }) => {
   const { comments, addComment, deleteComment, isLoading } = useComments(currentView);
+  const isAdmin = useAdminMode();
   const [isCommentingMode, setIsCommentingMode] = useState(false);
   const [activeCommentId, setActiveCommentId] = useState<string | null>(null);
   
@@ -35,7 +37,8 @@ const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView }) => {
       y: newPin.y,
       view: currentView,
       text: newText,
-      author: 'User', // w prawdziwej aplikacji pobierane z kontekstu auth
+      author: isAdmin ? 'Admin' : 'User', // w prawdziwej aplikacji pobierane z kontekstu auth
+      isAdminComment: isAdmin,
     });
 
     setNewPin(null);
@@ -72,7 +75,7 @@ const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView }) => {
         {!isLoading && comments.map((comment) => (
           <div 
             key={comment.id}
-            className="absolute z-50 pointer-events-auto"
+            className={`absolute z-50 pointer-events-auto ${comment.isAdminComment ? 'z-[60]' : ''}`}
             style={{ left: `${comment.x}%`, top: `${comment.y}%`, transform: 'translate(-50%, -50%)' }}
           >
             <button
@@ -80,26 +83,38 @@ const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView }) => {
                 e.stopPropagation();
                 setActiveCommentId(activeCommentId === comment.id ? null : comment.id);
               }}
-              className="w-8 h-8 rounded-full bg-yellow-400 border-2 border-white shadow-md flex items-center justify-center font-bold text-xs text-yellow-900 hover:scale-110 transition-transform"
+              className={`w-8 h-8 rounded-full border-2 border-white shadow-md flex items-center justify-center font-bold text-xs hover:scale-110 transition-transform ${
+                comment.isAdminComment
+                  ? 'bg-red-600 text-white'
+                  : 'bg-yellow-400 text-yellow-900'
+              }`}
             >
-              {comment.author.charAt(0).toUpperCase()}
+              {comment.isAdminComment ? '!' : comment.author.charAt(0).toUpperCase()}
             </button>
 
-            {/* Chmurka z treścią (otwiera się po kliknięciu) */}
-            {activeCommentId === comment.id && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 p-3 text-sm flex flex-col gap-2">
+            {/* Chmurka z treścią (zawsze widoczna w przypadku admina) */}
+            {(activeCommentId === comment.id || comment.isAdminComment) && (
+              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 rounded-lg shadow-xl border p-3 text-sm flex flex-col gap-2 ${
+                comment.isAdminComment 
+                  ? 'bg-red-50 border-red-200' 
+                  : 'bg-white border-gray-100'
+              }`}>
                  <div className="flex justify-between items-start mb-1">
-                    <span className="font-bold text-gray-800">{comment.author}</span>
-                    <button 
-                      onClick={() => deleteComment(comment.id)}
-                      className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded transition-colors"
-                      title="Usuń komentarz"
-                    >
-                      <Trash2 size={14} />
-                    </button>
+                    <span className={`font-bold ${comment.isAdminComment ? 'text-red-800' : 'text-gray-800'}`}>
+                      {comment.author}
+                    </span>
+                    {(!comment.isAdminComment || isAdmin) && (
+                      <button 
+                        onClick={() => deleteComment(comment.id)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded transition-colors"
+                        title="Usuń komentarz"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    )}
                  </div>
-                 <p className="text-gray-600 break-words">{comment.text}</p>
-                 <span className="text-[10px] text-gray-400 mt-1">
+                 <p className={`${comment.isAdminComment ? 'text-red-900' : 'text-gray-600'} break-words flex-1`}>{comment.text}</p>
+                 <span className={`text-[10px] mt-1 ${comment.isAdminComment ? 'text-red-500' : 'text-gray-400'}`}>
                    {new Date(comment.createdAt).toLocaleString()}
                  </span>
               </div>
