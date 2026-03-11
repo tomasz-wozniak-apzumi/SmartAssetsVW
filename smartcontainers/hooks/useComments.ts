@@ -17,7 +17,7 @@ export function useComments(currentView: string) {
   // Funkcja pomocnicza aby dodać timeout do każdego fetcha
   const fetchWithTimeout = async (url: string, options: RequestInit = {}) => {
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), 2000); // 2 sekundowy timeout
+    const id = setTimeout(() => controller.abort(), 5000); // 5 sekundowy timeout dla zimnych startów Vercel
     try {
       const response = await fetch(url, {
         ...options,
