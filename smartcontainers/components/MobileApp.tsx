@@ -143,7 +143,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
 
     const navItems = [
       { id: 'Znajdź', icon: <Search size={22} />, label: 'Znajdź' },
-      { id: 'Numery bieżące', icon: <FileText size={22} />, label: 'Numery\nbieżące' },
+      { id: 'Numery bieżące', icon: <FileText size={22} />, label: selectedAsset === 'Regały' ? 'Numery\nRegałów' : 'Numery\nbieżące' },
       { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: `Numery\n${asset.pluralGenitive}` },
       { id: 'Listy kontrolne', icon: <BookOpen size={22} />, label: 'Listy\nkontrolne' },
       { id: 'Serwis', icon: <Wrench size={22} />, label: 'Serwis' }
@@ -279,47 +279,58 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   );
 
   // ─── Numery Bieżące ───────────────────────────────────────────────────────
-  const renderNumeryBiezace = () => (
-    <div className="flex flex-col h-full bg-white relative">
-      {renderTopBar('Numery bieżące', true)}
-      {renderAssetHeader()}
-      <SearchInput />
-      <div className="flex-1 overflow-y-auto">
-        {[963, 964, 965].map(id => (
-          <div 
-            key={id} 
-            className="p-4 border-b border-gray-200 text-sm cursor-pointer hover:bg-gray-50 active:bg-gray-100"
-            onClick={() => { setSelectedItemId(id); setCurrentView('Numer bieżący detail'); }}
-          >
-            <div className="flex justify-between mb-2">
-              <div className="w-1/2">
-                <div className="text-gray-500 text-xs mb-1">Numer {asset.singularGenitive}</div>
-                <div className="text-[#1a2b4c] font-medium text-lg">40</div>
+  const renderNumeryBiezace = () => {
+    const listTitle = selectedAsset === 'Regały' ? 'Numery regałów' : 'Numery bieżące';
+    
+    // Zmienione mock data aby każdy element miał inny numer regału/kontenera (wcześniej wszystko to było 40)
+    const mockData = [
+      { id: 963, numerDomyslny: '40', nazwa: '3' },
+      { id: 964, numerDomyslny: '41', nazwa: '3' },
+      { id: 965, numerDomyslny: '42', nazwa: '3' },
+    ];
+
+    return (
+      <div className="flex flex-col h-full bg-white relative">
+        {renderTopBar(listTitle, true)}
+        {renderAssetHeader()}
+        <SearchInput />
+        <div className="flex-1 overflow-y-auto">
+          {mockData.map(item => (
+            <div 
+              key={item.id} 
+              className="p-4 border-b border-gray-200 text-sm cursor-pointer hover:bg-gray-50 active:bg-gray-100"
+              onClick={() => { setSelectedItemId(item.id); setCurrentView('Numer bieżący detail'); }}
+            >
+              <div className="flex justify-between mb-2">
+                <div className="w-1/2">
+                  <div className="text-gray-500 text-xs mb-1">Numer {asset.singularGenitive}</div>
+                  <div className="text-[#1a2b4c] font-medium text-lg">{item.numerDomyslny}</div>
+                </div>
+                <div className="w-1/2">
+                  <div className="text-gray-500 text-xs mb-1">Nazwa {asset.singularGenitive}</div>
+                  <div className="text-[#1a2b4c] font-medium text-lg">{item.nazwa}</div>
+                </div>
               </div>
-              <div className="w-1/2">
-                <div className="text-gray-500 text-xs mb-1">Nazwa {asset.singularGenitive}</div>
-                <div className="text-[#1a2b4c] font-medium text-lg">3</div>
+              <div className="flex justify-between mb-4">
+                <div className="w-1/2">
+                  <div className="text-gray-500 text-xs mb-1">Status</div>
+                  <div className="text-green-600 font-bold">W użyciu</div>
+                </div>
+                <div className="w-1/2">
+                  <div className="text-gray-500 text-xs mb-1">Następna weryfikacja</div>
+                  <div className="text-red-600 font-medium">2021-01-20</div>
+                </div>
+              </div>
+              <div>
+                <div className="text-gray-500 text-xs mb-1">Lokalizacja</div>
+                <div className="text-[#1a2b4c] font-medium text-base">Gestamp Działkowców {item.id}</div>
               </div>
             </div>
-            <div className="flex justify-between mb-4">
-              <div className="w-1/2">
-                <div className="text-gray-500 text-xs mb-1">Status</div>
-                <div className="text-green-600 font-bold">W użyciu</div>
-              </div>
-              <div className="w-1/2">
-                <div className="text-gray-500 text-xs mb-1">Następna weryfikacja</div>
-                <div className="text-red-600 font-medium">2021-01-20</div>
-              </div>
-            </div>
-            <div>
-              <div className="text-gray-500 text-xs mb-1">Lokalizacja</div>
-              <div className="text-[#1a2b4c] font-medium text-base">Gestamp Działkowców {id}</div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // ─── Numer Bieżący Detail ─────────────────────────────────────────────────
   const renderNumerBiezacyDetail = () => (
@@ -329,7 +340,9 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
         <button onClick={() => setCurrentView('Numery bieżące')} className="mr-4 text-[#1a2b4c]">
           <ChevronLeft size={24} />
         </button>
-        <h1 className="flex-1 text-center text-lg font-bold text-[#1a2b4c]">Numer bieżący</h1>
+        <h1 className="flex-1 text-center text-lg font-bold text-[#1a2b4c]">
+          {selectedAsset === 'Regały' ? 'Numer regału' : 'Numer bieżący'}
+        </h1>
         <div className="w-6 ml-4" />
       </div>
 
