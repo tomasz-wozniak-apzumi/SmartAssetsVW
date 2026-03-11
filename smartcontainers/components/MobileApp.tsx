@@ -141,15 +141,21 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     // Hide bottom nav on detail and "full" list views (where it's supposed to be hidden)
     if (['Numer bieżący detail', 'Numery bieżące full'].includes(currentView)) return null;
 
+    const navItems = [
+      { id: 'Znajdź', icon: <Search size={22} />, label: 'Znajdź' },
+      { id: 'Numery bieżące', icon: <FileText size={22} />, label: 'Numery\nbieżące' },
+      { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: `Numery\n${asset.pluralGenitive}` },
+      { id: 'Listy kontrolne', icon: <BookOpen size={22} />, label: 'Listy\nkontrolne' },
+      { id: 'Serwis', icon: <Wrench size={22} />, label: 'Serwis' }
+    ].filter(item => {
+      // Hide the third button ("Numery Regałów") if Asset is Regały
+      if (selectedAsset === 'Regały' && item.id === 'Numery kontenerów') return false;
+      return true;
+    });
+
     return (
       <div className="flex bg-white border-t border-gray-200 mt-auto shrink-0 pb-2 pt-2 px-1 justify-between">
-        {[
-          { id: 'Znajdź', icon: <Search size={22} />, label: 'Znajdź' },
-          { id: 'Numery bieżące', icon: <FileText size={22} />, label: 'Numery\nbieżące' },
-          { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: `Numery\n${asset.pluralGenitive}` },
-          { id: 'Listy kontrolne', icon: <BookOpen size={22} />, label: 'Listy\nkontrolne' },
-          { id: 'Serwis', icon: <Wrench size={22} />, label: 'Serwis' }
-        ].map(item => (
+        {navItems.map(item => (
           <button 
             key={item.id}
             onClick={() => setCurrentView(item.id as MobileView)}
@@ -345,20 +351,24 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
               <div className="text-gray-400 text-xs mb-1">Okres weryfikacji</div>
               <div className="text-[#1a2b4c] font-medium text-xl">0 dni</div>
             </div>
-            <div className="w-1/2 pl-2">
-              <div className="text-gray-400 text-xs mb-1">Wersja</div>
-              <div className="text-[#1a2b4c] font-medium text-xl">0</div>
-            </div>
+            {selectedAsset !== 'Regały' && (
+              <div className="w-1/2 pl-2">
+                <div className="text-gray-400 text-xs mb-1">Wersja</div>
+                <div className="text-[#1a2b4c] font-medium text-xl">0</div>
+              </div>
+            )}
           </div>
           <div className="flex justify-between">
             <div className="w-1/2 pr-2">
               <div className="text-gray-400 text-xs mb-1">Typ</div>
               <div className="text-[#1a2b4c] font-bold text-lg">Manualny</div>
             </div>
-            <div className="w-1/2 pl-2">
-              <div className="text-gray-400 text-xs mb-1">Numer bieżący</div>
-              <div className="text-[#1a2b4c] font-bold text-lg">{selectedItemId}</div>
-            </div>
+            {selectedAsset !== 'Regały' && (
+              <div className="w-1/2 pl-2">
+                <div className="text-gray-400 text-xs mb-1">Numer bieżący</div>
+                <div className="text-[#1a2b4c] font-bold text-lg">{selectedItemId}</div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -374,10 +384,14 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
         {/* Section 3: location / owner */}
         <div className="p-4 border-b border-gray-100">
           <div className="flex justify-between mb-4">
-            <div className="w-1/2 pr-2">
-              <div className="text-gray-400 text-xs mb-1">Lokalizacja</div>
-              <div className="text-[#1a2b4c] font-medium text-base leading-tight">Gestamp<br />Działkowców</div>
-            </div>
+            {selectedAsset !== 'Regały' ? (
+              <div className="w-1/2 pr-2">
+                <div className="text-gray-400 text-xs mb-1">Lokalizacja</div>
+                <div className="text-[#1a2b4c] font-medium text-base leading-tight">Gestamp<br />Działkowców</div>
+              </div>
+            ) : (
+              <div className="w-1/2 pr-2" />
+            )}
             <div className="w-1/2 pl-2">
               <div className="text-gray-400 text-xs mb-1">Właściciel</div>
               <div className="text-[#1a2b4c] font-medium text-base">VW</div>
