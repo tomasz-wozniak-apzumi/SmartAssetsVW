@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { ClipboardCheck, Edit2, Trash2, Eye, Upload, Download, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import AddDocumentModal from './AddDocumentModal';
 
+import { AssetType } from '../types';
+
 interface CurrentNumberPreviewProps {
   data: any;
   onClose: () => void;
+  currentAsset?: AssetType;
 }
 
-const CurrentNumberPreview: React.FC<CurrentNumberPreviewProps> = ({ data, onClose }) => {
+const CurrentNumberPreview: React.FC<CurrentNumberPreviewProps> = ({ data, onClose, currentAsset }) => {
   const [isAddDocOpen, setIsAddDocOpen] = useState(false);
 
   return (
@@ -77,14 +80,18 @@ const CurrentNumberPreview: React.FC<CurrentNumberPreviewProps> = ({ data, onClo
           <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">DANE PODSTAWOWE</h2>
           <div className="flex gap-12">
             <div className="grid grid-cols-4 gap-x-12 gap-y-6 flex-1">
-              <div>
-                <label className="block text-[10px] text-gray-400 font-semibold mb-1">Numer bieżący</label>
-                <p className="text-sm font-medium">{data.currentNumber}</p>
-              </div>
-              <div>
-                <label className="block text-[10px] text-gray-400 font-semibold mb-1">Lokalizacja</label>
-                <p className="text-sm font-medium">{data.location}</p>
-              </div>
+              {currentAsset !== 'Regały' && (
+                <div>
+                  <label className="block text-[10px] text-gray-400 font-semibold mb-1">Numer bieżący</label>
+                  <p className="text-sm font-medium">{data.currentNumber}</p>
+                </div>
+              )}
+              {currentAsset !== 'Regały' && (
+                <div>
+                  <label className="block text-[10px] text-gray-400 font-semibold mb-1">Lokalizacja</label>
+                  <p className="text-sm font-medium">{data.location}</p>
+                </div>
+              )}
               <div>
                 <label className="block text-[10px] text-gray-400 font-semibold mb-1">Właściciel</label>
                 <p className="text-sm font-medium">{data.owner}</p>
@@ -97,10 +104,12 @@ const CurrentNumberPreview: React.FC<CurrentNumberPreviewProps> = ({ data, onClo
                 <label className="block text-[10px] text-gray-400 font-semibold mb-1">Status</label>
                 <span className="text-green-600 text-sm font-bold">{data.status}</span>
               </div>
-              <div>
-                <label className="block text-[10px] text-gray-400 font-semibold mb-1">Wersja</label>
-                <p className="text-sm font-medium">{data.version}</p>
-              </div>
+              {currentAsset !== 'Regały' && (
+                <div>
+                  <label className="block text-[10px] text-gray-400 font-semibold mb-1">Wersja</label>
+                  <p className="text-sm font-medium">{data.version}</p>
+                </div>
+              )}
               <div>
                 <label className="block text-[10px] text-gray-400 font-semibold mb-1">Data produkcji</label>
                 <p className="text-sm font-medium">-</p>

@@ -491,7 +491,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
   return (
     <div className="flex flex-1 overflow-hidden relative bg-white">
       {isPreviewing && selectedCurrentNumber && (
-        <CurrentNumberPreview data={selectedCurrentNumber} onClose={() => setIsPreviewing(false)} />
+        <CurrentNumberPreview data={selectedCurrentNumber} onClose={() => setIsPreviewing(false)} currentAsset={currentAsset} />
       )}
 
       {isEditingChecklist && (
