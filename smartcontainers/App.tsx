@@ -6,11 +6,13 @@ import { ViewType, AssetType, ZakladType } from './types';
 import { ASSET_CONFIG } from './constants';
 import { ChevronDown, Download } from 'lucide-react';
 import CommentsOverlay from './components/CommentsOverlay';
+import MobileApp from './components/MobileApp'; // We will create this
 
 const App: React.FC = () => {
   const [currentAsset, setCurrentAsset] = useState<AssetType>('Kontenery');
   const [currentView, setCurrentView] = useState<ViewType>('Dane podstawowe');
   const [currentZaklad, setCurrentZaklad] = useState<ZakladType>('Zakład Września');
+  const [isMobileAppOpen, setIsMobileAppOpen] = useState(false);
 
   const handleAssetChange = (newAsset: AssetType) => {
     setCurrentAsset(newAsset);
@@ -28,8 +30,13 @@ const App: React.FC = () => {
         currentAsset={currentAsset} 
         currentZaklad={currentZaklad}
         onZakladChange={setCurrentZaklad}
+        onMobileAppOpen={() => setIsMobileAppOpen(true)}
       />
-      <main className="flex-1 flex flex-col min-w-0 bg-white z-10 relative">
+      
+      {isMobileAppOpen ? (
+        <MobileApp onClose={() => setIsMobileAppOpen(false)} />
+      ) : (
+        <main className="flex-1 flex flex-col min-w-0 bg-white z-10 relative">
         <CommentsOverlay currentView={currentView} />
         <div className="bg-white border-b border-gray-100 p-4 shrink-0">
           <div className="text-[11px] text-gray-400 mb-6 font-bold tracking-wide">
@@ -95,6 +102,7 @@ const App: React.FC = () => {
         />
         <BottomNav currentView={currentView} />
       </main>
+      )}
     </div>
   );
 };
