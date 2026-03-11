@@ -133,21 +133,21 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       );
     }
 
-    // Hide bottom nav on detail view (it has its own back)
-    if (currentView === 'Numer bieżący detail') return null;
+    // Hide bottom nav on detail and list views (they have their own back button to Menu)
+    if (['Numer bieżący detail', 'Numery bieżące', 'Numery kontenerów'].includes(currentView)) return null;
 
     return (
       <div className="flex bg-white border-t border-gray-200 mt-auto shrink-0 pb-2 pt-2 px-1 justify-between">
         {[
           { id: 'Znajdź', icon: <Search size={22} />, label: 'Znajdź' },
           { id: 'Numery bieżące', icon: <FileText size={22} />, label: 'Numery\nbieżące' },
-          { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: `Numery\n${asset.pluralGenitive}` },
+          { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: `Numery\n${asset.pluralGenitive}`, target: 'Numery bieżące' },
           { id: 'Listy kontrolne', icon: <BookOpen size={22} />, label: 'Listy\nkontrolne' },
           { id: 'Serwis', icon: <Wrench size={22} />, label: 'Serwis' }
         ].map(item => (
           <button 
             key={item.id}
-            onClick={() => setCurrentView(item.id as MobileView)}
+            onClick={() => setCurrentView((item.target || item.id) as MobileView)}
             className={`flex flex-col items-center flex-1 whitespace-pre-line text-center ${currentView === item.id ? 'text-[#1a2b4c]' : 'text-gray-400'}`}
           >
             <div className={`mb-1 ${currentView === item.id ? 'font-bold' : ''}`}>{item.icon}</div>
