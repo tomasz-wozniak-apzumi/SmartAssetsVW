@@ -77,6 +77,12 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
 
   const asset = ASSET_CONFIG[selectedAsset];
 
+  const mockNumeryBiezaceData = [
+    { id: 963, numerDomyslny: '40', nazwa: '3' },
+    { id: 964, numerDomyslny: '41', nazwa: '3' },
+    { id: 965, numerDomyslny: '42', nazwa: '3' },
+  ];
+
   // ─── Asset Header Banner ─────────────────────────────────────────────────
   const renderAssetHeader = () => (
     <div 
@@ -281,13 +287,6 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   // ─── Numery Bieżące ───────────────────────────────────────────────────────
   const renderNumeryBiezace = () => {
     const listTitle = selectedAsset === 'Regały' ? 'Numery regałów' : 'Numery bieżące';
-    
-    // Zmienione mock data aby każdy element miał inny numer regału/kontenera (wcześniej wszystko to było 40)
-    const mockData = [
-      { id: 963, numerDomyslny: '40', nazwa: '3' },
-      { id: 964, numerDomyslny: '41', nazwa: '3' },
-      { id: 965, numerDomyslny: '42', nazwa: '3' },
-    ];
 
     return (
       <div className="flex flex-col h-full bg-white relative">
@@ -295,7 +294,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
         {renderAssetHeader()}
         <SearchInput />
         <div className="flex-1 overflow-y-auto">
-          {mockData.map(item => (
+          {mockNumeryBiezaceData.map(item => (
             <div 
               key={item.id} 
               className="p-4 border-b border-gray-200 text-sm cursor-pointer hover:bg-gray-50 active:bg-gray-100"
@@ -333,31 +332,34 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   };
 
   // ─── Numer Bieżący Detail ─────────────────────────────────────────────────
-  const renderNumerBiezacyDetail = () => (
-    <div className="flex flex-col h-full bg-white overflow-hidden">
-      {/* Top bar — back to Numery bieżące */}
-      <div className="flex items-center p-4 bg-white border-b border-gray-200 shrink-0 sticky top-0 z-10">
-        <button onClick={() => setCurrentView('Numery bieżące')} className="mr-4 text-[#1a2b4c]">
-          <ChevronLeft size={24} />
-        </button>
-        <h1 className="flex-1 text-center text-lg font-bold text-[#1a2b4c]">
-          {selectedAsset === 'Regały' ? 'Numer regału' : 'Numer bieżący'}
-        </h1>
-        <div className="w-6 ml-4" />
-      </div>
+  const renderNumerBiezacyDetail = () => {
+    const selectedItem = mockNumeryBiezaceData.find(item => item.id === selectedItemId) || mockNumeryBiezaceData[0];
 
-      <div className="flex-1 overflow-y-auto">
-        {/* Section 1: basic info */}
-        <div className="p-4 border-b border-gray-100">
-          <div className="flex justify-between mb-4">
-            <div className="w-1/2 pr-2">
-              <div className="text-gray-400 text-xs mb-1">Numer {asset.singularGenitive}</div>
-              <div className="text-[#1a2b4c] font-medium text-xl">40</div>
-            </div>
-            <div className="w-1/2 pl-2">
-              <div className="text-gray-400 text-xs mb-1">Nazwa {asset.singularGenitive}</div>
-              <div className="text-[#1a2b4c] font-medium text-xl">3</div>
-            </div>
+    return (
+      <div className="flex flex-col h-full bg-white overflow-hidden">
+        {/* Top bar — back to Numery bieżące */}
+        <div className="flex items-center p-4 bg-white border-b border-gray-200 shrink-0 sticky top-0 z-10">
+          <button onClick={() => setCurrentView('Numery bieżące')} className="mr-4 text-[#1a2b4c]">
+            <ChevronLeft size={24} />
+          </button>
+          <h1 className="flex-1 text-center text-lg font-bold text-[#1a2b4c]">
+            {selectedAsset === 'Regały' ? 'Numer regału' : 'Numer bieżący'}
+          </h1>
+          <div className="w-6 ml-4" />
+        </div>
+
+        <div className="flex-1 overflow-y-auto">
+          {/* Section 1: basic info */}
+          <div className="p-4 border-b border-gray-100">
+            <div className="flex justify-between mb-4">
+              <div className="w-1/2 pr-2">
+                <div className="text-gray-400 text-xs mb-1">Numer {asset.singularGenitive}</div>
+                <div className="text-[#1a2b4c] font-medium text-xl">{selectedItem.numerDomyslny}</div>
+              </div>
+              <div className="w-1/2 pl-2">
+                <div className="text-gray-400 text-xs mb-1">Nazwa {asset.singularGenitive}</div>
+                <div className="text-[#1a2b4c] font-medium text-xl">{selectedItem.nazwa}</div>
+              </div>
           </div>
           <div className="flex justify-between mb-4">
             <div className="w-1/2 pr-2">
@@ -457,6 +459,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       </div>
     </div>
   );
+  };
 
   // ─── Numery Kontenerów ────────────────────────────────────────────────────
   const renderNumeryKontenerow = () => (
