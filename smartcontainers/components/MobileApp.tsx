@@ -16,16 +16,18 @@ import {
   Package,
   Layers,
   ShoppingCart,
-  Truck
+  Truck,
+  Pencil,
+  AlertTriangle
 } from 'lucide-react';
 
-type MobileView = 'Menu' | 'Znajdź' | 'Numery bieżące' | 'Numery kontenerów' | 'Listy kontrolne' | 'Serwis';
+type MobileView = 'Menu' | 'Znajdź' | 'Numery bieżące' | 'Numery kontenerów' | 'Listy kontrolne' | 'Serwis' | 'Numer bieżący detail';
 type AssetType = 'Kontenery' | 'Regały' | 'Trolleye' | 'HSW';
 
 interface AssetConfig {
   label: string;
-  singularGenitive: string; // "kontenera" / "regału" etc.
-  pluralGenitive: string;   // "kontenerów" / "regałów" etc.
+  singularGenitive: string;
+  pluralGenitive: string;
   icon: React.ReactNode;
   color: string;
 }
@@ -70,10 +72,11 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState<'TWORZENIE' | 'EDYCJA'>('TWORZENIE');
   const [selectedAsset, setSelectedAsset] = useState<AssetType>('Kontenery');
   const [assetyExpanded, setAssetyExpanded] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState<number>(963);
 
   const asset = ASSET_CONFIG[selectedAsset];
 
-  // ─── Asset Header Banner (shown in non-menu views) ────────────────────────
+  // ─── Asset Header Banner ─────────────────────────────────────────────────
   const renderAssetHeader = () => (
     <div 
       className="flex items-center px-4 py-2 shrink-0"
@@ -86,11 +89,11 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     </div>
   );
 
-  // ─── Top Bar ──────────────────────────────────────────────────────────────
-  const renderTopBar = (title: string, showBack: boolean = false) => (
+  // ─── Top Bar (Back always goes to Menu) ──────────────────────────────────
+  const renderTopBar = (title: string, showBack: boolean = false, backTarget: MobileView = 'Menu') => (
     <div className="flex items-center p-4 bg-white border-b border-gray-200 shrink-0 sticky top-0 z-10">
       {showBack ? (
-        <button onClick={() => setCurrentView('Znajdź')} className="mr-4 text-[#1a2b4c]">
+        <button onClick={() => setCurrentView(backTarget)} className="mr-4 text-[#1a2b4c]">
           <ChevronLeft size={24} />
         </button>
       ) : (
@@ -129,6 +132,9 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
         </div>
       );
     }
+
+    // Hide bottom nav on detail view (it has its own back)
+    if (currentView === 'Numer bieżący detail') return null;
 
     return (
       <div className="flex bg-white border-t border-gray-200 mt-auto shrink-0 pb-2 pt-2 px-1 justify-between">
@@ -169,7 +175,6 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       </div>
       
       <div className="flex flex-col flex-1 overflow-y-auto">
-        {/* Przestrzeń */}
         <div className="flex items-center justify-between p-4 border-b border-gray-100 cursor-default opacity-50">
           <span className="text-[#1a2b4c] font-medium text-[15px]">Przestrzeń: Adamowe</span>
           <ChevronRight size={18} className="text-gray-400" />
@@ -212,7 +217,6 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
           )}
         </div>
 
-        {/* Other non-clickable menu items */}
         {['Czyszczenie linii', 'Wizualizacje', 'Zmień rozdzielczość wideo', 'Wyloguj'].map((label, idx) => (
           <div key={idx} className="flex items-center justify-between p-4 border-b border-gray-100 cursor-default opacity-50">
             <span className="text-[#1a2b4c] font-medium text-[15px]">{label}</span>
@@ -226,7 +230,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   // ─── Znajdź View ──────────────────────────────────────────────────────────
   const renderZnajdz = () => (
     <div className="flex flex-col h-full bg-white relative">
-      {renderTopBar('Znajdź', false)}
+      {renderTopBar('Znajdź', true)}
       {renderAssetHeader()}
       <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-4">
         <button className="w-full bg-[#2a3b6c] text-white py-4 px-4 rounded shadow flex items-center justify-center text-lg font-bold tracking-wide">
@@ -241,7 +245,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     </div>
   );
 
-  // ─── Search Input ────────────────────────────────────────────────────────
+  // ─── Search Input ─────────────────────────────────────────────────────────
   const SearchInput = () => (
     <div className="p-3 bg-white shrink-0 border-b border-gray-100">
       <div className="relative">
@@ -263,7 +267,11 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       <SearchInput />
       <div className="flex-1 overflow-y-auto">
         {[963, 964, 965].map(id => (
-          <div key={id} className="p-4 border-b border-gray-200 text-sm">
+          <div 
+            key={id} 
+            className="p-4 border-b border-gray-200 text-sm cursor-pointer hover:bg-gray-50 active:bg-gray-100"
+            onClick={() => { setSelectedItemId(id); setCurrentView('Numer bieżący detail'); }}
+          >
             <div className="flex justify-between mb-2">
               <div className="w-1/2">
                 <div className="text-gray-500 text-xs mb-1">Numer {asset.singularGenitive}</div>
@@ -288,6 +296,122 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
               <div className="text-gray-500 text-xs mb-1">Lokalizacja</div>
               <div className="text-[#1a2b4c] font-medium text-base">Gestamp Działkowców {id}</div>
             </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  // ─── Numer Bieżący Detail ─────────────────────────────────────────────────
+  const renderNumerBiezacyDetail = () => (
+    <div className="flex flex-col h-full bg-white overflow-hidden">
+      {/* Top bar — back to Numery bieżące */}
+      <div className="flex items-center p-4 bg-white border-b border-gray-200 shrink-0 sticky top-0 z-10">
+        <button onClick={() => setCurrentView('Numery bieżące')} className="mr-4 text-[#1a2b4c]">
+          <ChevronLeft size={24} />
+        </button>
+        <h1 className="flex-1 text-center text-lg font-bold text-[#1a2b4c]">Numer bieżący</h1>
+        <div className="w-6 ml-4" />
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        {/* Section 1: basic info */}
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex justify-between mb-4">
+            <div className="w-1/2 pr-2">
+              <div className="text-gray-400 text-xs mb-1">Numer {asset.singularGenitive}</div>
+              <div className="text-[#1a2b4c] font-medium text-xl">40</div>
+            </div>
+            <div className="w-1/2 pl-2">
+              <div className="text-gray-400 text-xs mb-1">Nazwa {asset.singularGenitive}</div>
+              <div className="text-[#1a2b4c] font-medium text-xl">3</div>
+            </div>
+          </div>
+          <div className="flex justify-between mb-4">
+            <div className="w-1/2 pr-2">
+              <div className="text-gray-400 text-xs mb-1">Okres weryfikacji</div>
+              <div className="text-[#1a2b4c] font-medium text-xl">0 dni</div>
+            </div>
+            <div className="w-1/2 pl-2">
+              <div className="text-gray-400 text-xs mb-1">Wersja</div>
+              <div className="text-[#1a2b4c] font-medium text-xl">0</div>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div className="w-1/2 pr-2">
+              <div className="text-gray-400 text-xs mb-1">Typ</div>
+              <div className="text-[#1a2b4c] font-bold text-lg">Manualny</div>
+            </div>
+            <div className="w-1/2 pl-2">
+              <div className="text-gray-400 text-xs mb-1">Numer bieżący</div>
+              <div className="text-[#1a2b4c] font-bold text-lg">{selectedItemId}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: QR */}
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex items-center text-gray-400 text-xs mb-1 space-x-1">
+            <span>QR</span>
+            <Pencil size={12} />
+          </div>
+          <div className="text-[#1a2b4c] font-medium text-base">514499_59</div>
+        </div>
+
+        {/* Section 3: location / owner */}
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex justify-between mb-4">
+            <div className="w-1/2 pr-2">
+              <div className="text-gray-400 text-xs mb-1">Lokalizacja</div>
+              <div className="text-[#1a2b4c] font-medium text-base leading-tight">Gestamp<br />Działkowców</div>
+            </div>
+            <div className="w-1/2 pl-2">
+              <div className="text-gray-400 text-xs mb-1">Właściciel</div>
+              <div className="text-[#1a2b4c] font-medium text-base">VW</div>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div className="w-1/2 pr-2">
+              <div className="text-gray-400 text-xs mb-1">Producent</div>
+              <div className="text-gray-500 text-base">-</div>
+            </div>
+            <div className="w-1/2 pl-2">
+              <div className="text-gray-400 text-xs mb-1">Data produkcji</div>
+              <div className="text-gray-500 text-base">-</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 4: verification + status */}
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex justify-between">
+            <div className="w-1/2 pr-2">
+              <div className="text-gray-400 text-xs mb-1">Następna weryfikacja</div>
+              <div className="text-red-600 font-medium text-base">2021-01-20</div>
+            </div>
+            <div className="w-1/2 pl-2">
+              <div className="flex items-center text-gray-400 text-xs mb-1 space-x-1">
+                <span>Status</span>
+                <Pencil size={12} />
+              </div>
+              <div className="text-green-600 font-bold text-base">W użyciu</div>
+            </div>
+          </div>
+        </div>
+
+        {/* ZGŁOŚ USZKODZENIE */}
+        <div className="p-4">
+          <button className="w-full bg-[#2a3b6c] text-white py-4 rounded text-base font-bold tracking-widest flex items-center justify-center space-x-3 shadow-md">
+            <AlertTriangle size={20} />
+            <span>ZGŁOŚ USZKODZENIE</span>
+          </button>
+        </div>
+
+        {/* Action list */}
+        {['Zrób zdjęcie', 'Lista kontrolna inspekcji', 'Wyniki inspekcji', 'Historia', 'Dokumenty'].map((label, idx) => (
+          <div key={idx} className="flex items-center justify-between px-4 py-4 border-t border-gray-100 cursor-pointer hover:bg-gray-50">
+            <span className="text-[#1a2b4c] text-sm font-medium">{label}</span>
+            <ChevronRight size={18} className="text-gray-400" />
           </div>
         ))}
       </div>
@@ -346,18 +470,23 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   const renderListyKontrolne = () => (
     <div className="flex flex-col h-full bg-white relative">
       <div className="flex pt-4 bg-white border-b-2 border-gray-100 text-sm font-bold shadow-sm z-10 shrink-0">
+        {/* back button in tabs row */}
+        <button onClick={() => setCurrentView('Menu')} className="pl-3 pr-1 text-[#1a2b4c]">
+          <ChevronLeft size={22} />
+        </button>
         <div 
           onClick={() => setActiveTab('TWORZENIE')}
-          className={`flex-1 text-center pb-3 cursor-pointer ${activeTab === 'TWORZENIE' ? 'border-b-2 border-[#1a2b4c] text-[#1a2b4c]' : 'text-gray-500'}`}
+          className={`flex-1 text-center pb-3 pt-0 cursor-pointer ${activeTab === 'TWORZENIE' ? 'border-b-2 border-[#1a2b4c] text-[#1a2b4c]' : 'text-gray-500'}`}
         >
           TWORZENIE
         </div>
         <div 
           onClick={() => setActiveTab('EDYCJA')}
-          className={`flex-1 text-center pb-3 cursor-pointer ${activeTab === 'EDYCJA' ? 'border-b-2 border-[#1a2b4c] text-[#1a2b4c]' : 'text-gray-500'}`}
+          className={`flex-1 text-center pb-3 pt-0 cursor-pointer ${activeTab === 'EDYCJA' ? 'border-b-2 border-[#1a2b4c] text-[#1a2b4c]' : 'text-gray-500'}`}
         >
           EDYCJA
         </div>
+        <div className="w-10" /> {/* spacer to balance back button */}
       </div>
       {renderAssetHeader()}
       <SearchInput />
@@ -384,6 +513,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       case 'Menu': return renderMenu();
       case 'Znajdź': return renderZnajdz();
       case 'Numery bieżące': return renderNumeryBiezace();
+      case 'Numer bieżący detail': return renderNumerBiezacyDetail();
       case 'Numery kontenerów': return renderNumeryKontenerow();
       case 'Listy kontrolne': return renderListyKontrolne();
       case 'Serwis': return (
@@ -399,7 +529,6 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      {/* Mobile Device Container */}
       <div className="relative bg-white w-full max-w-[400px] h-full max-h-[850px] rounded-3xl overflow-hidden shadow-2xl flex flex-col border-[8px] border-gray-900 shadow-black/50">
         
         {/* Mock Status Bar */}
