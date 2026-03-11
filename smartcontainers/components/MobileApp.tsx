@@ -22,7 +22,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
-type MobileView = 'Menu' | 'Znajdź' | 'Numery bieżące' | 'Numery kontenerów' | 'Listy kontrolne' | 'Serwis' | 'Numer bieżący detail';
+type MobileView = 'Menu' | 'Znajdź' | 'Numery bieżące' | 'Numery kontenerów' | 'Listy kontrolne' | 'Serwis' | 'Numer bieżący detail' | 'Numery bieżące full';
 type AssetType = 'Kontenery' | 'Regały' | 'Trolleye' | 'HSW';
 
 interface AssetConfig {
@@ -101,15 +101,16 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
         <div className="w-6 mr-4" />
       )}
       <h1 className="flex-1 text-center text-lg font-bold text-[#1a2b4c]">{title}</h1>
-      {title === 'Numery bieżące' ? (
-        <button className="ml-4 text-[#1a2b4c]">
-          <Filter size={20} />
-        </button>
-      ) : (
-        <button onClick={onClose} className="ml-4 text-gray-400 p-1 hover:bg-gray-100 rounded-full" title="Zamknij">
+      <div className="flex items-center">
+        {title === 'Numery bieżące' && (
+          <button className="mr-2 text-[#1a2b4c]">
+            <Filter size={20} />
+          </button>
+        )}
+        <button onClick={onClose} className="text-gray-400 p-1 hover:bg-gray-100 rounded-full" title="Zamknij">
           <X size={20} />
         </button>
-      )}
+      </div>
     </div>
   );
 
@@ -137,21 +138,21 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       );
     }
 
-    // Hide bottom nav on detail and list views (they have their own back button to Menu)
-    if (['Numer bieżący detail', 'Numery bieżące', 'Numery kontenerów'].includes(currentView)) return null;
+    // Hide bottom nav on detail and "full" list views (where it's supposed to be hidden)
+    if (['Numer bieżący detail', 'Numery bieżące full'].includes(currentView)) return null;
 
     return (
       <div className="flex bg-white border-t border-gray-200 mt-auto shrink-0 pb-2 pt-2 px-1 justify-between">
         {[
           { id: 'Znajdź', icon: <Search size={22} />, label: 'Znajdź' },
           { id: 'Numery bieżące', icon: <FileText size={22} />, label: 'Numery\nbieżące' },
-          { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: `Numery\n${asset.pluralGenitive}`, target: 'Numery bieżące' },
+          { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: `Numery\n${asset.pluralGenitive}` },
           { id: 'Listy kontrolne', icon: <BookOpen size={22} />, label: 'Listy\nkontrolne' },
           { id: 'Serwis', icon: <Wrench size={22} />, label: 'Serwis' }
         ].map(item => (
           <button 
             key={item.id}
-            onClick={() => setCurrentView((item.target || item.id) as MobileView)}
+            onClick={() => setCurrentView(item.id as MobileView)}
             className={`flex flex-col items-center flex-1 whitespace-pre-line text-center ${currentView === item.id ? 'text-[#1a2b4c]' : 'text-gray-400'}`}
           >
             <div className={`mb-1 ${currentView === item.id ? 'font-bold' : ''}`}>{item.icon}</div>
@@ -221,12 +222,20 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
           )}
         </div>
 
-        {['Czyszczenie linii', 'Wizualizacje', 'Zmień rozdzielczość wideo', 'Wyloguj'].map((label, idx) => (
+        {['Czyszczenie linii', 'Wizualizacje', 'Zmień rozdzielczość wideo'].map((label, idx) => (
           <div key={idx} className="flex items-center justify-between p-4 border-b border-gray-100 cursor-default opacity-50">
             <span className="text-[#1a2b4c] font-medium text-[15px]">{label}</span>
             <ChevronRight size={18} className="text-gray-400" />
           </div>
         ))}
+
+        <div 
+          className="flex items-center justify-between p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 active:bg-gray-100"
+          onClick={onClose}
+        >
+          <span className="text-[#1a2b4c] font-medium text-[15px]">Wyloguj</span>
+          <ChevronRight size={18} className="text-gray-400" />
+        </div>
       </div>
     </div>
   );
@@ -435,7 +444,11 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
          { kNumer: '7', nazwa: '154', zNumer: '123', proto: '0', curr: '237', total: '237' },
          { kNumer: '1', nazwa: '1', zNumer: 'Brak', proto: '0', curr: '0', total: '0' }
        ].map((item, id) => (
-          <div key={id} className="p-4 border-b border-gray-200 text-sm">
+          <div 
+            key={id} 
+            className="p-4 border-b border-gray-200 text-sm cursor-pointer hover:bg-gray-50 active:bg-gray-100"
+            onClick={() => setCurrentView('Numery bieżące full')}
+          >
             <div className="flex justify-between mb-3">
               <div className="w-1/3">
                 <div className="text-gray-500 text-[11px] mb-1 leading-tight">Numer {asset.singularGenitive}</div>
@@ -519,6 +532,11 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       case 'Numery bieżące': return renderNumeryBiezace();
       case 'Numer bieżący detail': return renderNumerBiezacyDetail();
       case 'Numery kontenerów': return renderNumeryKontenerow();
+      case 'Numery bieżące full': return (
+        <div className="flex flex-col h-full">
+          {renderNumeryBiezace()}
+        </div>
+      );
       case 'Listy kontrolne': return renderListyKontrolne();
       case 'Serwis': return (
         <div className="flex flex-col h-full">
