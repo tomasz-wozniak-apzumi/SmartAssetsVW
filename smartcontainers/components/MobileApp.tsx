@@ -150,7 +150,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
 
     const navItems = [
       { id: 'Znajdź', icon: <Search size={22} />, label: 'Znajdź' },
-      { id: 'Numery bieżące', icon: <FileText size={22} />, label: selectedAsset === 'Regały' ? 'Numery\nRegałów' : 'Numery\nbieżące' },
+      { id: 'Numery bieżące', icon: <FileText size={22} />, label: 'Numery\nbieżące' },
       { id: 'Numery kontenerów', icon: <ListTodo size={22} />, label: `Numery\n${asset.pluralGenitive}` },
       { id: 'Listy kontrolne', icon: <BookOpen size={22} />, label: 'Listy\nkontrolne' },
       { id: 'Serwis', icon: <Wrench size={22} />, label: 'Serwis' }
@@ -287,7 +287,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
 
   // ─── Numery Bieżące ───────────────────────────────────────────────────────
   const renderNumeryBiezace = () => {
-    const listTitle = selectedAsset === 'Regały' ? 'Numery regałów' : 'Numery bieżące';
+    const listTitle = 'Numery bieżące';
 
     return (
       <div className="flex flex-col h-full bg-white relative">
