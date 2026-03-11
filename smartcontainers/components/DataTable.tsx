@@ -25,6 +25,14 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
   const [localChecklists, setLocalChecklists] = useState<ChecklistData[]>(MOCK_CHECKLISTS);
   const [selectedContainer, setSelectedContainer] = useState<ContainerData | null>(null);
   const [selectedCurrentNumber, setSelectedCurrentNumber] = useState<any | null>(null);
+
+  const ASSET_TYPES_MAP: Record<AssetType, string[]> = {
+    'Regały': ['Wspornikowy', 'Półkowy', 'Paletowy'],
+    'Kontenery': ['Manualny', 'Automatyczny'],
+    'HSW': ['Grawitacyjny', 'Kółkowy', 'Platformowy'],
+    'Trolleye': ['Siatkowy', 'Platformowy', 'Skrzyniowy']
+  };
+
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [isEditingChecklist, setIsEditingChecklist] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,10 +51,15 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
     orderNumber: '',
     project: '',
     verificationPeriod: '',
-    type: 'MANUAL',
+    type: ASSET_TYPES_MAP[currentAsset][0],
     emails: ''
   });
   const [numberError, setNumberError] = useState('');
+
+  // Update default type when asset changes
+  useEffect(() => {
+    setNewContainerData(prev => ({ ...prev, type: ASSET_TYPES_MAP[currentAsset][0] }));
+  }, [currentAsset]);
 
   // Reset states when view changes
   useEffect(() => {
@@ -87,7 +100,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
         name: newContainerData.name,
         verificationPeriod: parseInt(newContainerData.verificationPeriod) || 0,
         project: newContainerData.project,
-        type: newContainerData.type as 'MANUAL' | 'AUTOMATIC',
+        type: newContainerData.type,
         orderNumber: newContainerData.orderNumber,
         prototypes: 0,
         currentNumbers: 0,
@@ -104,7 +117,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
         currentNumber: '001',
         containerName: newContainerData.name,
         status: 'W użyciu',
-        type: newContainerData.type === 'MANUAL' ? 'Manualny' : 'Automatyczny',
+        type: newContainerData.type,
         version: '1.0',
         qrCode: `${newContainerData.number}_001`,
         nextVerification: '-',
@@ -117,7 +130,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
 
       setIsAddingContainer(false);
       setNewContainerData({
-        number: '', name: '', orderNumber: '', project: '', verificationPeriod: '', type: 'MANUAL', emails: ''
+        number: '', name: '', orderNumber: '', project: '', verificationPeriod: '', type: ASSET_TYPES_MAP[currentAsset][0], emails: ''
       });
       setNumberError('');
     } else if (isAddingLocation) {
@@ -192,7 +205,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
                             item.currentNumber.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesNumber = !filters['number'] || item.containerNumber === filters['number'];
       const matchesStatus = !filters['status'] || item.status === filters['status'];
-      const matchesType = !filters['type'] || (item.type === 'Manualny' ? 'MANUAL' : 'AUTOMATIC') === filters['type'];
+      const matchesType = !filters['type'] || item.type === filters['type'];
       const matchesLocation = !filters['location'] || item.location === filters['location'];
       const matchesVerification = !filters['verification'] || item.nextVerification === filters['verification'];
 
@@ -335,7 +348,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
                   <td className="px-4 py-3">{item.name}</td>
                   <td className="px-4 py-3 text-center">{item.verificationPeriod} dni</td>
                   <td className="px-4 py-3">{item.project}</td>
-                  <td className="px-4 py-3 uppercase text-[11px] font-bold text-gray-500">{item.type === 'MANUAL' ? 'Manualny' : 'Automatyczny'}</td>
+                  <td className="px-4 py-3 uppercase text-[11px] font-bold text-gray-500">{item.type}</td>
                   <td className="px-4 py-3">{item.orderNumber}</td>
                   <td className="px-4 py-3 text-center">{item.prototypes}</td>
                   <td className="px-4 py-3 text-center">{item.currentNumbers}</td>
@@ -601,8 +614,9 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
                      <label className="block text-xs font-bold text-gray-700 mb-1">Typ {getAssetGenitive(currentAsset)}</label>
                      <div className="relative">
                        <select value={newContainerData.type} onChange={e => setNewContainerData({...newContainerData, type: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none">
-                         <option value="MANUAL">Manualny</option>
-                         <option value="AUTOMATIC">Automatyczny</option>
+                         {ASSET_TYPES_MAP[currentAsset].map(option => (
+                           <option key={option} value={option}>{option}</option>
+                         ))}
                        </select>
                        <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
                      </div>
@@ -646,8 +660,9 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
                      <label className="block text-xs font-bold text-gray-700 mb-1">Typ {getAssetGenitive(currentAsset)}</label>
                      <div className="relative">
                        <select value={isEditingContainer.type} onChange={e => setIsEditingContainer({...isEditingContainer, type: e.target.value as any})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none">
-                         <option value="MANUAL">Manualny</option>
-                         <option value="AUTOMATIC">Automatyczny</option>
+                         {ASSET_TYPES_MAP[currentAsset].map(option => (
+                           <option key={option} value={option}>{option}</option>
+                         ))}
                        </select>
                        <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
                      </div>
@@ -724,8 +739,9 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
                          <label className="block text-xs font-bold text-gray-700 mb-1">Typ {getAssetGenitive(currentAsset)}</label>
                          <div className="relative">
                            <select value={isEditingCurrentNumber.type} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, type: e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none">
-                             <option value="Manualny">Manualny</option>
-                             <option value="Automatyczny">Automatyczny</option>
+                             {ASSET_TYPES_MAP[currentAsset].map(option => (
+                               <option key={option} value={option}>{option}</option>
+                             ))}
                            </select>
                            <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
                          </div>

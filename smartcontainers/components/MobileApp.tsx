@@ -78,10 +78,17 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
 
   const asset = ASSET_CONFIG[selectedAsset];
 
+  const ASSET_TYPES_MAP: Record<AssetType, string[]> = {
+    'Regały': ['Wspornikowy', 'Półkowy', 'Paletowy'],
+    'Kontenery': ['Manualny', 'Automatyczny'],
+    'HSW': ['Grawitacyjny', 'Kółkowy', 'Platformowy'],
+    'Trolleye': ['Siatkowy', 'Platformowy', 'Skrzyniowy']
+  };
+
   const mockNumeryBiezaceData = [
-    { id: 963, numerDomyslny: '40', nazwa: '3' },
-    { id: 964, numerDomyslny: '41', nazwa: '3' },
-    { id: 965, numerDomyslny: '42', nazwa: '3' },
+    { id: 963, numerDomyslny: '40', nazwa: '3', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
+    { id: 964, numerDomyslny: '41', nazwa: '3', type: ASSET_TYPES_MAP[selectedAsset]?.[1] || 'Inny' },
+    { id: 965, numerDomyslny: '42', nazwa: '3', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
   ];
 
   // ─── Asset Header Banner ─────────────────────────────────────────────────
@@ -377,7 +384,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
           <div className="flex justify-between">
             <div className="w-1/2 pr-2">
               <div className="text-gray-400 text-xs mb-1">Typ</div>
-              <div className="text-[#1a2b4c] font-bold text-lg">Manualny</div>
+              <div className="text-[#1a2b4c] font-bold text-lg">{selectedItem.type}</div>
             </div>
             {selectedAsset !== 'Regały' && (
               <div className="w-1/2 pl-2">

@@ -7,7 +7,7 @@ export interface ContainerData {
   name: string;
   verificationPeriod: number;
   project: string;
-  type: 'MANUAL' | 'AUTOMATIC';
+  type: string;
   orderNumber: string;
   prototypes: number;
   currentNumbers: number;
@@ -22,7 +22,7 @@ export interface CurrentNumberData {
   currentNumber: string;
   containerName: string;
   status: 'Warunkowo dopuszczony' | 'Prototyp' | 'Zablokowany' | 'W użyciu' | 'Uszkodzony';
-  type: 'Manualny' | 'Automatyczny';
+  type: string;
   version: string;
   qrCode: string;
   nextVerification: string;
