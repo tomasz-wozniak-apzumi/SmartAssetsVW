@@ -2,34 +2,39 @@ import Redis from 'ioredis';
 
 // Inicjacja klienta na zewnątrz, aby używał puli połączeń na serwerach Vercel
 const redisUrl = process.env.redisvw_REDIS_URL || '';
-const redis = redisUrl ? new Redis(redisUrl) : null;
+const redis = redisUrl ? new Redis(redisUrl, { connectTimeout: 10000 }) : null;
 
-export default async function handler(request: Request) {
-  const headers = { 
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  };
-
-  if (request.method === 'OPTIONS') {
-    return new Response(null, { status: 200, headers });
+// Allow CORS specifically for development if needed
+const allowCors = (fn: any) => async (req: any, res: any) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
   }
+  return await fn(req, res)
+}
 
+const handler = async (req: any, res: any) => {
   if (!redis) {
     console.error('Brak zmiennej redisvw_REDIS_URL');
-    return new Response(JSON.stringify({ error: 'Database connection not configured' }), { status: 500, headers });
+    return res.status(500).json({ error: 'Database connection not configured' });
   }
 
   try {
-    if (request.method === 'GET') {
+    if (req.method === 'GET') {
       const commentsStr = await redis.get('comments');
       const comments = commentsStr ? JSON.parse(commentsStr) : [];
-      return new Response(JSON.stringify(comments), { status: 200, headers });
+      return res.status(200).json(comments);
     }
 
-    if (request.method === 'POST') {
-      const body = await request.json();
+    if (req.method === 'POST') {
+      const body = req.body;
       const commentsStr = await redis.get('comments');
       const comments = commentsStr ? JSON.parse(commentsStr) : [];
       
@@ -37,25 +42,26 @@ export default async function handler(request: Request) {
       comments.push(newComment);
       
       await redis.set('comments', JSON.stringify(comments));
-      return new Response(JSON.stringify(newComment), { status: 201, headers });
+      return res.status(201).json(newComment);
     }
 
-    if (request.method === 'DELETE') {
-      const { searchParams } = new URL(request.url);
-      const id = searchParams.get('id');
-      if (!id) return new Response('Missing id', { status: 400, headers });
+    if (req.method === 'DELETE') {
+      const id = req.query.id;
+      if (!id) return res.status(400).json({ error: 'Missing id' });
 
       const commentsStr = await redis.get('comments');
       const comments = commentsStr ? JSON.parse(commentsStr) : [];
       
       const newComments = comments.filter((c: any) => c.id !== id);
       await redis.set('comments', JSON.stringify(newComments));
-      return new Response(JSON.stringify({ success: true }), { status: 200, headers });
+      return res.status(200).json({ success: true });
     }
 
-    return new Response('Method Not Allowed', { status: 405, headers });
+    return res.status(405).json({ error: 'Method Not Allowed' });
   } catch (error) {
     console.error('API comments error:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500, headers });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
+
+export default allowCors(handler);
