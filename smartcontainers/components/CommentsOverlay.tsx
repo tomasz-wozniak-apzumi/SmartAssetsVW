@@ -104,7 +104,7 @@ const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView, isMobile
                     <span className={`font-bold ${comment.isAdminComment ? 'text-red-800' : 'text-gray-800'}`}>
                       {comment.author}
                     </span>
-                    {(!comment.isAdminComment || isAdmin) && (
+                    {isAdmin && (
                       <button 
                         onClick={() => deleteComment(comment.id)}
                         className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded transition-colors"
