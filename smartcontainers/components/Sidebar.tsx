@@ -40,8 +40,8 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, currentAsset, currentZak
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 rounded-full bg-green-500"></div>
             <div className="truncate max-w-[140px]">
-              <p className="font-medium text-gray-700">Tomasz NGK demo Woźniak</p>
-              <p className="text-[10px] text-gray-400">tomasz.wozniak.mosina+ngk@...</p>
+              <p className="font-medium text-gray-700">Jan Kowalski</p>
+              <p className="text-[10px] text-gray-400">jan.kowalski@gmail.com</p>
             </div>
           </div>
           <ChevronDown size={12} />
