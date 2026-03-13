@@ -69,15 +69,40 @@ export function useComments(currentView: string, apiUrl = '/api/comments') {
 
   const deleteComment = async (id: string) => {
     try {
-      const res = await fetch(`${apiUrl}?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`${apiUrl}?id=${id}`, { 
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isDeleted: true }),
+      });
       if (res.ok) {
-        setComments(prev => prev.filter(c => c.id !== id));
+        setComments(prev => prev.map(c => c.id === id ? { ...c, isDeleted: true } : c));
         return;
       }
       throw new Error('Fallback');
     } catch {
       const updated = comments.map(c => 
         c.id === id ? { ...c, isDeleted: true } : c
+      );
+      localStorage.setItem('comments_admin_mock', JSON.stringify(updated));
+      setComments(updated);
+    }
+  };
+
+  const restoreComment = async (id: string) => {
+    try {
+      const res = await fetch(`${apiUrl}?id=${id}`, { 
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isDeleted: false }),
+      });
+      if (res.ok) {
+        setComments(prev => prev.map(c => c.id === id ? { ...c, isDeleted: false } : c));
+        return;
+      }
+      throw new Error('Fallback');
+    } catch {
+      const updated = comments.map(c => 
+        c.id === id ? { ...c, isDeleted: false } : c
       );
       localStorage.setItem('comments_admin_mock', JSON.stringify(updated));
       setComments(updated);
@@ -92,6 +117,7 @@ export function useComments(currentView: string, apiUrl = '/api/comments') {
     isLoading,
     addComment,
     deleteComment,
+    restoreComment,
     refresh: fetchComments,
   };
 }

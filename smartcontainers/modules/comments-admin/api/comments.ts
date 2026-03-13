@@ -71,6 +71,20 @@ const handler = async (req: any, res: any) => {
       return res.status(200).json({ success: true });
     }
 
+    if (req.method === 'PATCH') {
+      const id = req.query.id;
+      const { isDeleted } = req.body;
+      if (!id) return res.status(400).json({ error: 'Missing id' });
+
+      const raw = await redis.get(REDIS_KEY);
+      const comments = raw ? JSON.parse(raw) : [];
+      const updated = comments.map((c: any) => 
+        c.id === id ? { ...c, isDeleted: !!isDeleted } : c
+      );
+      await redis.set(REDIS_KEY, JSON.stringify(updated));
+      return res.status(200).json({ success: true });
+    }
+
     return res.status(405).json({ error: 'Method Not Allowed' });
   } catch (error) {
     console.error('[comments-admin] API error:', error);

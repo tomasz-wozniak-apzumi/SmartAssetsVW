@@ -1,7 +1,8 @@
 import React, { useState, MouseEvent } from 'react';
 import { useComments } from '../hooks/useComments';
 import { useAdminMode } from '../hooks/useAdminMode';
-import { MessageCircle, X, Send, Trash2 } from 'lucide-react';
+import { MessageCircle, X, Send, Trash2, Settings } from 'lucide-react';
+import AdminCommentsPanel from '../modules/comments-admin/components/AdminCommentsPanel';
 
 interface CommentsOverlayProps {
   currentView: string;
@@ -9,9 +10,10 @@ interface CommentsOverlayProps {
 }
 
 const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView, isMobile }) => {
-  const { comments, addComment, deleteComment, isLoading } = useComments(currentView);
+  const { comments, allComments, addComment, deleteComment, restoreComment, isLoading } = useComments(currentView);
   const isAdmin = useAdminMode();
   const [isCommentingMode, setIsCommentingMode] = useState(false);
+  const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
   const [activeCommentId, setActiveCommentId] = useState<string | null>(null);
   const [collapsedAdminComments, setCollapsedAdminComments] = useState<Set<string>>(new Set());
   
@@ -67,6 +69,28 @@ const CommentsOverlay: React.FC<CommentsOverlayProps> = ({ currentView, isMobile
           {isCommentingMode ? <X size={24} /> : <MessageCircle size={24} />}
         </button>
       </div>
+
+      {/* Admin management button */}
+      {isAdmin && !isCommentingMode && (
+        <div className={`${isMobile ? 'absolute bottom-24 right-20' : 'fixed bottom-6 right-24'} z-50`}>
+          <button
+            onClick={() => setIsAdminPanelOpen(true)}
+            className="p-4 rounded-full shadow-lg bg-gray-800 text-white hover:bg-gray-900 transition-all flex items-center justify-center"
+            title="Panel quản lý komentarzy"
+          >
+            <Settings size={24} />
+          </button>
+        </div>
+      )}
+
+      {isAdminPanelOpen && (
+        <AdminCommentsPanel 
+          comments={allComments}
+          onClose={() => setIsAdminPanelOpen(false)}
+          onDelete={deleteComment}
+          onRestore={restoreComment}
+        />
+      )}
 
       {/* Nakładka na cały ekran - gdy tryb komentarzy, łapie kliknięcia */}
       <div 
