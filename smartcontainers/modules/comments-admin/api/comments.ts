@@ -64,7 +64,9 @@ const handler = async (req: any, res: any) => {
 
       const raw = await redis.get(REDIS_KEY);
       const comments = raw ? JSON.parse(raw) : [];
-      const updated = comments.filter((c: any) => c.id !== id);
+      const updated = comments.map((c: any) => 
+        c.id === id ? { ...c, isDeleted: true } : c
+      );
       await redis.set(REDIS_KEY, JSON.stringify(updated));
       return res.status(200).json({ success: true });
     }

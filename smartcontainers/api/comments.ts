@@ -52,7 +52,9 @@ const handler = async (req: any, res: any) => {
       const commentsStr = await redis.get('comments');
       const comments = commentsStr ? JSON.parse(commentsStr) : [];
       
-      const newComments = comments.filter((c: any) => c.id !== id);
+      const newComments = comments.map((c: any) => 
+        c.id === id ? { ...c, isDeleted: true } : c
+      );
       await redis.set('comments', JSON.stringify(newComments));
       return res.status(200).json({ success: true });
     }

@@ -76,13 +76,15 @@ export function useComments(currentView: string, apiUrl = '/api/comments') {
       }
       throw new Error('Fallback');
     } catch {
-      const updated = comments.filter(c => c.id !== id);
+      const updated = comments.map(c => 
+        c.id === id ? { ...c, isDeleted: true } : c
+      );
       localStorage.setItem('comments_admin_mock', JSON.stringify(updated));
       setComments(updated);
     }
   };
 
-  const activeComments = comments.filter(c => c.view === currentView);
+  const activeComments = comments.filter(c => c.view === currentView && !c.isDeleted);
 
   return {
     comments: activeComments,

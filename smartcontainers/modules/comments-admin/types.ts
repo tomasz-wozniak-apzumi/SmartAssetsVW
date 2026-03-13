@@ -11,4 +11,5 @@ export interface CommentData {
   author: string;
   createdAt: string; // ISO 8601
   isAdminComment?: boolean;
+  isDeleted?: boolean;
 }
