@@ -1,4 +1,5 @@
 import Redis from 'ioredis';
+import crypto from 'crypto';
 
 // Inicjacja klienta na zewnątrz, aby używał puli połączeń na serwerach Vercel
 const redisUrl = process.env.redisvw_REDIS_URL || '';

@@ -1,4 +1,5 @@
 import Redis from 'ioredis';
+import crypto from 'crypto';
 
 // ============================================================
 // comments-admin module — API handler (Vercel serverless / Express)
