@@ -1,6 +1,6 @@
 import React, { useState, MouseEvent } from 'react';
-import { useComments } from '../hooks/useComments';
-import { useAdminMode } from '../hooks/useAdminMode';
+import { useComments } from '../modules/comments-admin/hooks/useComments';
+import { useAdminMode } from '../modules/comments-admin/hooks/useAdminMode';
 import { MessageCircle, X, Send, Trash2, Settings } from 'lucide-react';
 import AdminCommentsPanel from '../modules/comments-admin/components/AdminCommentsPanel';
 
