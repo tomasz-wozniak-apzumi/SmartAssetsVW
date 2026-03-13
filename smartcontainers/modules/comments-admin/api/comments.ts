@@ -1,4 +1,5 @@
 import Redis from 'ioredis';
+import crypto from 'crypto';
 
 // ============================================================
 // comments-admin module — API handler (Vercel serverless / Express)
@@ -64,7 +65,23 @@ const handler = async (req: any, res: any) => {
 
       const raw = await redis.get(REDIS_KEY);
       const comments = raw ? JSON.parse(raw) : [];
-      const updated = comments.filter((c: any) => c.id !== id);
+      const updated = comments.map((c: any) => 
+        c.id === id ? { ...c, isDeleted: true } : c
+      );
+      await redis.set(REDIS_KEY, JSON.stringify(updated));
+      return res.status(200).json({ success: true });
+    }
+
+    if (req.method === 'PATCH') {
+      const id = req.query.id;
+      const { isDeleted } = req.body;
+      if (!id) return res.status(400).json({ error: 'Missing id' });
+
+      const raw = await redis.get(REDIS_KEY);
+      const comments = raw ? JSON.parse(raw) : [];
+      const updated = comments.map((c: any) => 
+        c.id === id ? { ...c, isDeleted: !!isDeleted } : c
+      );
       await redis.set(REDIS_KEY, JSON.stringify(updated));
       return res.status(200).json({ success: true });
     }

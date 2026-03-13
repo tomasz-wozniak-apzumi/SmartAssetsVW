@@ -1,10 +1,11 @@
 import Redis from 'ioredis';
+import crypto from 'crypto';
 
 // Inicjacja klienta na zewnątrz, aby używał puli połączeń na serwerach Vercel
 const redisUrl = process.env.redisvw_REDIS_URL || '';
 const redis = redisUrl ? new Redis(redisUrl, { connectTimeout: 10000 }) : null;
 
-// Allow CORS specifically for development if  needed
+// Allow CORS specifically for development if needed
 const allowCors = (fn: any) => async (req: any, res: any) => {
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -37,10 +38,10 @@ const handler = async (req: any, res: any) => {
       const body = req.body;
       const commentsStr = await redis.get('comments');
       const comments = commentsStr ? JSON.parse(commentsStr) : [];
-
+      
       const newComment = { id: crypto.randomUUID(), createdAt: new Date().toISOString(), ...body };
       comments.push(newComment);
-
+      
       await redis.set('comments', JSON.stringify(comments));
       return res.status(201).json(newComment);
     }
@@ -51,9 +52,24 @@ const handler = async (req: any, res: any) => {
 
       const commentsStr = await redis.get('comments');
       const comments = commentsStr ? JSON.parse(commentsStr) : [];
-
+      
       const newComments = comments.map((c: any) => 
         c.id === id ? { ...c, isDeleted: true } : c
+      );
+      await redis.set('comments', JSON.stringify(newComments));
+      return res.status(200).json({ success: true });
+    }
+
+    if (req.method === 'PATCH') {
+      const id = req.query.id;
+      const { isDeleted } = req.body;
+      if (!id) return res.status(400).json({ error: 'Missing id' });
+
+      const commentsStr = await redis.get('comments');
+      const comments = commentsStr ? JSON.parse(commentsStr) : [];
+      
+      const newComments = comments.map((c: any) => 
+        c.id === id ? { ...c, isDeleted: !!isDeleted } : c
       );
       await redis.set('comments', JSON.stringify(newComments));
       return res.status(200).json({ success: true });
