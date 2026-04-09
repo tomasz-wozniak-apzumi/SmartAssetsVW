@@ -21,7 +21,7 @@ export interface CurrentNumberData {
   containerNumber: string;
   currentNumber: string;
   containerName: string;
-  status: 'Warunkowo dopuszczony' | 'Prototyp' | 'Zablokowany' | 'W użyciu' | 'Uszkodzony';
+  status: 'Warunkowo dopuszczony' | 'Prototyp' | 'Zablokowany' | 'W użyciu' | 'Uszkodzony' | 'Nowy' | 'Nieużywany';
   type: string;
   version: string;
   qrCode: string;

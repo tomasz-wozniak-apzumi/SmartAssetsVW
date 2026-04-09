@@ -40,7 +40,7 @@ const App: React.FC = () => {
         <CommentsOverlay currentView={currentView} />
         <div className="bg-white border-b border-gray-100 p-4 shrink-0">
           <div className="text-[11px] text-gray-400 mb-6 font-bold tracking-wide">
-            Assety / <span className="text-[#007bff]">{currentAsset}</span> / <span className="text-gray-600">{currentView}</span>
+            Assety / <span className="text-[#007bff]">{currentAsset === 'HSW' ? 'HSW Podstawy rolkowe' : currentAsset}</span> / <span className="text-gray-600">{currentView}</span>
           </div>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4 pr-4">
@@ -52,7 +52,7 @@ const App: React.FC = () => {
                        className="w-full pl-3 pr-8 py-2 border border-gray-200 rounded text-sm text-gray-800 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer appearance-none outline-none font-semibold shadow-sm"
                     >
                         {(Object.keys(ASSET_CONFIG) as AssetType[]).map(asset => (
-                            <option key={asset} value={asset}>{asset}</option>
+                            <option key={asset} value={asset}>{asset === 'HSW' ? 'HSW Podstawy rolkowe' : asset}</option>
                         ))}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">

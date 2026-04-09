@@ -29,8 +29,8 @@ export const MOCK_CONTAINERS: ContainerData[] = [
   { id: '4', assetType: 'Trolleye', number: 'TR-219', name: 'Trolley transportowy lekki', verificationPeriod: 30, project: 'Assembly Line 1', type: 'Siatkowy', orderNumber: 'TX-55091', prototypes: 1, currentNumbers: 12, total: 13, zaklad: 'Zakład Poznań' },
   { id: '5', assetType: 'Trolleye', number: 'TR-604', name: 'Trolley ciężki platformowy', verificationPeriod: 180, project: 'SteelForge Alpha', type: 'Platformowy', orderNumber: 'ORD-8822', prototypes: 0, currentNumbers: 110, total: 110, zaklad: 'Zakład Września' },
   // HSW
-  { id: '6', assetType: 'HSW', number: 'HSW-882', name: 'Wózek widłowy czołowy', verificationPeriod: 120, project: 'Magazyn Główny', type: 'Grawitacyjny', orderNumber: 'PO-44512', prototypes: 0, currentNumbers: 45, total: 45, zaklad: 'Zakład Września' },
-  { id: '7', assetType: 'HSW', number: 'HSW-102', name: 'Paleciak z wagą', verificationPeriod: 365, project: 'Logistyka', type: 'Platformowy', orderNumber: 'PO-12344', prototypes: 0, currentNumbers: 20, total: 20, zaklad: 'Zakład Poznań' },
+  { id: '6', assetType: 'HSW', number: 'HSW-882', name: 'Podstawa rolkowa A', verificationPeriod: 120, project: 'Magazyn Główny', type: 'Manualny', orderNumber: 'PO-44512', prototypes: 0, currentNumbers: 45, total: 45, zaklad: 'Zakład Września' },
+  { id: '7', assetType: 'HSW', number: 'HSW-102', name: 'Podstawa rolkowa B', verificationPeriod: 365, project: 'Logistyka', type: 'Automatyczny', orderNumber: 'PO-12344', prototypes: 0, currentNumbers: 20, total: 20, zaklad: 'Zakład Poznań' },
 ];
 
 export const MOCK_CURRENT_NUMBERS: CurrentNumberData[] = [
@@ -44,8 +44,8 @@ export const MOCK_CURRENT_NUMBERS: CurrentNumberData[] = [
   { id: '5', assetType: 'Regały', containerNumber: 'REG-12', currentNumber: '001', containerName: 'Regał wysokiego składowania', status: 'W użyciu', type: 'Wspornikowy', version: '1', qrCode: 'REG12_01', nextVerification: '10.12.2024', owner: 'Logistyka', producer: 'Regal-System', location: 'Magazyn A', zaklad: 'Zakład Poznań' },
   { id: '6', assetType: 'Regały', containerNumber: 'REG-14', currentNumber: '002', containerName: 'Regał paletowy rzędowy', status: 'W użyciu', type: 'Paletowy', version: '2', qrCode: 'REG14_02', nextVerification: '15.11.2025', owner: 'Logistyka', producer: 'Regal-System', location: 'Magazyn B', zaklad: 'Zakład Września' },
   // HSW
-  { id: '7', assetType: 'HSW', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Wózek widłowy czołowy', status: 'W użyciu', type: 'Grawitacyjny', version: '1.2', qrCode: 'HSW882_23', nextVerification: '05.05.2025', owner: 'Utrzymanie Ruchu', producer: 'Toyota', location: 'Hala 3', zaklad: 'Zakład Września' },
-  { id: '8', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Paleciak z wagą', status: 'Uszkodzony', type: 'Platformowy', version: '1.0', qrCode: 'HSW102_04', nextVerification: '01.09.2024', owner: 'Magazyn Wewnętrzny', producer: 'Mag-Tech', location: 'Strefa buforowa', zaklad: 'Zakład Poznań' },
+  { id: '7', assetType: 'HSW', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Podstawa rolkowa A', status: 'Nowy', type: 'Manualny', version: '1.2', qrCode: 'HSW882_23', nextVerification: '05.05.2025', owner: 'Utrzymanie Ruchu', producer: 'Toyota', location: 'Hala 3', zaklad: 'Zakład Września' },
+  { id: '8', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Podstawa rolkowa B', status: 'W użyciu', type: 'Automatyczny', version: '1.0', qrCode: 'HSW102_04', nextVerification: '01.09.2024', owner: 'Magazyn Wewnętrzny', producer: 'Mag-Tech', location: 'Strefa buforowa', zaklad: 'Zakład Poznań' },
 ];
 
 export const MOCK_LOCATIONS: LocationData[] = [
@@ -105,7 +105,7 @@ export const MOCK_EVENTS: EventData[] = [
   { id: '7', assetType: 'Regały', name: 'Zgubienie podczas transportu na zewnątrz', zaklad: 'Zakład Poznań' },
   { id: '8', assetType: 'HSW', name: 'Odrzucenie podczas kontroli jakości', zaklad: 'Zakład Września' },
   { id: '9', assetType: 'Kontenery', name: 'Korozja elementów mocujących', zaklad: 'Zakład Września' },
-  { id: '10', assetType: 'HSW', name: 'Kolizja z wózkiem widłowym HSW', zaklad: 'Zakład Poznań' },
+  { id: '10', assetType: 'HSW', name: 'Kolizja z HSW Podstawy rolkowe', zaklad: 'Zakład Poznań' },
 ];
 
 export const MENU_ITEMS: MenuItem[] = [

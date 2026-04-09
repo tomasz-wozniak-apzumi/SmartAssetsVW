@@ -29,7 +29,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
   const ASSET_TYPES_MAP: Record<AssetType, string[]> = {
     'Regały': ['Wspornikowy', 'Półkowy', 'Paletowy'],
     'Kontenery': ['Manualny', 'Automatyczny'],
-    'HSW': ['Grawitacyjny', 'Kółkowy', 'Platformowy'],
+    'HSW': ['Manualny', 'Automatyczny'],
     'Trolleye': ['Siatkowy', 'Platformowy', 'Skrzyniowy']
   };
 
@@ -311,7 +311,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
              {assetIconMap[currentAsset] || <Package size={24} strokeWidth={1.5} />}
            </div>
            <div className="flex flex-col">
-              <h1 className="text-2xl font-bold text-gray-800 leading-tight mb-1">{currentZaklad} / {currentAsset}</h1>
+              <h1 className="text-2xl font-bold text-gray-800 leading-tight mb-1">{currentZaklad} / {currentAsset === 'HSW' ? 'HSW Podstawy rolkowe' : currentAsset}</h1>
               <span className="text-[13px] font-semibold text-gray-500">{view}</span>
            </div>
         </div>
@@ -711,13 +711,30 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
                    <div>
                      <label className="block text-xs font-bold text-gray-700 mb-1">Status</label>
                      <div className="relative">
-                       <select value={isEditingCurrentNumber.status} onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, status: e.target.value})} className={`w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none font-semibold ${isEditingCurrentNumber.status === 'W użyciu' ? 'text-green-600' : 'text-orange-500'}`}>
-                         <option value="Warunkowo dopuszczony">Warunkowo dopuszczony</option>
-                         <option value="W użyciu">W użyciu</option>
-                         <option value="Zablokowany">Zablokowany</option>
-                         <option value="W naprawie">W naprawie</option>
-                         <option value="Nowy">Nowy</option>
-                       </select>
+                       <select 
+                          value={isEditingCurrentNumber.status} 
+                          onChange={e => setIsEditingCurrentNumber({...isEditingCurrentNumber, status: e.target.value as any})} 
+                          className={`w-full px-3 py-2 border border-gray-200 rounded text-sm focus:border-blue-500 focus:outline-none appearance-none font-semibold ${isEditingCurrentNumber.status === 'W użyciu' ? 'text-green-600' : 'text-orange-500'}`}
+                        >
+                          {currentAsset === 'HSW' ? (
+                            <>
+                              <option value="Prototyp">Prototyp</option>
+                              <option value="Nowy">Nowy</option>
+                              <option value="W użyciu">W użyciu</option>
+                              <option value="Zablokowany">Zablokowany</option>
+                              <option value="Warunkowo dopuszczony">Warunkowo dopuszczony</option>
+                              <option value="Nieużywany">Nieużywany</option>
+                            </>
+                          ) : (
+                            <>
+                              <option value="Warunkowo dopuszczony">Warunkowo dopuszczony</option>
+                              <option value="W użyciu">W użyciu</option>
+                              <option value="Zablokowany">Zablokowany</option>
+                              <option value="W naprawie">W naprawie</option>
+                              <option value="Nowy">Nowy</option>
+                            </>
+                          )}
+                        </select>
                        <ChevronDown size={14} className="absolute right-3 top-2.5 pointer-events-none text-gray-400" />
                      </div>
                    </div>

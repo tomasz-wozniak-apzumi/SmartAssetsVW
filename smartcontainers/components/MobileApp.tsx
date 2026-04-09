@@ -57,9 +57,9 @@ const ASSET_CONFIG: Record<AssetType, AssetConfig> = {
     color: '#6c2a2a',
   },
   HSW: {
-    label: 'HSW',
-    singularGenitive: 'HSW',
-    pluralGenitive: 'HSW',
+    label: 'HSW Podstawy rolkowe',
+    singularGenitive: 'HSW Podstawy rolkowe',
+    pluralGenitive: 'HSW Podstawy rolkowe',
     icon: <Truck size={20} />,
     color: '#5c3a6c',
   },
@@ -81,7 +81,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   const ASSET_TYPES_MAP: Record<AssetType, string[]> = {
     'Regały': ['Wspornikowy', 'Półkowy', 'Paletowy'],
     'Kontenery': ['Manualny', 'Automatyczny'],
-    'HSW': ['Grawitacyjny', 'Kółkowy', 'Platformowy'],
+    'HSW': ['Manualny', 'Automatyczny'],
     'Trolleye': ['Siatkowy', 'Platformowy', 'Skrzyniowy']
   };
 
