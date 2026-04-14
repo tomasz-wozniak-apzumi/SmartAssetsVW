@@ -165,6 +165,20 @@ export const MENU_ITEMS: MenuItem[] = [
 const assetsList: AssetType[] = ['Kontenery', 'Trolleye', 'Regały', 'HSW', 'Środki Transportu'];
 const zakladList: ZakladType[] = ['Zakład Września', 'Zakład Poznań'];
 
+const NAMES_DICT: Record<AssetType, string[]> = {
+  'Kontenery': ['Pojemnik KLT 600x400', 'Euro Gitterbox', 'Pojemnik KLT 400x300', 'Pojemnik specjalny ESD', 'Skrzynka paletowa stalowa', 'Pojemnik VDA', 'Kosze siatkowe M', 'Pojemnik blaszany ciężki', 'Pojemnik na odpady', 'Gitterbox wysoki'],
+  'Trolleye': ['Trolley sekwencyjny wiązek', 'Trolley transportowy platformowy', 'Wózek sekwencyjny drzwi', 'Trolley zestawowy (Kitting)', 'Wózek przepływowy', 'Platforma zaczepowa', 'Trolley na odlewy', 'System Milk-Run Trolley', 'Wózek boczny sekwencyjny', 'Trolley z nadbudową'],
+  'Regały': ['Regał wysokiego składowania', 'Regał półkowy na części drobne', 'Regał wspornikowy zewnętrzny', 'Regał przepływowy KLT', 'Regał kompletacyjny', 'System wielopoziomowy', 'Regał paletowy rzędowy', 'Regał na matryce', 'Regał jezdny', 'Regał rolkowy grawitacyjny'],
+  'HSW': ['HSW AGV Crafter', 'Podstawa rolkowa Caddy', 'AGV Sekwencyjny JIT', 'Podstawa Baterii HV', 'Podstawa rolkowa Custom', 'Wózek autonomiczny L', 'Platforma jezdna M', 'HSW Transporter T6', 'AGV Holownik', 'HSW Modułowy'],
+  'Środki Transportu': ['Wózek platformowy Still', 'Pojazd Melex', 'Ciągnik elektryczny Linde', 'Wózek widłowy Toyota', 'Platforma holownicza', 'Melex bagażowy', 'Wózek czołowy Jungheinrich', 'Wózek Reach Truck', 'Wózek systemowy VNA', 'Melex osobowy']
+};
+
+const LOCATIONS_DICT = ['Hala Montażu Głównego', 'Hala Spawalni', 'Strefa Kwarantanny', 'Magazyn Buforowy', 'Strefa Załadunku CLIP', 'Aleja Główna Logistyki', 'Zajezdnia Wózków', 'Strefa Sekwencjonowania', 'Lakiernia 2', 'Odlewnia Aluminiowa', 'Magazyn Części Zamiennych', 'Gestamp Działkowców', 'Tłocznia', 'Park Dostawców'];
+const PRODUCERS_DICT = ['Schaefer', 'Troll-Pol', 'Stal-bud', 'Wanzl', 'Mecalux', 'Jungheinrich', 'Still', 'Gottwald', 'Toyota', 'VW R&D', 'Mag-Tech', 'Logisystem'];
+const EVENTS_DICT = ['Zarysowanie powłoki', 'Błąd odczytu etykiety', 'Przepalenie pinu', 'Zarysowanie czujnika laserowego', 'Uszkodzone koło polimerowe', 'Awaria hamulca bezpieczeństwa', 'Deformacja ramy podczas rozładunku', 'Uszkodzona siatka zabezpieczająca', 'Zablokowanie mechanizmu dokującego', 'Spadek napięcia zasilania', 'Błąd modułu komunikacyjnego', 'Zgubienie etykiety RFID'];
+const CHECKLISTS_DICT = ['Inspekcja powłoki lakierniczej', 'Weryfikacja parametrów baterii', 'BHP UDT: Okresowy przegląd układu nośnego', 'Kontrola działania paneli sterujących', 'Test odblasków i oświetlenia', 'Analiza stabilności ramy', 'Kontrola spójności spawów', 'Test zawiasów i blokad', 'Sprawdzenie dyszla pociągowego', 'Codzienna inspekcja wizualna', 'Test napędów trakcyjnych', 'Weryfikacja stężników i kotew'];
+const PROJECTS_DICT = ['Caddy/Transporter', 'Crafter', 'Grand California', 'Silniki', 'Zabudowy Specjalne', 'Linia Standardowa', 'Montaż Baterii', 'Logistyka Wewnętrzna'];
+
 assetsList.forEach(asset => {
   zakladList.forEach(zaklad => {
     
@@ -173,15 +187,15 @@ assetsList.forEach(asset => {
       MOCK_CONTAINERS.push({
          id: `c-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
          assetType: asset,
-         number: `GEN-${asset.substring(0,3).toUpperCase()}-${i}`,
-         name: `${asset === 'HSW' ? 'HSW Podstawa rolkowa' : asset} - Wygenerowany ${i}`,
-         verificationPeriod: 180,
-         project: 'Linia Standardowa',
+         number: `GEN-${asset.substring(0,3).toUpperCase()}-0${i}`,
+         name: NAMES_DICT[asset][i % NAMES_DICT[asset].length],
+         verificationPeriod: 90 * ((i % 4) + 1),
+         project: PROJECTS_DICT[i % PROJECTS_DICT.length],
          type: (asset === 'Kontenery' || asset === 'HSW') ? 'Manualny' : (asset === 'Regały' ? 'Wspornikowy' : 'Inny'),
-         orderNumber: `PO-GEN-${i}`,
-         prototypes: 0,
-         currentNumbers: 5,
-         total: 5,
+         orderNumber: `PO-GEN-202${i}`,
+         prototypes: i % 3 === 0 ? 1 : 0,
+         currentNumbers: (i * 15) + 5,
+         total: (i * 15) + 5,
          zaklad: zaklad
       });
     }
@@ -191,17 +205,17 @@ assetsList.forEach(asset => {
       MOCK_CURRENT_NUMBERS.push({
          id: `curr-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
          assetType: asset,
-         containerNumber: `GEN-${asset.substring(0,3).toUpperCase()}-${i}`,
-         currentNumber: `00${i}`,
-         containerName: `${asset === 'HSW' ? 'HSW Podstawa rolkowa' : asset} - Wygenerowany ${i}`,
-         status: i % 2 === 0 ? 'W użyciu' : 'Nowy',
+         containerNumber: `GEN-${asset.substring(0,3).toUpperCase()}-0${i}`,
+         currentNumber: `00${i + 1}`,
+         containerName: NAMES_DICT[asset][i % NAMES_DICT[asset].length],
+         status: i % 3 === 0 ? 'W użyciu' : (i % 3 === 1 ? 'Nowy' : 'Warunkowo dopuszczony'),
          type: (asset === 'Kontenery' || asset === 'HSW') ? 'Manualny' : (asset === 'Regały' ? 'Wspornikowy' : 'Inny'),
-         version: '1.0',
-         qrCode: `QR-GEN-${i}`,
-         nextVerification: '01.01.2025',
-         owner: 'Logistyka',
-         producer: 'VW',
-         location: 'Magazyn Systemowy',
+         version: `1.${i % 5}`,
+         qrCode: `QR-GEN-${asset.substring(0,2)}-${i}`,
+         nextVerification: `1${i}.10.2025`,
+         owner: i % 2 === 0 ? 'Logistyka' : 'Utrzymanie Ruchu',
+         producer: PRODUCERS_DICT[i % PRODUCERS_DICT.length],
+         location: LOCATIONS_DICT[i % LOCATIONS_DICT.length],
          zaklad: zaklad
       });
     }
@@ -211,8 +225,8 @@ assetsList.forEach(asset => {
       MOCK_LOCATIONS.push({
          id: `loc-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
          assetType: asset,
-         name: `Strefa zautomatyzowana ${i} (${asset})`,
-         containerCount: 5,
+         name: LOCATIONS_DICT[i % LOCATIONS_DICT.length] + ` - Sektor ${String.fromCharCode(65 + (i % 5))}`,
+         containerCount: (i * 12) + 8,
          zaklad: zaklad
       });
     }
@@ -222,17 +236,17 @@ assetsList.forEach(asset => {
       MOCK_SERVICES.push({
          id: `srv-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
          assetType: asset,
-         containerNumber: `GEN-${asset.substring(0,3).toUpperCase()}-${i}`,
-         currentNumber: `00${i}`,
-         containerName: `${asset === 'HSW' ? 'HSW Podstawa rolkowa' : asset} - Wygenerowany ${i}`,
-         status: 'Do przeglądu',
-         ticketStatus: 'Otwarty',
-         reportedDate: '01.10.2024, 08:00',
-         reportedBy: 'System',
-         executionDate: '-',
+         containerNumber: `GEN-${asset.substring(0,3).toUpperCase()}-0${i}`,
+         currentNumber: `00${i + 1}`,
+         containerName: NAMES_DICT[asset][i % NAMES_DICT[asset].length],
+         status: EVENTS_DICT[i % EVENTS_DICT.length],
+         ticketStatus: i % 4 === 0 ? 'Zamknięty' : 'Otwarty',
+         reportedDate: `2${i}.09.2024, 08:30`,
+         reportedBy: 'System Diagnostyczny',
+         executionDate: i % 4 === 0 ? `2${i+1}.09.2024, 15:00` : '-',
          owner: 'VW',
-         executor: '-',
-         location: 'Strefa Serwisu',
+         executor: i % 2 === 0 ? '-' : 'Serwis Zewnętrzny',
+         location: LOCATIONS_DICT[i % LOCATIONS_DICT.length],
          zaklad: zaklad
       });
     }
@@ -242,11 +256,11 @@ assetsList.forEach(asset => {
       MOCK_CHECKLISTS.push({
          id: `chk-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
          assetType: asset,
-         name: `Procedura BHP/UDT nr ${i} dla ${asset}`,
-         createdDate: '10.10.2023 10:00',
-         editDate: '10.10.2023 10:00',
-         stepCount: 5 + i,
-         version: '1.0',
+         name: CHECKLISTS_DICT[i % CHECKLISTS_DICT.length],
+         createdDate: `1${i}.10.2023 10:00`,
+         editDate: `1${i}.10.2023 10:00`,
+         stepCount: 5 + (i % 15),
+         version: `1.${i % 4}`,
          zaklad: zaklad
       });
     }
@@ -256,7 +270,7 @@ assetsList.forEach(asset => {
       MOCK_EVENTS.push({
          id: `evt-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
          assetType: asset,
-         name: `Rutynowe naruszenie strefy - ${i} (${asset})`,
+         name: EVENTS_DICT[i % EVENTS_DICT.length],
          zaklad: zaklad
       });
     }
