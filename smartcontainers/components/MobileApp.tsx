@@ -100,6 +100,8 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     { id: 965, numerDomyslny: '1096', nazwa: 'Pojemnik KLT 400x300', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
     { id: 966, numerDomyslny: 'TR-SEQ', nazwa: 'Trolley sekwencyjny', type: ASSET_TYPES_MAP[selectedAsset]?.[1] || 'Inny' },
     { id: 967, numerDomyslny: 'ST-001', nazwa: 'Wózek platformowy Still', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
+    { id: 968, numerDomyslny: 'AGV-023', nazwa: 'AGV Crafter', type: ASSET_TYPES_MAP[selectedAsset]?.[1] || 'Inny' },
+    { id: 969, numerDomyslny: 'HSW-004', nazwa: 'Podstawa rolkowa Caddy', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
   ];
 
   // ─── Asset Header Banner ─────────────────────────────────────────────────
@@ -491,7 +493,9 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
          { kNumer: 'GBX-001', nazwa: 'Euro Gitterbox', zNumer: 'PO-77231', proto: '0', curr: '850', total: '850' },
          { kNumer: 'KLT-4147', nazwa: 'Pojemnik KLT', zNumer: 'ORD-1123', proto: '0', curr: '2400', total: '2400' },
          { kNumer: 'TR-SEQ', nazwa: 'Trolley sekwencyjny', zNumer: 'TX-5091', proto: '1', curr: '42', total: '43' },
-         { kNumer: 'TRUCK-STL', nazwa: 'Wózek Still', zNumer: 'PO-9912', proto: '0', curr: '15', total: '15' }
+         { kNumer: 'TRUCK-STL', nazwa: 'Wózek Still', zNumer: 'PO-9912', proto: '0', curr: '15', total: '15' },
+         { kNumer: 'AGV-CRAF', nazwa: 'HSW AGV Crafter', zNumer: 'PO-44512', proto: '0', curr: '45', total: '45' },
+         { kNumer: 'REG-12', nazwa: 'Regał wysokiego składowania', zNumer: 'PO-1234', proto: '0', curr: '12', total: '12' }
        ].map((item, id) => (
           <div 
             key={id} 
@@ -562,6 +566,8 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
           { title: 'Przegląd układu jezdnego Trolley', steps: 6, unsaved: false },
           { title: 'Inspekcja odkształceń słupów po kolizji', steps: 7, unsaved: false },
           { title: 'BHP UDT: Codzienna kontrola wózka', steps: 15, unsaved: false },
+          { title: 'Przegląd nośności i stabilności regału', steps: 12, unsaved: false },
+          { title: 'Test hamulców bezpieczeństwa Melex', steps: 8, unsaved: true },
         ].map((item, idx) => (
           <div key={idx} className="flex justify-between items-center p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50">
              <div>
@@ -589,6 +595,8 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       { id: '102', numerBiezacy: '1096', numerKonta: 'KLT-6147', nazwa: 'Pojemnik KLT', status: 'Uszkodzony', dataOrg: '2025-11-20' },
       { id: '130', numerBiezacy: '001', numerKonta: 'TRUCK-STL', nazwa: 'Wózek platformowy Still', status: 'Do przeglądu', dataOrg: '2025-11-12' },
       { id: '121', numerBiezacy: '1004', numerKonta: 'TR-PLAT', nazwa: 'Trolley platformowy', status: 'Zablokowany', dataOrg: '2025-11-12' },
+      { id: '118', numerBiezacy: '001', numerKonta: 'REG-12', nazwa: 'Regał wysokiego składowania', status: 'Do przeglądu', dataOrg: '2026-01-15' },
+      { id: '103', numerBiezacy: '001', numerKonta: 'GBX-001', nazwa: 'Euro Gitterbox', status: 'Zablokowany', dataOrg: '2026-02-05' },
     ];
 
     return (
