@@ -2,6 +2,8 @@ import React from 'react';
 import { MENU_ITEMS, ASSET_CONFIG } from '../constants';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { ViewType, AssetType, ZakladType } from '../types';
+import logoIcon from '../logo/logo_icon.png';
+import image1 from '../logo/image1.png';
 
 interface SidebarProps {
   currentView: ViewType;
@@ -20,16 +22,9 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, currentAsset, currentZak
       {/* Logo */}
       <div className="p-4 flex items-center space-x-2">
         <div className="flex flex-col items-center">
-          <div className="flex items-center space-x-1">
-             <div className="w-6 h-6 flex flex-col space-y-[2px] justify-center">
-                <div className="h-[2px] w-full bg-[#cc0000]"></div>
-                <div className="h-[2px] w-3/4 bg-[#cc0000]"></div>
-                <div className="h-[2px] w-1/2 bg-[#cc0000]"></div>
-             </div>
-             <div className="flex flex-col -space-y-1">
-                <span className="font-bold text-gray-800 text-xl tracking-tighter">apzumi</span>
-                <span className="text-[10px] text-gray-500 font-medium tracking-widest uppercase text-right">spatial</span>
-             </div>
+          <div className="flex items-center justify-start space-x-2">
+             <img src={logoIcon} alt="Logo Icon" className="h-8 object-contain" />
+             <img src={image1} alt="Logo Text" className="h-8 object-contain" />
           </div>
         </div>
       </div>

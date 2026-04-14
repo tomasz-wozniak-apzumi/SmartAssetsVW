@@ -19,12 +19,13 @@ import {
   ShoppingCart,
   Truck,
   Pencil,
-  AlertTriangle
+  AlertTriangle,
+  Car
 } from 'lucide-react';
 import CommentsOverlay from './CommentsOverlay';
 
 type MobileView = 'Menu' | 'Znajdź' | 'Numery bieżące' | 'Numery kontenerów' | 'Listy kontrolne' | 'Serwis' | 'Numer bieżący detail' | 'Numery bieżące full';
-type AssetType = 'Kontenery' | 'Regały' | 'Trolleye' | 'HSW';
+type AssetType = 'Kontenery' | 'Regały' | 'Trolleye' | 'HSW' | 'Środki Transportu';
 
 interface AssetConfig {
   label: string;
@@ -63,6 +64,13 @@ const ASSET_CONFIG: Record<AssetType, AssetConfig> = {
     icon: <Truck size={20} />,
     color: '#5c3a6c',
   },
+  'Środki Transportu': {
+    label: 'Środki Transportu',
+    singularGenitive: 'środka transportu',
+    pluralGenitive: 'środków transportu',
+    icon: <Car size={20} />,
+    color: '#d97706',
+  },
 };
 
 interface MobileAppProps {
@@ -82,7 +90,8 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
     'Regały': ['Wspornikowy', 'Półkowy', 'Paletowy'],
     'Kontenery': ['Manualny', 'Automatyczny'],
     'HSW': ['Manualny', 'Automatyczny'],
-    'Trolleye': ['Siatkowy', 'Platformowy', 'Skrzyniowy']
+    'Trolleye': ['Siatkowy', 'Platformowy', 'Skrzyniowy'],
+    'Środki Transportu': ['Typ A', 'Typ B']
   };
 
   const mockNumeryBiezaceData = [

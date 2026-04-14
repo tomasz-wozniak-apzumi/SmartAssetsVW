@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Plus, Box, ClipboardCheck, LayoutGrid, ChevronDown, Settings, CheckSquare, History, X, Save, Folder, Upload, Package, Layers } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Plus, Box, ClipboardCheck, LayoutGrid, ChevronDown, Settings, CheckSquare, History, X, Save, Folder, Upload, Package, Layers, Car } from 'lucide-react';
 import { MOCK_CONTAINERS, MOCK_CURRENT_NUMBERS, MOCK_LOCATIONS, MOCK_SERVICES, MOCK_CHECKLISTS, MOCK_EVENTS } from '../constants';
 import { ViewType, ContainerData, LocationData, EventData, CurrentNumberData, ServiceData, ChecklistData, AssetType, ZakladType } from '../types';
 
@@ -30,7 +30,8 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
     'Regały': ['Wspornikowy', 'Półkowy', 'Paletowy'],
     'Kontenery': ['Manualny', 'Automatyczny'],
     'HSW': ['Manualny', 'Automatyczny'],
-    'Trolleye': ['Siatkowy', 'Platformowy', 'Skrzyniowy']
+    'Trolleye': ['Siatkowy', 'Platformowy', 'Skrzyniowy'],
+    'Środki Transportu': ['Typ A', 'Typ B']
   };
 
   const [isPreviewing, setIsPreviewing] = useState(false);
@@ -179,6 +180,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
       case 'Trolleye': return 'trolleya';
       case 'Regały': return 'regału';
       case 'HSW': return 'HSW';
+      case 'Środki Transportu': return 'środka transportu';
       default: return 'elementu';
     }
   };
@@ -302,6 +304,7 @@ const DataTable: React.FC<DataTableProps> = ({ view, currentAsset, currentZaklad
       'Trolleye': <LayoutGrid size={24} strokeWidth={1.5} />,
       'Regały': <Layers size={24} strokeWidth={1.5} />,
       'HSW': <Box size={24} strokeWidth={1.5} />,
+      'Środki Transportu': <Car size={24} strokeWidth={1.5} />,
     };
 
     return (

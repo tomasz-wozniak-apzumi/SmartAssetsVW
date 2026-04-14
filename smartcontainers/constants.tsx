@@ -18,6 +18,7 @@ export const ASSET_CONFIG: Record<AssetType, { defaultModule: ViewType, modules:
   'Trolleye': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
   'Regały': { defaultModule: 'Numery bieżące', modules: ['Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
   'HSW': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
+  'Środki Transportu': { defaultModule: 'Dane podstawowe', modules: ['Dane podstawowe', 'Numery bieżące', 'Lokalizacje', 'Serwis', 'Checklisty', 'Zdarzenia'] },
 };
 
 export const MOCK_CONTAINERS: ContainerData[] = [
@@ -31,6 +32,8 @@ export const MOCK_CONTAINERS: ContainerData[] = [
   // HSW
   { id: '6', assetType: 'HSW', number: 'HSW-882', name: 'Podstawa rolkowa A', verificationPeriod: 120, project: 'Magazyn Główny', type: 'Manualny', orderNumber: 'PO-44512', prototypes: 0, currentNumbers: 45, total: 45, zaklad: 'Zakład Września' },
   { id: '7', assetType: 'HSW', number: 'HSW-102', name: 'Podstawa rolkowa B', verificationPeriod: 365, project: 'Logistyka', type: 'Automatyczny', orderNumber: 'PO-12344', prototypes: 0, currentNumbers: 20, total: 20, zaklad: 'Zakład Poznań' },
+  // Środki Transportu
+  { id: '8', assetType: 'Środki Transportu', number: 'ST-001', name: 'Wózek platformowy', verificationPeriod: 365, project: 'Logistyka', type: 'Typ A', orderNumber: 'PO-9912', prototypes: 0, currentNumbers: 10, total: 10, zaklad: 'Zakład Września' },
 ];
 
 export const MOCK_CURRENT_NUMBERS: CurrentNumberData[] = [
@@ -46,6 +49,8 @@ export const MOCK_CURRENT_NUMBERS: CurrentNumberData[] = [
   // HSW
   { id: '7', assetType: 'HSW', containerNumber: 'HSW-882', currentNumber: '023', containerName: 'Podstawa rolkowa A', status: 'Nowy', type: 'Manualny', version: '1.2', qrCode: 'HSW882_23', nextVerification: '05.05.2025', owner: 'Utrzymanie Ruchu', producer: 'Toyota', location: 'Hala 3', zaklad: 'Zakład Września' },
   { id: '8', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Podstawa rolkowa B', status: 'W użyciu', type: 'Automatyczny', version: '1.0', qrCode: 'HSW102_04', nextVerification: '01.09.2024', owner: 'Magazyn Wewnętrzny', producer: 'Mag-Tech', location: 'Strefa buforowa', zaklad: 'Zakład Poznań' },
+  // Środki Transportu
+  { id: '9', assetType: 'Środki Transportu', containerNumber: 'ST-001', currentNumber: '001', containerName: 'Wózek platformowy', status: 'W użyciu', type: 'Typ A', version: '1.0', qrCode: 'ST001_01', nextVerification: '10.10.2025', owner: 'Logistyka', producer: 'Still', location: 'Magazyn Główny', zaklad: 'Zakład Września' },
 ];
 
 export const MOCK_LOCATIONS: LocationData[] = [
@@ -58,7 +63,8 @@ export const MOCK_LOCATIONS: LocationData[] = [
   { id: '7', assetType: 'Regały', name: 'Linia Montażowa Silników', containerCount: 5, zaklad: 'Zakład Poznań' },
   { id: '8', assetType: 'HSW', name: 'Plac Zewnętrzny Północ', containerCount: 110, zaklad: 'Zakład Września' },
   { id: '9', assetType: 'Kontenery', name: 'VW Główny Oddział', containerCount: 78, zaklad: 'Zakład Poznań' },
-  { id: '10', assetType: 'Regały', name: 'Magazyn Kwarantanny', containerCount: 3, zaklad: 'Zakład Września' }
+  { id: '10', assetType: 'Regały', name: 'Magazyn Kwarantanny', containerCount: 3, zaklad: 'Zakład Września' },
+  { id: '11', assetType: 'Środki Transportu', name: 'Zajezdnia', containerCount: 15, zaklad: 'Zakład Września' }
 ];
 
 export const MOCK_SERVICES: ServiceData[] = [
@@ -70,6 +76,7 @@ export const MOCK_SERVICES: ServiceData[] = [
   { id: '120', assetType: 'Kontenery', containerNumber: 'K-731', currentNumber: '240', containerName: 'Pojemnik KLT', status: 'Naprawiony', ticketStatus: 'Zamknięty', reportedDate: '25.09.2024, 09:35', reportedBy: 'Janusz Testowy', executionDate: '26.09.2024, 13:18', owner: 'VW', executor: 'Serwis Zewnętrzny', location: 'Clavey', zaklad: 'Zakład Poznań' },
   { id: '121', assetType: 'Trolleye', containerNumber: 'TR-604', currentNumber: '1991', containerName: 'Trolley ciężki', status: 'Zablokowany', ticketStatus: 'Otwarty', reportedDate: '26.09.2024, 13:50', reportedBy: 'Kamil Kamil D...', executionDate: '-', owner: 'VW', executor: '-', location: 'Gestamp Działkowców', zaklad: 'Zakład Poznań' },
   { id: '126', assetType: 'HSW', containerNumber: 'HSW-102', currentNumber: '004', containerName: 'Paleciak z wagą', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '27.09.2024, 08:55', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'VW', executor: '-', location: 'Strefa buforowa', zaklad: 'Zakład Września' },
+  { id: '130', assetType: 'Środki Transportu', containerNumber: 'ST-001', currentNumber: '001', containerName: 'Wózek', status: 'W użyciu', ticketStatus: 'Otwarty', reportedDate: '28.09.2024, 10:00', reportedBy: 'Janusz Testowy', executionDate: '-', owner: 'Logistyka', executor: '-', location: 'Zajezdnia', zaklad: 'Zakład Września' },
 ];
 
 export const MOCK_CHECKLISTS: ChecklistData[] = [
@@ -93,6 +100,9 @@ export const MOCK_CHECKLISTS: ChecklistData[] = [
   { id: 'h1', assetType: 'HSW', name: 'UDT: Codzienna kontrola pracownicza', createdDate: '17.05.2022 13:53', editDate: '17.05.2022 13:53', stepCount: 15, version: '2.5', zaklad: 'Zakład Poznań' },
   { id: 'h2', assetType: 'HSW', name: 'Przegląd układu hydraulicznego i wideł', createdDate: '22.10.2022 07:00', editDate: '22.10.2022 08:30', stepCount: 10, version: '1.4', zaklad: 'Zakład Września' },
   { id: 'h3', assetType: 'HSW', name: 'Weryfikacja hamulców i kierowania', createdDate: '30.11.2022 14:20', editDate: '01.12.2022 10:15', stepCount: 8, version: '1.1', zaklad: 'Zakład Poznań' },
+
+  // Środki Transportu
+  { id: 'st1', assetType: 'Środki Transportu', name: 'Przegląd codzienny pojazdu', createdDate: '01.01.2023 08:00', editDate: '01.01.2023 08:00', stepCount: 10, version: '1.0', zaklad: 'Zakład Września' },
 ];
 
 export const MOCK_EVENTS: EventData[] = [
@@ -106,6 +116,7 @@ export const MOCK_EVENTS: EventData[] = [
   { id: '8', assetType: 'HSW', name: 'Odrzucenie podczas kontroli jakości', zaklad: 'Zakład Września' },
   { id: '9', assetType: 'Kontenery', name: 'Korozja elementów mocujących', zaklad: 'Zakład Września' },
   { id: '10', assetType: 'HSW', name: 'Kolizja z HSW Podstawy rolkowe', zaklad: 'Zakład Poznań' },
+  { id: '11', assetType: 'Środki Transportu', name: 'Awaria akumulatora', zaklad: 'Zakład Września' },
 ];
 
 export const MENU_ITEMS: MenuItem[] = [
