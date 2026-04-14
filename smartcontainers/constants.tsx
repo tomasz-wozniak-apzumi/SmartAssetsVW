@@ -160,3 +160,105 @@ export const MENU_ITEMS: MenuItem[] = [
   { title: 'Role', icon: <ShieldCheck size={18} /> },
   { title: 'Umiejętności', icon: <Award size={18} /> },
 ];
+
+// Automatyczne wypełnienie brakujących danych do pełnych 10 dla każdej kombinacji (Asset x Przestrzeń)
+const assetsList: AssetType[] = ['Kontenery', 'Trolleye', 'Regały', 'HSW', 'Środki Transportu'];
+const zakladList: ZakladType[] = ['Zakład Września', 'Zakład Poznań'];
+
+assetsList.forEach(asset => {
+  zakladList.forEach(zaklad => {
+    
+    const countCont = MOCK_CONTAINERS.filter(item => item.assetType === asset && item.zaklad === zaklad).length;
+    for(let i = countCont; i < 10; i++) {
+      MOCK_CONTAINERS.push({
+         id: `c-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
+         assetType: asset,
+         number: `GEN-${asset.substring(0,3).toUpperCase()}-${i}`,
+         name: `${asset === 'HSW' ? 'HSW Podstawa rolkowa' : asset} - Wygenerowany ${i}`,
+         verificationPeriod: 180,
+         project: 'Linia Standardowa',
+         type: (asset === 'Kontenery' || asset === 'HSW') ? 'Manualny' : (asset === 'Regały' ? 'Wspornikowy' : 'Inny'),
+         orderNumber: `PO-GEN-${i}`,
+         prototypes: 0,
+         currentNumbers: 5,
+         total: 5,
+         zaklad: zaklad
+      });
+    }
+
+    const countCurr = MOCK_CURRENT_NUMBERS.filter(item => item.assetType === asset && item.zaklad === zaklad).length;
+    for(let i = countCurr; i < 10; i++) {
+      MOCK_CURRENT_NUMBERS.push({
+         id: `curr-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
+         assetType: asset,
+         containerNumber: `GEN-${asset.substring(0,3).toUpperCase()}-${i}`,
+         currentNumber: `00${i}`,
+         containerName: `${asset === 'HSW' ? 'HSW Podstawa rolkowa' : asset} - Wygenerowany ${i}`,
+         status: i % 2 === 0 ? 'W użyciu' : 'Nowy',
+         type: (asset === 'Kontenery' || asset === 'HSW') ? 'Manualny' : (asset === 'Regały' ? 'Wspornikowy' : 'Inny'),
+         version: '1.0',
+         qrCode: `QR-GEN-${i}`,
+         nextVerification: '01.01.2025',
+         owner: 'Logistyka',
+         producer: 'VW',
+         location: 'Magazyn Systemowy',
+         zaklad: zaklad
+      });
+    }
+
+    const countLoc = MOCK_LOCATIONS.filter(item => item.assetType === asset && item.zaklad === zaklad).length;
+    for(let i = countLoc; i < 10; i++) {
+      MOCK_LOCATIONS.push({
+         id: `loc-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
+         assetType: asset,
+         name: `Strefa zautomatyzowana ${i} (${asset})`,
+         containerCount: 5,
+         zaklad: zaklad
+      });
+    }
+
+    const countSrv = MOCK_SERVICES.filter(item => item.assetType === asset && item.zaklad === zaklad).length;
+    for(let i = countSrv; i < 10; i++) {
+      MOCK_SERVICES.push({
+         id: `srv-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
+         assetType: asset,
+         containerNumber: `GEN-${asset.substring(0,3).toUpperCase()}-${i}`,
+         currentNumber: `00${i}`,
+         containerName: `${asset === 'HSW' ? 'HSW Podstawa rolkowa' : asset} - Wygenerowany ${i}`,
+         status: 'Do przeglądu',
+         ticketStatus: 'Otwarty',
+         reportedDate: '01.10.2024, 08:00',
+         reportedBy: 'System',
+         executionDate: '-',
+         owner: 'VW',
+         executor: '-',
+         location: 'Strefa Serwisu',
+         zaklad: zaklad
+      });
+    }
+
+    const countChk = MOCK_CHECKLISTS.filter(item => item.assetType === asset && item.zaklad === zaklad).length;
+    for(let i = countChk; i < 10; i++) {
+      MOCK_CHECKLISTS.push({
+         id: `chk-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
+         assetType: asset,
+         name: `Procedura BHP/UDT nr ${i} dla ${asset}`,
+         createdDate: '10.10.2023 10:00',
+         editDate: '10.10.2023 10:00',
+         stepCount: 5 + i,
+         version: '1.0',
+         zaklad: zaklad
+      });
+    }
+
+    const countEvt = MOCK_EVENTS.filter(item => item.assetType === asset && item.zaklad === zaklad).length;
+    for(let i = countEvt; i < 10; i++) {
+      MOCK_EVENTS.push({
+         id: `evt-gen-${asset}-${zaklad.replace(/\s+/g, '')}-${i}`,
+         assetType: asset,
+         name: `Rutynowe naruszenie strefy - ${i} (${asset})`,
+         zaklad: zaklad
+      });
+    }
+  });
+});
