@@ -95,9 +95,11 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   };
 
   const mockNumeryBiezaceData = [
-    { id: 963, numerDomyslny: '40', nazwa: '3', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
-    { id: 964, numerDomyslny: '41', nazwa: '3', type: ASSET_TYPES_MAP[selectedAsset]?.[1] || 'Inny' },
-    { id: 965, numerDomyslny: '42', nazwa: '3', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
+    { id: 963, numerDomyslny: 'KLT-6147', nazwa: 'Pojemnik KLT 600x400', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
+    { id: 964, numerDomyslny: 'GBX-001', nazwa: 'Euro Gitterbox', type: ASSET_TYPES_MAP[selectedAsset]?.[1] || 'Inny' },
+    { id: 965, numerDomyslny: '1096', nazwa: 'Pojemnik KLT 400x300', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
+    { id: 966, numerDomyslny: 'TR-SEQ', nazwa: 'Trolley sekwencyjny', type: ASSET_TYPES_MAP[selectedAsset]?.[1] || 'Inny' },
+    { id: 967, numerDomyslny: 'ST-001', nazwa: 'Wózek platformowy Still', type: ASSET_TYPES_MAP[selectedAsset]?.[0] || 'Inny' },
   ];
 
   // ─── Asset Header Banner ─────────────────────────────────────────────────
@@ -486,10 +488,10 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       <SearchInput />
       <div className="flex-1 overflow-y-auto">
        {[
-         { kNumer: '5', nazwa: '2', zNumer: '77238938', proto: '0', curr: '180', total: '180' },
-         { kNumer: '6', nazwa: '8', zNumer: 'Brak', proto: '0', curr: '230', total: '230' },
-         { kNumer: '7', nazwa: '154', zNumer: '123', proto: '0', curr: '237', total: '237' },
-         { kNumer: '1', nazwa: '1', zNumer: 'Brak', proto: '0', curr: '0', total: '0' }
+         { kNumer: 'GBX-001', nazwa: 'Euro Gitterbox', zNumer: 'PO-77231', proto: '0', curr: '850', total: '850' },
+         { kNumer: 'KLT-4147', nazwa: 'Pojemnik KLT', zNumer: 'ORD-1123', proto: '0', curr: '2400', total: '2400' },
+         { kNumer: 'TR-SEQ', nazwa: 'Trolley sekwencyjny', zNumer: 'TX-5091', proto: '1', curr: '42', total: '43' },
+         { kNumer: 'TRUCK-STL', nazwa: 'Wózek Still', zNumer: 'PO-9912', proto: '0', curr: '15', total: '15' }
        ].map((item, id) => (
           <div 
             key={id} 
@@ -556,9 +558,10 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
       <SearchInput />
       <div className="flex-1 overflow-y-auto">
         {[
-          { title: 'Codzienna inspekcja', steps: 4, unsaved: true },
-          { title: 'Weryfikacja uszkodzeń', steps: 3, unsaved: false },
-          { title: 'Przegląd okresowy', steps: 6, unsaved: false },
+          { title: 'Wizualna inspekcja siatek KLT/GBX', steps: 5, unsaved: true },
+          { title: 'Przegląd układu jezdnego Trolley', steps: 6, unsaved: false },
+          { title: 'Inspekcja odkształceń słupów po kolizji', steps: 7, unsaved: false },
+          { title: 'BHP UDT: Codzienna kontrola wózka', steps: 15, unsaved: false },
         ].map((item, idx) => (
           <div key={idx} className="flex justify-between items-center p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50">
              <div>
@@ -582,9 +585,10 @@ const MobileApp: React.FC<MobileAppProps> = ({ onClose }) => {
   // ─── Serwis ───────────────────────────────────────────────────────────────
   const renderSerwis = () => {
     const mockSerwisData = [
-      { id: '621', numerBiezacy: '1234512345', numerKonta: '1234512345', nazwa: 'Test1234512345', status: 'Do naprawy', dataOrg: '2026-03-09' },
-      { id: '601', numerBiezacy: '2003', numerKonta: '5', nazwa: '2', status: 'Do naprawy', dataOrg: '2025-11-20' },
-      { id: '581', numerBiezacy: '...', numerKonta: '531720', nazwa: 'Nowa Wersja Instancji', status: 'Do naprawy', dataOrg: '2025-11-12' },
+      { id: '109', numerBiezacy: '023', numerKonta: 'AGV-CRAF', nazwa: 'HSW AGV Crafter', status: 'Awaria', dataOrg: '2026-03-09' },
+      { id: '102', numerBiezacy: '1096', numerKonta: 'KLT-6147', nazwa: 'Pojemnik KLT', status: 'Uszkodzony', dataOrg: '2025-11-20' },
+      { id: '130', numerBiezacy: '001', numerKonta: 'TRUCK-STL', nazwa: 'Wózek platformowy Still', status: 'Do przeglądu', dataOrg: '2025-11-12' },
+      { id: '121', numerBiezacy: '1004', numerKonta: 'TR-PLAT', nazwa: 'Trolley platformowy', status: 'Zablokowany', dataOrg: '2025-11-12' },
     ];
 
     return (
